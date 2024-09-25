@@ -8,7 +8,7 @@ pub mod race {
     use crate::util::memory::{read_field_as_string, read_field_as_vec, read_mem_as_string};
     use crate::types::memorylayout::{MemoryLayout, MemorySection};
 
-    #[derive(Default, Debug)]
+    #[derive(Default, Debug, Clone)]
     pub struct Race {
         pub id: i32,
         pub name: String,

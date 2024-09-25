@@ -114,19 +114,17 @@ impl DFInstance {
         }
 
         for &c in &self.creature_vector {
-            let mut d = Dwarf::default();
+            let d = match Dwarf::new(self, c) {
+                Ok(d) => d,
+                Err(_) => continue,
+            };
 
-            // // enumerate the creature information
-            d.id = read_field::<i32>(&self.proc, c, &self.memory_layout, MemorySection::Dwarf, "id").unwrap();
-            let race = self.get_race(
-                read_field::<i32>(&self.proc, c, &self.memory_layout, MemorySection::Dwarf, "race").unwrap()
-            ).unwrap();
+            dwarves.push(d);
+        }
 
-            let name_offset =  self.memory_layout.field_offset(MemorySection::Dwarf, "name");
-            let first_name_offset = name_offset + self.memory_layout.field_offset(MemorySection::Word, "first_name");
-            d.first_name = read_mem_as_string(&self.proc, c + first_name_offset);
-            println!("First Name: {}", d.first_name);
-
+        for d in &dwarves {
+            println!("Dwarf: {}", d.first_name);
+        }
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
             // // if !last_name.is_empty() && last_name.len() > 2 {
             // //     let first_name = read_mem_as_string(&self.proc, c + name_offset + first_name_offset);
@@ -147,7 +145,6 @@ impl DFInstance {
             //     let v = read_mem::<i32>(&self.proc.handle, s + 0x4);
             //     states.insert(k, v);
             // }
-        }
     }
 }
 
