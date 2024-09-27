@@ -1,3 +1,5 @@
+use std::fmt::{Debug, Error, Formatter};
+
 use crate::win::memory::memory::read_mem;
 use crate::DFInstance;
 
@@ -9,7 +11,7 @@ pub struct FlagArray {
 impl FlagArray {
         pub unsafe fn new(df: &DFInstance, address: usize) -> Self {
             let mut flags_addr = read_mem::<usize>(&df.proc.handle, address);
-            let size_in_bytes = read_mem::<u32>(&df.proc.handle, address + 4) as usize;
+            let size_in_bytes = read_mem::<u32>(&df.proc.handle, address + std::mem::size_of::<usize>()) as usize;
 
             if size_in_bytes > 1000 {
                 println!("FlagArray size is too large: {}", size_in_bytes);
@@ -21,22 +23,37 @@ impl FlagArray {
 
             let mut flags = BitArray::new(size_in_bytes * 8);
             for i in 0..size_in_bytes {
-                let mut pos = 7;
                 let byte = read_mem::<u8>(&df.proc.handle, flags_addr);
                 if byte > 0 {
-                    let mut iter = 128;
-                    while iter > 0 {
-                        let _ = flags.set(i * 8 + pos, true);
-                        pos -= 1;
-                        iter /= 2;
+                    for p in (0..=7).rev() {
+                        let mut iter = 128;
+                        while iter > 0 {
+                            let _ = flags.set(i * 8 + p, true);
+                            iter /= 2;
+                        }
                     }
                 }
-                flags_addr += 1;
+                flags_addr += 0x1;
             }
             FlagArray {
             address,
             flags,
         }
+    }
+}
+
+impl Clone for FlagArray {
+    fn clone(&self) -> Self {
+        FlagArray {
+            address: self.address,
+            flags: self.flags.clone(),
+        }
+    }
+}
+
+impl Debug for FlagArray {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+        write!(f, "{:?}", self.flags)
     }
 }
 
@@ -88,5 +105,20 @@ impl BitArray {
 
     pub fn size(&self) -> usize {
         self.size
+    }
+}
+
+impl Clone for BitArray {
+    fn clone(&self) -> Self {
+        BitArray {
+            data: self.data.clone(),
+            size: self.size,
+        }
+    }
+}
+
+impl Debug for BitArray {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+        write!(f, "{:?}", self.data)
     }
 }

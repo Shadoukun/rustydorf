@@ -1,9 +1,9 @@
-mod caste {
+pub mod caste {
     use crate::win::memory::memory::{enum_mem_vec, read_mem};
     use crate::{types::{flagarray::FlagArray, memorylayout::MemorySection}, util::memory::read_mem_as_string, DFInstance};
 
 
-    #[derive(Default)]
+    #[derive(Default, Debug, Clone)]
     pub struct Caste {
         pub address: usize,
         pub name: String,
@@ -27,24 +27,23 @@ mod caste {
             };
 
             c.tag = read_mem_as_string(&df.proc, address);
-            c.name = read_mem_as_string(&df.proc, address + df.memory_layout.field_offset(MemorySection::Caste, "name"));
-            c.name_plural = read_mem_as_string(&df.proc, address + df.memory_layout.field_offset(MemorySection::Word, "noun"));
+            c.name = read_mem_as_string(&df.proc, address + df.memory_layout.field_offset(MemorySection::Caste, "caste_name"));
+            c.name_plural = read_mem_as_string(&df.proc, address + df.memory_layout.field_offset(MemorySection::Word, "noun_plural"));
             c.flags = FlagArray::new(&df, address + df.memory_layout.field_offset(MemorySection::Caste, "flags"));
 
-            if c.flags.flags.get(97).unwrap() {
+            if c.flags.flags.get(97).unwrap_or_default() {
                 c.baby_age = match read_mem::<i32>(&df.proc.handle, address + df.memory_layout.field_offset(MemorySection::Caste, "baby_age")) {
                     -1 => 0,
                     x => x
                 };
             }
 
-            if c.flags.flags.get(98).unwrap() {
+            if c.flags.flags.get(98).unwrap_or_default() {
                 c.child_age = match read_mem::<i32>(&df.proc.handle, address + df.memory_layout.field_offset(MemorySection::Caste, "child_age")) {
                     -1 => 0,
                     x => x
                 };
             }
-
             c.adult_size = read_mem::<i32>(&df.proc.handle, address + df.memory_layout.field_offset(MemorySection::Caste, "adult_size"));
 
             c.body_addr = address + df.memory_layout.field_offset(MemorySection::Caste, "body_info");
@@ -53,21 +52,21 @@ mod caste {
             // convenience flag setting
 
             // butcherable
-            if c.flags.flags.get(46).unwrap() {
+            if c.flags.flags.get(46).unwrap_or_default() {
                 let _ = c.flags.flags.set(202, true);
             }
 
             let trainable: bool =
-            c.flags.flags.get(53).unwrap() || // Hunting
-            c.flags.flags.get(88).unwrap() || // War
-            c.flags.flags.get(54).unwrap() || // Pet
-            c.flags.flags.get(55).unwrap();   // Exotic Pet
+            c.flags.flags.get(53).unwrap_or_default() || // Hunting
+            c.flags.flags.get(88).unwrap_or_default() || // War
+            c.flags.flags.get(54).unwrap_or_default() || // Pet
+            c.flags.flags.get(55).unwrap_or_default();   // Exotic Pet
             if trainable {
                 let _ = c.flags.flags.set(203, true);
             }
 
             // fishable
-            let not_fishable = c.flags.flags.get(37).unwrap();
+            let not_fishable = c.flags.flags.get(37).unwrap_or_default();
             if not_fishable {
                 let _ = c.flags.flags.set(26, false);
             }

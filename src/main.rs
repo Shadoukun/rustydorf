@@ -25,10 +25,13 @@ pub const DEFAULT_BASE_ADDR: u64 = 0x140000000;
 struct DFInstance {
     pub proc: Process,
     pub memory_layout: MemoryLayout,
-    pub languages: Languages,
+    pub dwarf_race_id: i32,
     creature_vector: Vec<usize>,
-    races: Vec<Race>,
-    dwarves: Vec<Dwarf>,
+
+    pub languages: Languages,
+    pub races: Vec<Race>,
+    pub dwarves: Vec<Dwarf>,
+
 }
 
 #[allow(dead_code)]
@@ -47,9 +50,12 @@ impl DFInstance {
             ..Default::default()
         };
 
-        let creature_vector_addr = df.memory_layout.field_offset(MemorySection::Addresses, "active_creature_vector");
-        df.creature_vector = enum_mem_vec(&df.proc.handle, address_plus_offset(&df.proc, creature_vector_addr));
+        let dwarf_race_index_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "dwarf_race_index"));
+        df.dwarf_race_id = read_mem::<i16>(&df.proc.handle, dwarf_race_index_addr) as i32;
 
+        let creature_vector_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "active_creature_vector"));
+        df.creature_vector = enum_mem_vec(&df.proc.handle, creature_vector_addr);
+        println!("Creature Vector: {:?}", df.creature_vector);
         df.load_languages();
         df.load_races();
         df.load_dwarves();
