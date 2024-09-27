@@ -3,6 +3,8 @@ pub mod dwarf {
     use std::collections::HashMap;
     use std::fmt::Error;
 
+    use crate::caste;
+    use crate::caste::caste::Caste;
     use crate::race::race::Race;
     use crate::win::memory::memory::enum_mem_vec;
     use crate::win::{memory::memory::read_mem, process::Process};
@@ -13,7 +15,7 @@ pub mod dwarf {
         pub addr: usize,
         pub id: i32,
         pub race: Race,
-        // pub caste: Caste,
+        pub caste: Caste,
         pub first_name: String,
         pub nickname: String,
         pub last_name: String,
@@ -45,6 +47,7 @@ pub mod dwarf {
             if race.name != "dwarf" {
                 return Err(Error);
             }
+
             let name_offset = df.memory_layout.field_offset(MemorySection::Dwarf, "name");
             let first_name = read_mem_as_string(&df.proc, addr + name_offset + df.memory_layout.field_offset(MemorySection::Word, "first_name"));
 
@@ -54,10 +57,20 @@ pub mod dwarf {
 
             let states = Self::read_states(df, addr);
 
+            // I'm pretty sure this doesn't work as intended but dwarves only have 2 castes so it doesn't matter for now
+            let caste_id = read_field::<i32>(&df.proc, addr, &df.memory_layout, MemorySection::Dwarf, "caste").unwrap();
+            let mut caste: &Caste;
+            if caste_id == 0 {
+                caste = &race.castes[0];
+            } else {
+                caste = &race.castes[1];
+            }
+
             let d = Dwarf {
                 addr,
                 id,
                 race: race.clone(),
+                caste: caste.clone(),
                 first_name,
                 nickname,
                 last_name: String::new(),

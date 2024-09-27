@@ -87,7 +87,6 @@ pub mod race {
                 for c in castes {
                     let caste = Caste::new(df, c);
                     r.castes.push(caste);
-                    // todo: add caste details
                 }
             }
 
