@@ -26,6 +26,7 @@ struct DFInstance {
     pub proc: Process,
     pub memory_layout: MemoryLayout,
     pub dwarf_race_id: i32,
+    pub dwarf_civ_id: i32,
     creature_vector: Vec<usize>,
 
     pub languages: Languages,
@@ -50,12 +51,21 @@ impl DFInstance {
             ..Default::default()
         };
 
+        // Race ID
         let dwarf_race_index_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "dwarf_race_index"));
         df.dwarf_race_id = read_mem::<i16>(&df.proc.handle, dwarf_race_index_addr) as i32;
+        println!("Dwarf Race ID: {}", df.dwarf_race_id);
 
+        // Civ ID
+        let dwarf_civ_index_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "dwarf_civ_index"));
+        df.dwarf_civ_id = read_mem::<i32>(&df.proc.handle, dwarf_civ_index_addr);
+        println!("Dwarf Civ ID: {}", df.dwarf_civ_id);
+
+        // enum creature vector
         let creature_vector_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "active_creature_vector"));
         df.creature_vector = enum_mem_vec(&df.proc.handle, creature_vector_addr);
         println!("Creature Vector: {:?}", df.creature_vector);
+
         df.load_languages();
         df.load_races();
         df.load_dwarves();
@@ -120,6 +130,15 @@ impl DFInstance {
         }
 
         for &c in &self.creature_vector {
+            // filter creatures by civ id to get only dwarves
+            let creature_civ = read_mem::<i32>(
+                &self.proc.handle,
+                c + self.memory_layout.field_offset(MemorySection::Dwarf, "civ")
+            );
+            if self.dwarf_civ_id != creature_civ {
+                continue;
+            }
+
             let d = match Dwarf::new(self, c) {
                 Ok(d) => d,
                 Err(_) => continue,
@@ -130,6 +149,7 @@ impl DFInstance {
 
         for d in &dwarves {
             println!("Dwarf: {}", d.first_name);
+            println!("Dwarf Caste: {}", d.caste.tag);
         }
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
             // // if !last_name.is_empty() && last_name.len() > 2 {
