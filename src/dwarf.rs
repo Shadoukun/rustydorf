@@ -15,6 +15,10 @@ pub mod dwarf {
         pub id: i32,
         pub race: Race,
         pub caste: Caste,
+        pub souls: Vec<usize>,
+        pub sex: Sex,
+        pub orient_vec: Vec<Commitment>,
+        pub orientation: Orientation,
         pub first_name: String,
         pub nickname: String,
         pub last_name: String,
@@ -51,7 +55,7 @@ pub mod dwarf {
             d.read_race_and_caste(df)?;
             d.read_names(df);
             d.read_states(df);
-
+            d.read_soul(df);
             d.turn_count = read_field::<i32>(&df.proc, addr, &df.memory_layout, MemorySection::Dwarf, "turn_count")?;
             // TODO: age and migration
             d.raw_prof_id = read_field::<u8>(&df.proc, addr, &df.memory_layout, MemorySection::Dwarf, "profession")?;
@@ -62,7 +66,7 @@ pub mod dwarf {
 
             // TODO: fake identities
             // TODO: squad info
-            // TODO: gender orientation
+            d.read_gender_orientation(df);
             // TODO: profession
             // TODO: mood
             // TODO: labors
@@ -70,6 +74,57 @@ pub mod dwarf {
             Ok(d)
 
         }
+
+        unsafe fn read_gender_orientation(&mut self, df: &DFInstance) {
+            let orient_offset = self.souls[0] + df.memory_layout.field_offset(MemorySection::Soul, "orientation");
+            let orientation_byte = read_mem::<u8>(&df.proc.handle, orient_offset);
+
+            let sex = Sex::from(read_field::<u8>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "sex").unwrap());
+
+            let male_interest = Commitment::from((orientation_byte & (3<<1))>>1);
+            let female_interest = Commitment::from((orientation_byte & (3<<3))>>3);
+
+            let mut orientation: Orientation = Default::default();
+
+            if sex == Sex::Male {
+                if male_interest != Commitment::Uninterested && female_interest != Commitment::Uninterested {
+                    orientation = Orientation::Bisexual;
+                } else if female_interest != Commitment::Uninterested {
+                    orientation = Orientation::Heterosexual;
+                } else if male_interest != Commitment::Uninterested {
+                    orientation = Orientation::Homosexual;
+                } else {
+                    orientation = Orientation::Asexual;
+                }
+
+            } else if sex == Sex::Female {
+                if female_interest != Commitment::Uninterested && male_interest != Commitment::Uninterested {
+                    orientation = Orientation::Bisexual;
+                } else if male_interest != Commitment::Uninterested {
+                    orientation = Orientation::Heterosexual;
+                } else if female_interest != Commitment::Uninterested {
+                    orientation = Orientation::Homosexual;
+                } else {
+                    orientation = Orientation::Asexual;
+                }
+            }
+
+            self.sex = sex;
+            self.orientation = orientation;
+            self.orient_vec = vec![male_interest, female_interest];
+
+            println!("Sex: {:?}, ", self.sex);
+            println!("Sexual Orientation: {:?} [Male Interest: {:?} | Female Interest: {:?}]", self.orientation, self.orient_vec[0], self.orient_vec[1]);
+        }
+
+        unsafe fn read_soul(&mut self, df: &DFInstance) {
+            self.souls = enum_mem_vec(&df.proc.handle, self.addr + df.memory_layout.field_offset(MemorySection::Dwarf, "souls"));
+
+            if self.souls.len() > 1 {
+                println!("Dwarf has more than one soul");
+            }
+        }
+
 
         unsafe fn read_race_and_caste(&mut self, df: &DFInstance) -> Result<(), Error> {
             let race_id = read_field::<i32>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "race")?;
@@ -117,4 +172,48 @@ pub mod dwarf {
         df.languages.language_word(df, offset)
     }
 
+    #[derive(Default, Debug, PartialEq)]
+    pub enum Sex {
+        #[default]
+        Female = 0,
+        Male = 1,
+        Unknown = -1,
+    }
+
+    impl From<u8> for Sex {
+        fn from(value: u8) -> Self {
+            match value {
+                0 => Sex::Female,
+                1 => Sex::Male,
+                _ => Sex::Unknown,
+            }
+        }
+    }
+
+
+    #[derive(Debug, PartialEq)]
+    pub enum Commitment {
+        Uninterested = 0,
+        Lover = 1,
+        Marriage = 2,
+    }
+
+    impl From<u8> for Commitment {
+        fn from(value: u8) -> Self {
+            match value {
+                1 => Commitment::Lover,
+                2 => Commitment::Marriage,
+                _ => Commitment::Uninterested,
+            }
+        }
+    }
+
+    #[derive(Default, Debug, PartialEq)]
+    pub enum Orientation {
+        #[default]
+        Heterosexual,
+        Bisexual,
+        Homosexual,
+        Asexual,
+    }
 }
