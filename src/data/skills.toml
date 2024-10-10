@@ -1,0 +1,596 @@
+[[skills]]
+name = "Mining"
+noun = "Miner"
+profession_id = 0
+mood = 1
+
+[[skills]]
+name = "Wood Cutting"
+noun = "Wood Cutter"
+profession_id = 1
+
+[[skills]]
+name = "Carpentry"
+noun = "Carpenter"
+profession_id = 2
+mood = 1
+
+[[skills]]
+name = "Engraving"
+noun = "Engraver"
+profession_id = 6
+mood = 1
+
+[[skills]]
+name = "Masonry"
+noun = "Mason"
+profession_id = 7
+mood = 1
+
+[[skills]]
+name = "Animal Training"
+noun = "Animal Trainer"
+
+[[skills]]
+name = "Animal Caretaking"
+noun = "Animal Caretaker"
+
+[[skills]]
+name = "Fish Dissection"
+noun = "Fish Dissector"
+
+[[skills]]
+name = "Animal Dissection"
+noun = "Animal Dissector"
+
+[[skills]]
+name = "Fish Cleaning"
+noun = "Fish Cleaner"
+
+[[skills]]
+name = "Butchery"
+noun = "Butcher"
+
+[[skills]]
+name = "Trapping"
+noun = "Trapper"
+
+[[skills]]
+name = "Tanning"
+noun = "Tanner"
+profession_id = 46
+mood = 1
+
+[[skills]]
+name = "Weaving"
+noun = "Weaver"
+profession_id = 28
+mood = 1
+
+[[skills]]
+name = "Brewing"
+noun = "Brewer"
+
+[[skills]]
+name = "Clothesmaking"
+noun = "Clothier"
+profession_id = 29
+mood = 1
+
+[[skills]]
+name = "Milling"
+noun = "Miller"
+
+[[skills]]
+name = "Threshing"
+noun = "Thresher"
+
+[[skills]]
+name = "Cheesemaking"
+noun = "Cheesemaker"
+
+[[skills]]
+name = "Milking"
+noun = "Milker"
+
+[[skills]]
+name = "Cooking"
+noun = "Cook"
+
+[[skills]]
+name = "Growing"
+noun = "Grower"
+
+[[skills]]
+name = "Herbalism"
+noun = "Herbalist"
+
+[[skills]]
+name = "Fishing"
+noun = "Fisherman"
+
+[[skills]]
+name = "Furnace Operation"
+noun = "Furnace Operator"
+
+[[skills]]
+name = "Strand Extraction"
+noun = "Strand Extractor"
+
+[[skills]]
+name = "Weaponsmithing"
+noun = "Weaponsmith"
+profession_id = 16
+mood = 1
+
+[[skills]]
+name = "Armorsmithing"
+noun = "Armorsmith"
+profession_id = 17
+mood = 1
+
+[[skills]]
+name = "Metalsmithing"
+noun = "Metalsmith"
+profession_id = 14
+mood = 1
+
+[[skills]]
+name = "Gem Cutting"
+noun = "Gem Cutter"
+profession_id = 21
+mood = 1
+
+[[skills]]
+name = "Gem Setting"
+noun = "Gem Setter"
+profession_id = 22
+mood = 1
+
+[[skills]]
+name = "Wood Crafting"
+noun = "Wood Crafter"
+profession_id = 24
+mood = 1
+
+[[skills]]
+name = "Stone Crafting"
+noun = "Stone Crafter"
+profession_id = 25
+mood = 1
+
+[[skills]]
+name = "Metal Crafting"
+noun = "Metal Crafter"
+profession_id = 19
+mood = 1
+
+[[skills]]
+name = "Glassmaking"
+noun = "Glassmaker"
+profession_id = 30
+mood = 1
+
+[[skills]]
+name = "Leatherworking"
+noun = "Leatherworker"
+profession_id = 26
+mood = 1
+
+[[skills]]
+name = "Bone Carving"
+noun = "Bone Carver"
+profession_id = 27
+mood = 1
+
+[[skills]]
+name = "Axe"
+noun = "Axeman"
+
+[[skills]]
+name = "Sword"
+noun = "Swordsman"
+
+[[skills]]
+name = "Knife"
+noun = "Knife User"
+
+[[skills]]
+name = "Mace"
+noun = "Maceman"
+
+[[skills]]
+name = "Hammer"
+noun = "Hammerman"
+
+[[skills]]
+name = "Spear"
+noun = "Spearman"
+
+[[skills]]
+name = "Crossbow"
+noun = "Crossbowman"
+
+[[skills]]
+name = "Shield"
+noun = "Shield User"
+
+[[skills]]
+name = "Armor"
+noun = "Armor User"
+
+[[skills]]
+name = "Siege Engineering"
+noun = "Siege Engineer"
+
+[[skills]]
+name = "Siege Operation"
+noun = "Siege Operator"
+
+[[skills]]
+name = "Bowmaking"
+noun = "Bowyer"
+profession_id = 3
+mood = 1
+
+[[skills]]
+name = "Pike"
+noun = "Pikeman"
+
+[[skills]]
+name = "Lash"
+noun = "Lasher"
+
+[[skills]]
+name = "Bow"
+noun = "Bowman"
+
+[[skills]]
+name = "Blowgun"
+noun = "Blowgunner"
+
+[[skills]]
+name = "Throwing"
+noun = "Thrower"
+
+[[skills]]
+name = "Machinery"
+noun = "Mechanic"
+profession_id = 60
+mood = 1
+
+[[skills]]
+name = "Druidism"
+noun = "Druid"
+
+[[skills]]
+name = "Ambushing"
+noun = "Ambusher"
+
+[[skills]]
+name = "Wound Dressing"
+noun = "Wound Dresser"
+
+[[skills]]
+name = "Diagnosing"
+noun = "Diagnostician"
+
+[[skills]]
+name = "Surgery"
+noun = "Surgeon"
+
+[[skills]]
+name = "Bone Setting"
+noun = "Bone Doctor"
+
+[[skills]]
+name = "Suturing"
+noun = "Suturer"
+
+[[skills]]
+name = "Crutch-walking"
+noun = "Crutch-walker"
+
+[[skills]]
+name = "Wood Burning"
+noun = "Wood Burner"
+
+[[skills]]
+name = "Lye Making"
+noun = "Lye Maker"
+
+[[skills]]
+name = "Soap Making"
+noun = "Soaper"
+
+[[skills]]
+name = "Potash Making"
+noun = "Potash Maker"
+
+[[skills]]
+name = "Dyeing"
+noun = "Dyer"
+
+[[skills]]
+name = "Pump Operation"
+noun = "Pump Operator"
+
+[[skills]]
+name = "Swimming"
+noun = "Swimmer"
+
+[[skills]]
+name = "Persuasion"
+noun = "Persuader"
+social = 1
+
+[[skills]]
+name = "Negotiation"
+noun = "Negotiator"
+
+[[skills]]
+name = "Judging Intent"
+noun = "Judge of Intent"
+
+[[skills]]
+name = "Appraisal"
+noun = "Appraiser"
+
+[[skills]]
+name = "Organization"
+noun = "Organizer"
+
+[[skills]]
+name = "Record Keeping"
+noun = "Record Keeper"
+
+[[skills]]
+name = "Lying"
+noun = "Liar"
+social = 1
+
+[[skills]]
+name = "Intimidation"
+noun = "Intimidator"
+social = 1
+
+[[skills]]
+name = "Conversation"
+noun = "Conversationalist"
+social = 1
+
+[[skills]]
+name = "Comedy"
+noun = "Comedian"
+social = 1
+
+[[skills]]
+name = "Flattery"
+noun = "Flatterer"
+social = 1
+
+[[skills]]
+name = "Consoling"
+noun = "Consoler"
+social = 1
+
+[[skills]]
+name = "Pacification"
+noun = "Pacifier"
+social = 1
+
+[[skills]]
+name = "Tracking"
+noun = "Tracker"
+
+[[skills]]
+name = "Studying"
+noun = "Student"
+
+[[skills]]
+name = "Concentration"
+noun = "Concentration"
+
+[[skills]]
+name = "Discipline"
+noun = "Discipline"
+
+[[skills]]
+name = "Observation"
+noun = "Observer"
+
+[[skills]]
+name = "Writing"
+noun = "Wordsmith"
+
+[[skills]]
+name = "Prose"
+noun = "Writer"
+
+[[skills]]
+name = "Poetry"
+noun = "Poet"
+
+[[skills]]
+name = "Reading"
+noun = "Reader"
+
+[[skills]]
+name = "Speaking"
+noun = "Speaker"
+
+[[skills]]
+name = "Coordination"
+noun = "Coordination"
+
+[[skills]]
+name = "Balance"
+noun = "Balance"
+
+[[skills]]
+name = "Leadership"
+noun = "Leader"
+
+[[skills]]
+name = "Teaching"
+noun = "Teacher"
+
+[[skills]]
+name = "Fighting"
+noun = "Fighter"
+
+[[skills]]
+name = "Archery"
+noun = "Archer"
+
+[[skills]]
+name = "Wrestling"
+noun = "Wrestler"
+
+[[skills]]
+name = "Biting"
+noun = "Biter"
+
+[[skills]]
+name = "Striking"
+noun = "Striker"
+
+[[skills]]
+name = "Kicking"
+noun = "Kicker"
+
+[[skills]]
+name = "Dodging"
+noun = "Dodger"
+
+[[skills]]
+name = "Misc. Object"
+noun = "Misc. Object User"
+
+[[skills]]
+name = "Knapping"
+noun = "Knapper"
+
+[[skills]]
+name = "Military Tactics"
+noun = "Military Tactician"
+
+[[skills]]
+name = "Shearing"
+noun = "Shearer"
+
+[[skills]]
+name = "Spinning"
+noun = "Spinner"
+
+[[skills]]
+name = "Pottery"
+noun = "Potter"
+
+[[skills]]
+name = "Glazing"
+noun = "Glazer"
+
+[[skills]]
+name = "Pressing"
+noun = "Presser"
+
+[[skills]]
+name = "Beekeeping"
+noun = "Beekeeper"
+
+[[skills]]
+name = "Wax Working"
+noun = "Wax Worker"
+
+[[skills]]
+name = "Climbing"
+noun = "Climber"
+
+[[skills]]
+name = "Gelding"
+noun = "Gelder"
+
+[[skills]]
+name = "Dance"
+noun = "Dancer"
+
+[[skills]]
+name = "Music"
+noun = "Musician"
+
+[[skills]]
+name = "Singing"
+noun = "Singer"
+
+[[skills]]
+name = "Keyboard Instrument"
+noun = "Keyboardist"
+
+[[skills]]
+name = "Stringed Instrument"
+noun = "Stringed Instrumentalist"
+
+[[skills]]
+name = "Wind Instrument"
+noun = "Wind Instrumentalist"
+
+[[skills]]
+name = "Percussion Instrument"
+noun = "Percussionist"
+
+[[skills]]
+name = "Critical Thinking"
+noun = "Critical Thinker"
+
+[[skills]]
+name = "Logic"
+noun = "Logician"
+
+[[skills]]
+name = "Mathematics"
+noun = "Mathematician"
+
+[[skills]]
+name = "Astronomy"
+noun = "Astronomer"
+
+[[skills]]
+name = "Chemistry"
+noun = "Chemist"
+
+[[skills]]
+name = "Geography"
+noun = "Geographer"
+
+[[skills]]
+name = "Optics Engineering"
+noun = "Optics Engineer"
+
+[[skills]]
+name = "Fluid Engineering"
+noun = "Fluid Engineer"
+
+[[skills]]
+name = "Papermaking"
+noun = "Papermaker"
+
+[[skills]]
+name = "Bookbinding"
+noun = "Bookbinder"
+
+[[skills]]
+name = "Intrigue"
+noun = "Schemer"
+
+[[skills]]
+name = "Riding"
+noun = "Rider"
+
+[[skills]]
+name = "Stonecutting"
+noun = "Stonecutter"
+
+[[skills]]
+name = "Stone Carving"
+noun = "Stone Carver"

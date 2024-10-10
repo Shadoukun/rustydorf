@@ -1,0 +1,322 @@
+[[health_info]]
+id = 0
+name = "Diagnosis & Recovery"
+color = "#28C217"
+type = 1
+descriptions.1 = { desc = "Recovery", symbol = "Re" }
+descriptions.2 = { desc = "Diagnosis", symbol = "D" }
+
+[[health_info]]
+id = 1
+name = "Bleeding"
+color = "#FF0000"
+type = 6
+
+descriptions.1 = { desc = "Heavy Bleeding", symbol = "B!" }
+descriptions.2 = { desc = "Bleeding", symbol = "B~" }
+
+[[health_info]]
+id = 12
+name = "Hunger"
+color = "#66440C"
+type = 2
+descriptions.1 = { desc = "Starving", symbol = "H!" }
+descriptions.2 = { desc = "Hungry", symbol = "H~" }
+
+[[health_info]]
+id = 13
+name = "Drowsiness"
+color = "#1745C2"
+type = 2
+descriptions.1 = { desc = "Very Drowsy", symbol = "D!" }
+descriptions.2 = { desc = "Drowsy", symbol = "D~" }
+
+[[health_info]]
+id = 17
+name = "Ability to Stand"
+color = "#B8B209"
+type = 2
+descriptions.1 = { desc = "Cannot Stand", symbol = "Sx" }
+descriptions.2 = { desc = "Stand Impaired", symbol = "S~" }
+
+[[health_info]]
+id = 18
+name = "Ability to Grasp"
+color = "#B8B209"
+type = 2
+descriptions.1 = { desc = "Cannot Grasp", symbol = "Gx" }
+descriptions.2 = { desc = "Grasp Impaired", symbol = "G~" }
+
+[[health_info]]
+id = 9
+name = "Exhaustion"
+color = "#B8B209"
+type = 2
+descriptions.1 = { desc = "Exhausted", symbol = "Ex" }
+descriptions.2 = { desc = "Over-exerted", symbol = "Ovx" }
+descriptions.3 = { desc = "Tired", symbol = "Tir" }
+
+[[health_info]]
+id = 3
+name = "Paralysis"
+color = "#139185"
+type = 2
+descriptions.1 = { desc = "Paralyzed", symbol = "Pz!" }
+descriptions.2 = { desc = "Partially Paralyzed", symbol = "Pz+" }
+descriptions.3 = { desc = "Sluggish", symbol = "Slg" }
+
+[[health_info]]
+id = 4
+name = "Numbness"
+color = "#139185"
+type = 2
+descriptions.1 = { desc = "Completely Numb", symbol = "Nm!" }
+descriptions.2 = { desc = "Partially Numb", symbol = "Nm+" }
+descriptions.3 = { desc = "Slightly Numb", symbol = "Nm" }
+
+[[health_info]]
+id = 5
+name = "Fever"
+color = "#FF0000"
+type = 2
+descriptions.1 = { desc = "Serious Fever", symbol = "F!" }
+descriptions.2 = { desc = "Moderate Fever", symbol = "F+" }
+descriptions.3 = { desc = "Slight Fever", symbol = "F~" }
+
+[[health_info]]
+id = 11
+name = "Thirst"
+color = "#1745C2"
+type = 2
+descriptions.1 = { desc = "Dehydrated", symbol = "T!" }
+descriptions.2 = { desc = "Thirsty", symbol = "T~" }
+
+[[health_info]]
+id = 10
+name = "Breathing"
+color = "#178FC2"
+type = 2
+multiple = true
+descriptions.1 = { desc = "Cannot Breathe", symbol = "Br!" }
+descriptions.2 = { desc = "Drowning", symbol = "Dr" }
+descriptions.3 = { desc = "Trouble Breathing", symbol = "Br+" }
+descriptions.4 = { desc = "Winded", symbol = "Wd" }
+
+[[health_info]]
+id = 8
+name = "Movement Impaired"
+color = "#139185"
+type = 2
+multiple = true
+descriptions.1 = { desc = "Unconscious", symbol = "U!" }
+descriptions.2 = { desc = "Stunned", symbol = "St" }
+descriptions.3 = { desc = "Webbed", symbol = "Wb" }
+descriptions.4 = { desc = "Dizzy", symbol = "Dz" }
+
+[[health_info]]
+id = 15
+name = "Vision"
+color = "#876A18"
+type = 2
+descriptions.1 = { desc = "Vision Lost", symbol = "Vx" }
+descriptions.2 = { desc = "Vision Impaired", symbol = "V~" }
+descriptions.3 = { desc = "Vision ~Impaired", symbol = "V" }
+
+[[health_info]]
+id = 19
+name = "Ability to Fly"
+color = "#B8B209"
+type = 2
+descriptions.1 = { desc = "Cannot Fly", symbol = "Fx" }
+descriptions.2 = { desc = "Flight Impaired", symbol = "F~" }
+
+[[health_info]]
+id = 16
+name = "Gutted"
+color = "#28C217"
+type = 2
+descriptions.1 = { desc = "Gutted", symbol = "G!" }
+
+[[health_info]]
+id = 14
+name = "Nausea"
+color = "#28C217"
+type = 2
+descriptions.1 = { desc = "Nauseous", symbol = "Na" }
+
+[[health_info]]
+id = 2
+name = "Blood Loss"
+color = "#C78BB1"
+type = 2
+descriptions.1 = { desc = "Severe Blood Loss", symbol = "Pal" }
+descriptions.2 = { desc = "Blood Loss", symbol = "Fnt" }
+
+[[health_info]]
+id = 29
+name = "Infection"
+color = "#C71585"
+type = 4
+descriptions.1 = { desc = "Infected", symbol = "In" }
+
+[[health_info]]
+id = 20
+name = "Nerve Damage"
+color = "#139185"
+type = 6
+multiple = true
+descriptions.1 = { desc = "Motor Nerve Severed", symbol = "Mn" }
+descriptions.2 = { desc = "Sensory Nerve Severed", symbol = "Sn" }
+
+[[health_info]]
+id = 7
+name = "Pain"
+color = "#876A18"
+type = 6
+descriptions.1 = { desc = "Extreme Pain", symbol = "Pn!" }
+descriptions.2 = { desc = "Moderate Pain", symbol = "Pn+" }
+descriptions.3 = { desc = "Slight Pain", symbol = "Pn~" }
+
+[[health_info]]
+id = 21
+name = "Arterial Damage"
+color = "#FF0000"
+type = 4
+descriptions.1 = { desc = "Major Artery Torn", symbol = "A!" }
+descriptions.2 = { desc = "Artery Torn", symbol = "A+" }
+
+[[health_info]]
+id = 22
+name = "Breaks & Fractures"
+color = "#FF0000"
+type = 4
+descriptions.1 = { desc = "Overlapping Fracture", symbol = "Of" }
+descriptions.2 = { desc = "Compound Fracture", symbol = "Cf" }
+descriptions.3 = { desc = "Broken", symbol = "Br" }
+descriptions.4 = { desc = "Fractured", symbol = "Fr" }
+
+[[health_info]]
+id = 30
+name = "Lacerations"
+color = "#B30732"
+type = 4
+multiple = true
+descriptions.1 = { desc = "Tissue Smashed Apart", symbol = "Sm!" }
+descriptions.2 = { desc = "Tissue Smashed Open", symbol = "Sm+" }
+descriptions.3 = { desc = "Tissue Torn Apart", symbol = "To!" }
+descriptions.4 = { desc = "Tissue Torn Open", symbol = "To+" }
+descriptions.5 = { desc = "Tissue Cut Apart", symbol = "Ct!" }
+descriptions.6 = { desc = "Tissue Cut Open", symbol = "Ct+" }
+descriptions.7 = { desc = "Tissue Broken Apart", symbol = "Br!" }
+descriptions.8 = { desc = "Tissue Broken Open", symbol = "Br+" }
+descriptions.9 = { desc = "Tissue Gouged Apart", symbol = "Go!" }
+descriptions.10 = { desc = "Tissue Gouged Open", symbol = "Go+" }
+
+[[health_info]]
+id = 23
+name = "Tendons"
+color = "#B8B209"
+type = 4
+descriptions.1 = { desc = "Tendon Torn", symbol = "Tn!" }
+descriptions.2 = { desc = "Tendon Strained", symbol = "Tn+" }
+descriptions.3 = { desc = "Tendon Bruised", symbol = "Tn" }
+
+[[health_info]]
+id = 24
+name = "Ligaments"
+color = "#B8B209"
+type = 4
+descriptions.1 = { desc = "Ligament Torn", symbol = "Lt!" }
+descriptions.2 = { desc = "Ligament Strained", symbol = "Lt+" }
+descriptions.3 = { desc = "Ligament Bruised", symbol = "Lt" }
+
+[[health_info]]
+id = 25
+name = "Needs Setting"
+color = "#B8B209"
+type = 6
+descriptions.1 = { desc = "Needs Setting", symbol = "Ns" }
+
+[[health_info]]
+id = 31
+name = "Severed & Missing"
+color = "#4A4235"
+type = 4
+descriptions.1 = { desc = "Severed", symbol = "Sv" }
+descriptions.2 = { desc = "Missing", symbol = "Mi" }
+descriptions.3 = { desc = "Leaking", symbol = "Lk" }
+
+[[health_info]]
+id = 32
+name = "Rot"
+color = "#C71585"
+type = 6
+descriptions.1 = { desc = "Inoperable Rot", symbol = "R!" }
+descriptions.2 = { desc = "Rotten", symbol = "R" }
+
+[[health_info]]
+id = 34
+name = "Immobilization"
+color = "#B8B209"
+type = 1
+descriptions.1 = { desc = "Immobilization", symbol = "I" }
+
+[[health_info]]
+id = 35
+name = "Dressing"
+type = 1
+descriptions.1 = { desc = "Dressing", symbol = "Ɖ" }
+
+[[health_info]]
+id = 36
+name = "Cleaning"
+color = "#139185"
+type = 1
+descriptions.1 = { desc = "Cleaning", symbol = "≈" }
+
+[[health_info]]
+id = 37
+name = "Surgery"
+color = "#FF0000"
+type = 1
+descriptions.1 = { desc = "Surgery", symbol = "S" }
+
+[[health_info]]
+id = 38
+name = "Sutures"
+type = 1
+descriptions.1 = { desc = "Sutures", symbol = "Ø" }
+
+[[health_info]]
+id = 39
+name = "Traction"
+color = "#B8B209"
+type = 1
+descriptions.1 = { desc = "Traction", symbol = "T" }
+
+[[health_info]]
+id = 40
+name = "Crutch"
+color = "#B8B209"
+descriptions.1 = { desc = "Needs Crutch", type = 1, symbol = "C!" }
+descriptions.2 = { desc = "Has Crutch", type = 2, symbol = "Cr" }
+
+[[health_info]]
+id = 41
+name = "Other Damage"
+multiple = true
+type = 4
+descriptions.1 = { desc = "Bruised", symbol = "Bru", severity = 6, color = "#876A18" }
+descriptions.2 = { desc = "Burnt", symbol = "Brt", severity = 1, color = "#B30732" }
+descriptions.3 = { desc = "Frostbitten", symbol = "Fb", severity = 4, color = "#178FC2" }
+descriptions.4 = { desc = "Melted", symbol = "Me", severity = 0, color = "#FF0000" }
+descriptions.5 = { desc = "Necrotic", symbol = "Ne", severity = 3, color = "#C71585" }
+descriptions.6 = { desc = "Frozen", symbol = "Fn", severity = 5, color = "#1745C2" }
+descriptions.7 = { desc = "Blistered", symbol = "Bl", severity = 2, color = "#B30732" }
+
+[[health_info]]
+id = 42
+name = "Gelded"
+color = "#876918"
+type = 6
+descriptions.1 = { desc = "Gelded", symbol = "G" }

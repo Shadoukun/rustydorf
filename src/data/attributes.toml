@@ -1,0 +1,299 @@
+[[attributes]]
+id = 0
+name = "Strength"
+
+[attributes.levels]
+1 = "Unfathomably weak"
+2 = "Unquestionably weak"
+3 = "Very weak"
+4 = "Weak"
+5 = ""
+6 = "Strong"
+7 = "Very strong"
+8 = "Mighty"
+9 = "Unbelieveably strong"
+
+[[attributes]]
+id = 1
+name = "Agility"
+
+[attributes.levels]
+1 = "Abysmally clumsy"
+2 = "Totally clumsy"
+3 = "Quite clumsy"
+4 = "Clumsy"
+5 = ""
+6 = "Agile"
+7 = "Very agile"
+8 = "Extremely agile"
+9 = "Amazingly agile"
+
+[[attributes]]
+id = 2
+name = "Toughness"
+
+[attributes.levels]
+1 = "Shockingly fragile"
+2 = "Remarkably flimsy"
+3 = "Very flimsy"
+4 = "Flimsy"
+5 = ""
+6 = "Tough"
+7 = "Quite durable"
+8 = "Incredibly tough"
+9 = "Basically unbreakable"
+
+[[attributes]]
+id = 3
+name = "Endurance"
+
+[attributes.levels]
+1 = "Truly quick to tire"
+2 = "Extremely quick to tire"
+3 = "Very quick to tire"
+4 = "Quick to tire"
+5 = ""
+6 = "Slow to tire"
+7 = "Very slow to tire"
+8 = "Indefatigable"
+9 = "Absolutely inexhaustible"
+
+[[attributes]]
+id = 4
+name = "Disease Resistance"
+
+[attributes.levels]
+1 = "Stunningly susceptible to disease"
+2 = "Really susceptible to disease"
+3 = "Quite susceptible to disease"
+4 = "Susceptible to disease"
+5 = ""
+6 = "Rarely sick"
+7 = "Very rarely sick"
+8 = "Almost never sick"
+9 = "Virtually never sick"
+
+[[attributes]]
+id = 5
+name = "Disease Resistance"
+
+[attributes.levels]
+1 = "Stunningly susceptible to disease"
+2 = "Really susceptible to disease"
+3 = "Quite susceptible to disease"
+4 = "Susceptible to disease"
+5 = ""
+6 = "Rarely sick"
+7 = "Very rarely sick"
+8 = "Almost never sick"
+9 = "Virtually never sick"
+
+[[attributes]]
+id = 6
+name = "Recuperation"
+
+[attributes.levels]
+1 = "Shockingly slow to heal"
+2 = "Really slow to heal"
+3 = "Very slow to heal"
+4 = "Slow to heal"
+5 = ""
+6 = "Quick to heal"
+7 = "Quite quick to heal"
+8 = "Incredibly quick to heal"
+9 = "Possessed of amazing recuperative powers"
+
+[[attributes]]
+id = 7
+name = "Analytical Ability"
+
+[attributes.levels]
+1 = "A stunning lack of analytical ability"
+2 = "A lousy intellect"
+3 = "Very bad analytical abilities"
+4 = "Poor analytical abilities"
+5 = ""
+6 = "A good intellect"
+7 = "A sharp intellect"
+8 = "Great analytical abilities"
+9 = "Awesome intellectual powers"
+
+[[attributes]]
+id = 8
+name = "Creativity"
+
+[attributes.levels]
+1 = "Next to no creative talent"
+2 = "Lousy creativity"
+3 = "Poor creativity"
+4 = "Meager creativity"
+5 = ""
+6 = "Good creativity"
+7 = "Very good creativity"
+8 = "Great creativity"
+9 = "A boundless creative imagination"
+
+[[attributes]]
+id = 9
+name = "Empathy"
+
+[attributes.levels]
+1 = "The utter inability to judge others' emotions"
+2 = "Next to no empathy"
+3 = "A very bad sense of empathy"
+4 = "Poor empathy"
+5 = ""
+6 = "An ability to read emotions fairly well"
+7 = "A very good sense of empathy"
+8 = "A great sense of empathy"
+9 = "An absolutely remarkable sense of others' emotions"
+
+[[attributes]]
+id = 10
+name = "Focus"
+
+[attributes.levels]
+1 = "The absolute inability to focus"
+2 = "Really poor focus"
+3 = "Quite poor focus"
+4 = "Poor focus"
+5 = ""
+6 = "The ability to focus"
+7 = "Very good focus"
+8 = "A great ability to focus"
+9 = "Unbreakable focus"
+
+[[attributes]]
+id = 11
+name = "Intuition"
+
+[attributes.levels]
+1 = "Horrible intuition"
+2 = "Lousy intuition"
+3 = "Very bad intuition"
+4 = "Bad intuition"
+5 = ""
+6 = "Good intuition"
+7 = "Very good intuition"
+8 = "Great intuition"
+9 = "Uncanny intuition"
+
+[[attributes]]
+id = 16
+name = "Kinesthetic Sense"
+
+[attributes.levels]
+1 = "An unbelievably atrocious sense of the position of own body"
+2 = "A very clumsy kinesthetic sense"
+3 = "A poor kinesthetic sense"
+4 = "A meager kinesthetic sense"
+5 = ""
+6 = "A good kinesthetic sense"
+7 = "A very good sense of the position of own body"
+8 = "A great kinesthetic sense"
+9 = "An astounding feel for the position of own body"
+
+[[attributes]]
+id = 13
+name = "Linguistic Ability"
+
+[attributes.levels]
+1 = "Difficulty with words and language"
+2 = "Very little linguistic ability"
+3 = "Little linguistic ability"
+4 = "A little difficulty with words"
+5 = ""
+6 = "A way with words"
+7 = "A natural inclination toward language"
+8 = "A great affinity for language"
+9 = "An astonishing ability with languages and words"
+
+[[attributes]]
+id = 12
+name = "Memory"
+
+[attributes.levels]
+1 = "Little memory to speak of"
+2 = "A really bad memory"
+3 = "A poor memory"
+4 = "An iffy memory"
+5 = ""
+6 = "A good memory"
+7 = "A great memory"
+8 = "An amazing memory"
+9 = "An astonishing memory"
+
+[[attributes]]
+id = 15
+name = "Musicality"
+
+[attributes.levels]
+1 = "Absolutely no feel for music at all"
+2 = "Next to no natural musical ability"
+3 = "Little natural inclination toward music"
+4 = "An iffy sense for music"
+5 = ""
+6 = "A feel for music"
+7 = "A natural ability with music"
+8 = "A great musical sense"
+9 = "An astonishing knack for music"
+
+[[attributes]]
+id = 11
+name = "Patience"
+
+[attributes.levels]
+1 = "No patience at all"
+2 = "Very little patience"
+3 = "Little patience"
+4 = "A shortage of patience"
+5 = ""
+6 = "A sum of patience"
+7 = "A great deal of patience"
+8 = "A deep well of patience"
+9 = "Absolutely boundless patience"
+
+[[attributes]]
+id = 18
+name = "Social Awareness"
+
+[attributes.levels]
+1 = "An absolute inability to understand social relationships"
+2 = "A lack of understanding of social relationships"
+3 = "A poor ability to manage or understand social relationships"
+4 = "A meager ability with social relationships"
+5 = ""
+6 = "A good feel for social relationships"
+7 = "A very good feel for social relationships"
+8 = "A great feel for social relationships"
+9 = "A shockingly profound feel for social relationships"
+
+[[attributes]]
+id = 14
+name = "Spatial Sense"
+
+[attributes.levels]
+1 = "No sense for spatial relationships"
+2 = "An atrocious spatial sense"
+3 = "Poor spatial senses"
+4 = "A questionable spatial sense"
+5 = ""
+6 = "A good spatial sense"
+7 = "A great feel for the surrounding space"
+8 = "An amazing spatial sense"
+9 = "A stunning feel for spatial relationships"
+
+[[attributes]]
+id = 8
+name = "Willpower"
+
+[attributes.levels]
+1 = "Absolutely no willpower"
+2 = "Next to no willpower"
+3 = "A large deficit of willpower"
+4 = "Little willpower"
+5 = ""
+6 = "Above average willpower"
+7 = "A lot of willpower"
+8 = "An iron will"
+9 = "An unbreakable will"

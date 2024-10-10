@@ -1,0 +1,548 @@
+[[unit_jobs]]
+id = 0
+name = "Carve Fortification"
+img = "wall-brick"
+
+[[unit_jobs]]
+name = "Smooth"
+sub.1 = { id = 1, name = "Smooth Wall" }
+sub.2 = { id = 2, name = "Smooth Floor" }
+
+[[unit_jobs]]
+name = "Engrave"
+img = "paint-brush"
+sub.1 = { id = 3, name = "Detail Wall" }
+sub.2 = { id = 4, name = "Detail Floor" }
+
+[[unit_jobs]]
+name = "Dig"
+img = "shovel"
+sub.1 = { id = 5, name = "Dig" }
+sub.2 = { id = 9, name = "Carve Ramp" }
+sub.3 = { id = 10, name = "Dig Channel" }
+
+[[unit_jobs]]
+name = "Carve Stairs"
+img = "stairs--plus"
+sub.1 = { id = 6, name = "Carve Upward Staircase" }
+sub.2 = { id = 7, name = "Carve Downward Staircase" }
+sub.3 = { id = 8, name = "Carve Up/Down Staircase" }
+
+[[unit_jobs]]
+id = 11
+name = "Fell Tree"
+img = "tree--minus"
+
+[[unit_jobs]]
+name = "Remove Construction"
+img = "hammer--minus"
+sub.1 = { id = 13 }
+sub.2 = { id = 200, name = "Remove Stairs/Ramps", img = "stairs--minus" }
+sub.3 = { id = 88, name = "Destroy Building" }
+
+[[unit_jobs]]
+name = "Collect"
+img = "jar--arrow"
+sub.1 = { id = 14, name = "Collect Webs" }
+sub.2 = { id = 24, name = "Collect Sand" }
+sub.3 = { id = 217, name = "Collect Clay" }
+
+[[unit_jobs]]
+name = "Trade"
+img = "store-market-stall"
+sub.1 = { id = 15, name = "Bring Item to Depot", img = "wooden-box--arrow" }
+sub.2 = { id = 197, name = "Trade at Depot", img = "hand-shake" }
+
+[[unit_jobs]]
+name = "Shop"
+img = "store"
+sub.1 = { id = 16, name = "Bring Item to Shop", img = "shopping-basket--arrow" }
+sub.2 = { id = 47, name = "Go Shopping" }
+sub.3 = { id = 48, name = "Go Shopping" }
+
+[[unit_jobs]]
+id = 17
+name = "Eat"
+img = "cutlery"
+
+[[unit_jobs]]
+name = "Provision"
+img = "paper-bag--plus"
+sub.1 = { id = 18, name = "Get Provisions" }
+sub.2 = { id = 21, name = "Fill Waterskin", img = "water--plus" }
+sub.3 = { id = 22, name = "Fill Waterskin", img = "water--plus" }
+
+[[unit_jobs]]
+name = "Drink"
+img = "ale"
+sub.1 = { id = 19 }
+sub.2 = { id = 20 }
+
+[[unit_jobs]]
+id = 23
+name = "Sleep"
+img = "moon"
+
+[[unit_jobs]]
+name = "Hunt/Fish/Trapping"
+img = "bow"
+sub.1 = { id = 25, name = "Fish", img = "carp" }
+sub.2 = { id = 26, name = "Hunt" }
+sub.3 = { id = 27, name = "Hunt Small Animal" }
+sub.4 = { id = 107, name = "Bait Trap with Meat/Gem/Fish" }
+
+[[unit_jobs]]
+id = 28
+name = "Kidnap"
+img = "user-thief-baldie"
+
+[[unit_jobs]]
+name = "Justice"
+img = "balance"
+sub.1 = { id = 29, name = "Beat Criminal" }
+sub.2 = { id = 223, name = "Executing Criminal" }
+
+[[unit_jobs]]
+id = 30
+name = "Starting Fist Fight"
+img = "crossed-swords"
+
+[[unit_jobs]]
+name = "Taxes"
+img = "money-bag-dollar"
+sub.1 = { id = 31, name = "Collect Taxes", img = "money-bag--arrow" }
+sub.2 = { id = 32, name = "Guard Tax Collector", img = "shield" }
+
+[[unit_jobs]]
+name = "Catch Animal"
+img = "bug--arrow"
+sub.1 = { id = 33, name = "Catch Live Land Animal" }
+sub.2 = { id = 34, name = "Catch Live Fish", img = "carp" }
+
+[[unit_jobs]]
+id = 35
+name = "Return Kill"
+img = "arrow-return"
+
+[[unit_jobs]]
+id = 36
+name = "Store Owned Item"
+img = "safe--plus"
+
+[[unit_jobs]]
+id = 37
+name = "Place Item in Tomb"
+img = "headstone--plus"
+
+[[unit_jobs]]
+id = 38
+name = "Store Item in Stockpile"
+img = "cart-box"
+
+[[unit_jobs]]
+name = "Store Item"
+img = "box--arrow"
+sub.1 = { id = 39, name = "Store Item in Bag", img = "money-bag--in" }
+sub.2 = { id = 40, name = "Store Item in Location", img = "chest--in" }
+sub.3 = { id = 41, name = "Store Weapon" }
+sub.4 = { id = 42, name = "Store Armor" }
+sub.5 = { id = 43, name = "Store Item in Barrel" }
+sub.6 = { id = 44, name = "Store Item in Bin", img = "inbox--in" }
+
+[[unit_jobs]]
+id = 45
+name = "Seek Artifact"
+img = "eye--arrow"
+
+[[unit_jobs]]
+id = 46
+name = "Seek Infant"
+img = "heart--arrow"
+
+[[unit_jobs]]
+name = "Clean"
+img = "broom"
+sub.1 = { id = 49 }
+sub.2 = { id = 144, name = "Clean Trap" }
+
+[[unit_jobs]]
+id = 51
+name = "Pickup Equipment"
+img = "toolbox--arrow"
+
+[[unit_jobs]]
+id = 52
+name = "Dump Item"
+img = "box--minus"
+
+[[unit_jobs]]
+name = "Strange Mood"
+img = "exclamation-white"
+sub.1 = { id = 53, name = "[Strange] Mood (Crafter)" }
+sub.2 = { id = 54, name = "[Strange] Mood (Jeweler)" }
+sub.3 = { id = 55, name = "[Strange] Mood (Smith)" }
+sub.4 = { id = 56, name = "[Strange] Mood (Magma Smith)" }
+sub.5 = { id = 57, name = "[Strange] Mood" }
+sub.6 = { id = 58, name = "[Strange] Mood" }
+sub.7 = { id = 59, name = "[Strange] Mood (Carpenter)" }
+sub.8 = { id = 60, name = "[Strange] Mood (Mason)" }
+sub.9 = { id = 61, name = "[Strange] Mood (Bowyer)" }
+sub.10 = { id = 62, name = "[Strange] Mood (Tanner)" }
+sub.11 = { id = 63, name = "[Strange] Mood (Clothier)" }
+sub.12 = { id = 64, name = "[Strange] Mood (Glassmaker)" }
+sub.13 = { id = 65, name = "[Strange] Mood (Mechanics)" }
+
+[[unit_jobs]]
+id = 66
+name = "Construct Building"
+img = "hammer-screwdriver"
+
+[[unit_jobs]]
+name = "Construct"
+img = "hammer-screwdriver"
+sub.1 = { id = 67, name = "Construct [mat] Door/Portal", img = "door--plus" }
+sub.2 = { id = 68, name = "Construct [mat] Floodgate" }
+sub.3 = { id = 198, name = "Construct [mat] Hatch Cover" }
+sub.4 = { id = 199, name = "Construct [mat] Grate", img = "grid" }
+sub.5 = { id = 69, name = "Construct [mat] Bed" }
+sub.6 = { id = 70, name = "Construct [mat] Chair/Throne", img = "chair--plus" }
+sub.7 = { id = 71, name = "Construct [mat] Casket/Sarcophagus/Coffin" }
+sub.8 = { id = 72, name = "Construct [mat] Table" }
+sub.9 = { id = 73, name = "Construct [mat] Box/Chest/Coffer", img = "chest--plus" }
+sub.10 = { id = 74, name = "Construct [mat] Bag", img = "chest--plus" }
+sub.11 = { id = 75, name = "Construct [mat] Bin", img = "inbox--plus" }
+sub.12 = { id = 76, name = "Construct [mat] Armor Stand" }
+sub.13 = { id = 77, name = "Construct [mat] Weapon Rack" }
+sub.14 = { id = 78, name = "Construct [mat] Cabinet", img = "drawer--plus" }
+sub.15 = { id = 79, name = "Construct [mat] Statue" }
+sub.16 = { id = 205, name = "Construct Traction Bench" }
+sub.17 = { id = 80, name = "Construct [mat] Blocks" }
+sub.18 = { id = 201, name = "Construct [mat] Quern" }
+sub.19 = { id = 202, name = "Construct [mat] Millstone" }
+sub.20 = { id = 210, name = "Construct Slab" }
+
+[[unit_jobs]]
+id = 81
+name = "Make Raw [mat]"
+img = "ice"
+
+[[unit_jobs]]
+name = "Make Crafts"
+img = "crown--plus"
+sub.1 = { id = 82, name = "Make [mat] Crafts" }
+sub.2 = { id = 128, name = "Make Totem", img = "skull--plus" }
+sub.3 = { id = 230, name = "Make [mat] Figurine" }
+sub.4 = { id = 231, name = "Make [mat] Amulet" }
+sub.5 = { id = 232, name = "Make [mat] Scepter" }
+sub.6 = { id = 233, name = "Make [mat] Crown" }
+sub.7 = { id = 234, name = "Make [mat] Ring" }
+sub.8 = { id = 235, name = "Make [mat] Earring" }
+sub.9 = { id = 236, name = "Make [mat] Bracelet" }
+sub.10 = { id = 237, name = "Make [mat] Large Gem" }
+
+[[unit_jobs]]
+id = 83
+name = "Mint [mat] Coins"
+img = "money-coin"
+
+[[unit_jobs]]
+name = "Cut Gems/Glass"
+img = "diamond"
+sub.1 = { id = 84, name = "Cut [mat] Gems" }
+sub.2 = { id = 85, name = "Cut [mat] Glass" }
+sub.3 = { id = 111, name = "Polish [mat] Stones" }
+
+[[unit_jobs]]
+name = "Smelting"
+img = "furnace"
+sub.1 = { id = 89, name = "Smelt [mat] Ore" }
+sub.2 = { id = 90, name = "Melt a Metal Object" }
+sub.3 = { id = 91, name = "Extract Metal Strands" }
+
+[[unit_jobs]]
+name = "Agriculture"
+img = "leaf-plant"
+sub.1 = { id = 92, name = "Planting [seeds]", img = "beans" }
+sub.2 = { id = 93, name = "Harvest Plants", img = "leaf--arrow" }
+sub.3 = { id = 188, name = "Fertilize Field", img = "grid-small-dot" }
+sub.4 = { id = 12, name = "Gather Plants", img = "mushroom--arrow" }
+
+[[unit_jobs]]
+name = "Animal Training"
+img = "bell"
+sub.1 = { id = 94, name = "Train Hunting Animal", img = "bell-green" }
+sub.2 = { id = 95, name = "Train War Animal", img = "bell-red" }
+sub.3 = { id = 224, name = "Train Animal" }
+
+[[unit_jobs]]
+name = "Forge/Make Armor/Weapon/Shield"
+img = "status-forge"
+sub.1 = { id = 96, name = "Forge/Make [mat] Weapon", img = "weapon" }
+sub.2 = { id = 100, name = "Forge/Make [mat] Armor", img = "armor" }
+sub.3 = { id = 101, name = "Forge/Make [mat] Helm", img = "helm" }
+sub.4 = { id = 102, name = "Forge/Make [mat] Pants", img = "armor" }
+sub.5 = { id = 118, name = "Forge/Make [mat] Shield", img = "shield" }
+sub.6 = { id = 116, name = "Forge/Make [mat] Handwear", img = "glove" }
+sub.7 = { id = 117, name = "Forge/Make [mat] Footwear", img = "boot" }
+
+[[unit_jobs]]
+name = "Decorate/Encrust/Stud"
+img = "ruby"
+sub.1 = { id = 103, name = "Stud with [mat]" }
+sub.2 = { id = 86, name = "Encrust with [mat] Gems" }
+sub.3 = { id = 87, name = "Encrust with Glass" }
+sub.4 = { id = 145, name = "Encrust with [mat] Stones" }
+sub.5 = { id = 130, name = "Decorate With [mat]" }
+
+[[unit_jobs]]
+name = "Butcher"
+img = "knife-bloody"
+sub.1 = { id = 183, name = "Slaughter Animal" }
+sub.2 = { id = 104, name = "Butcher an Animal" }
+sub.3 = { id = 105, name = "Prepare a Raw Fish", img = "fish" }
+
+[[unit_jobs]]
+name = "Milk/Cheese"
+img = "milk-cheese"
+sub.1 = { id = 108, name = "Milk Creature", img = "milk" }
+sub.2 = { id = 109, name = "Make Cheese", img = "cheese" }
+
+[[unit_jobs]]
+name = "Plant Processing"
+img = "leaf--plus"
+sub.1 = { id = 106, name = "Mill Plants" }
+sub.2 = { id = 110, name = "Process Plants" }
+sub.3 = { id = 112, name = "Process Plants (Vial)" }
+sub.4 = { id = 113, name = "Process Plants (Barrel)" }
+
+[[unit_jobs]]
+id = 114
+name = "Prepare Meal"
+img = "meat"
+
+[[unit_jobs]]
+name = "Forge/Make Item"
+img = "status-forge"
+sub.1 = { id = 203, name = "Forge/Make [mat] Splint", img = "hammer-screwdriver" }
+sub.2 = { id = 204, name = "Forge/Make [mat] Crutch", img = "hammer-screwdriver" }
+sub.3 = { id = 98, name = "Forge/Make [mat] Catapult Parts", img = "hammer-screwdriver" }
+sub.4 = { id = 99, name = "Forge/Make [mat] Ballista Parts", img = "hammer-screwdriver" }
+sub.5 = { id = 120, name = "Forge/Make [mat] Chain/Rope" }
+sub.6 = { id = 121, name = "Forge/Make [mat] Waterskin/Vial/Flask" }
+sub.7 = { id = 122, name = "Forge/Make [mat] Mug/Goblet/Cup" }
+sub.8 = { id = 123, name = "Forge/Make [mat] Toy" }
+sub.9 = { id = 124, name = "Forge/Make [mat] Animal Trap" }
+sub.10 = { id = 125, name = "Forge/Make [mat] Barrel" }
+sub.11 = { id = 126, name = "Forge/Make [mat] Bucket" }
+sub.12 = { id = 131, name = "Make [mat] Backpack" }
+sub.13 = { id = 132, name = "Make [mat] Quiver" }
+sub.14 = { id = 139, name = "Forge/Make [mat] Mechanisms", img = "gear--plus" }
+sub.15 = { id = 216, name = "Forge/Make [mat] Tool" }
+sub.16 = { id = 119, name = "Forge/Make [mat] Cage" }
+sub.17 = { id = 127, name = "Make Window" }
+sub.18 = { id = 97, name = "Forge [mat] Anvil" }
+sub.19 = { id = 193, name = "Forge/Make [mat] Pipe Section" }
+
+[[unit_jobs]]
+name = "Forge/Make Ammunition"
+img = "status-forge"
+sub.1 = { id = 129, name = "Forge/Make [mat] Ammunition" }
+sub.2 = { id = 133, name = "Forge [mat] Ballista Arrow Head" }
+sub.3 = { id = 134, name = "Assemble Siege Ammunition", img = "hammer-screwdriver" }
+
+[[unit_jobs]]
+name = "Siege Weapon"
+sub.1 = { id = 135, name = "Load Catapult" }
+sub.2 = { id = 136, name = "Load Ballista" }
+sub.3 = { id = 137, name = "Fire Catapult" }
+sub.4 = { id = 138, name = "Fire Ballista" }
+
+[[unit_jobs]]
+name = "Traps"
+img = "gear-small"
+sub.1 = { id = 140, name = "Forge/Make Trap Component" }
+sub.2 = { id = 141, name = "Load Cage Trap" }
+sub.3 = { id = 142, name = "Load Stone Trap" }
+sub.4 = { id = 143, name = "Load Weapon Trap" }
+
+[[unit_jobs]]
+name = "Levers/Links"
+img = "switch"
+sub.1 = { id = 146, name = "Link a Building to Trigger", img = "switch-network" }
+sub.2 = { id = 147, name = "Pull the Lever" }
+
+[[unit_jobs]]
+name = "Extraction"
+img = "pipette"
+sub.1 = { id = 149, name = "Extract from Plants" }
+sub.2 = { id = 150, name = "Extract from Raw Fish" }
+sub.3 = { id = 151, name = "Extract from Animal" }
+
+[[unit_jobs]]
+name = "Animal Taming/Chains"
+img = "animal"
+sub.1 = { id = 152, name = "Tame a Small Animal" }
+sub.2 = { id = 153, name = "Tame Animal" }
+sub.3 = { id = 154, name = "Chain Animal", img = "chain" }
+sub.4 = { id = 155, name = "Unchain Animal", img = "chain-unchain" }
+sub.5 = { id = 156, name = "Unchain Pet", img = "chain-unchain" }
+sub.6 = { id = 157, name = "Release Large Creature", img = "chain-unchain" }
+sub.7 = { id = 158, name = "Release Pet", img = "chain-unchain" }
+sub.8 = { id = 159, name = "Release Small Creature", img = "chain-unchain" }
+sub.9 = { id = 160, name = "Handle Small Creature" }
+sub.10 = { id = 161, name = "Handle Large Creature" }
+sub.11 = { id = 162, name = "Cage Large Creature", img = "chain" }
+sub.12 = { id = 163, name = "Cage Small Creature", img = "chain" }
+
+[[unit_jobs]]
+name = "Medical"
+img = "first-aid-kit"
+sub.1 = { id = 50, name = "Rest", img = "bandaid--exclamation" }
+sub.2 = { id = 164, name = "Recover Wounded", img = "bandaid--arrow" }
+sub.3 = { id = 165, name = "Diagnose Patient", img = "x-ray" }
+sub.4 = { id = 166, name = "Immobilize Break" }
+sub.5 = { id = 167, name = "Dress Wound" }
+sub.6 = { id = 168, name = "Clean Patient", img = "soap" }
+sub.7 = { id = 169, name = "Surgery" }
+sub.8 = { id = 170, name = "Suture" }
+sub.9 = { id = 171, name = "Set Bone" }
+sub.10 = { id = 172, name = "Place In Traction" }
+sub.11 = { id = 207, name = "Bring Crutch" }
+sub.12 = { id = 208, name = "Apply Cast" }
+
+[[unit_jobs]]
+name = "Aquarium/Pond"
+img = "water"
+sub.1 = { id = 173, name = "Drain Aquarium" }
+sub.2 = { id = 174, name = "Fill Aquarium", img = "paint-can--arrow" }
+sub.3 = { id = 175, name = "Fill Pond", img = "paint-can--arrow" }
+
+[[unit_jobs]]
+name = "Help"
+sub.1 = { id = 176, name = "Give Water", img = "water--arrow" }
+sub.2 = { id = 177, name = "Give Food", img = "bread--arrow" }
+
+[[unit_jobs]]
+name = "Help (Pet)"
+img = "animal"
+sub.1 = { id = 178, name = "Give Pet Water", img = "water--arrow" }
+sub.2 = { id = 179, name = "Give Pet Food", img = "bread--arrow" }
+sub.3 = { id = 180, name = "Recover Pet" }
+
+[[unit_jobs]]
+name = "Pit/Pond Creature"
+img = "zone--plus"
+sub.1 = { id = 181, name = "Pit/Pond Large Animal" }
+sub.2 = { id = 182, name = "Pit/Pond Small Animal" }
+
+[[unit_jobs]]
+name = "Make Ash/Charcoal"
+img = "furnace"
+sub.1 = { id = 184, name = "Make Charcoal" }
+sub.2 = { id = 185, name = "Make Ash" }
+
+[[unit_jobs]]
+name = "Make Lye/Potash"
+img = "cup2"
+sub.1 = { id = 186, name = "Make Lye" }
+sub.2 = { id = 187, name = "Make Potash From Lye" }
+sub.3 = { id = 189, name = "Make Potash From Ash" }
+
+[[unit_jobs]]
+name = "Weave/Dye/Sew Cloth"
+sub.1 = { id = 115, name = "Weave Cloth" }
+sub.2 = { id = 190, name = "Dye Thread", img = "color--plus" }
+sub.3 = { id = 191, name = "Dye Cloth", img = "color--plus" }
+sub.4 = { id = 192, name = "Sew [mat] Image" }
+
+[[unit_jobs]]
+id = 194
+name = "Operate Pump"
+
+[[unit_jobs]]
+name = "Administration"
+sub.1 = { id = 195, name = "Manage Work Orders", img = "book-open-list" }
+sub.2 = { id = 196, name = "Update Stockpile Records", img = "abacus" }
+sub.3 = { id = -5, name = "Attend Meeting", img = "hand-shake--arrow" }
+
+[[unit_jobs]]
+id = 206
+name = "Clean Self"
+img = "soap"
+
+[[unit_jobs]]
+id = 209
+name = "[Reaction]"
+reaction_class = "reaction_other"
+img = "cup2"
+
+[[unit_jobs]]
+id = 211
+name = "Engrave Memorial Slab"
+img = "headstone-cross"
+
+[[unit_jobs]]
+id = 212
+name = "Shear Creature"
+img = "animal"
+
+[[unit_jobs]]
+id = 213
+name = "Spin Thread"
+img = "spinning"
+
+[[unit_jobs]]
+name = "Pen/Pasture Animal"
+img = "zone--plus"
+sub.1 = { id = 214, name = "Pen/Pasture Large Animal" }
+sub.2 = { id = 215, name = "Pen/Pasture Small Animal" }
+
+[[unit_jobs]]
+name = "Beekeeping"
+img = "bee"
+sub.1 = { id = 218, name = "Install Colony In Hive", img = "beehive--plus" }
+sub.2 = { id = 219, name = "Collect Hive Products", img = "beehive--arrow" }
+
+[[unit_jobs]]
+id = 220
+name = "Causing Trouble"
+img = "hand-finger"
+
+[[unit_jobs]]
+id = 221
+name = "Drinking Blood"
+img = "exclamation-white"
+
+[[unit_jobs]]
+id = 222
+name = "Reporting Crime"
+img = "balloon-prohibition"
+
+[[unit_jobs]]
+name = "Minecart"
+sub.1 = { id = 225, name = "Carving Track", img = "shovel" }
+sub.2 = { id = 226, name = "Pushing Minecart", img = "cart-box" }
+sub.3 = { id = 227, name = "Placing Minecart", img = "hammer-screwdriver" }
+sub.4 = { id = 228, name = "Storing Item In Minecart", img = "cart-box" }
+
+[[unit_jobs]]
+id = 229
+name = "Geld Animal"
+img = "knife-bloody"
+
+[[unit_jobs]]
+name = "Idle/Break"
+img = "cross-small"
+sub.1 = { id = -2, name = "On Break", img = "hourglass" }
+sub.2 = { id = -3, name = "No Job" }
+
+[[unit_jobs]]
+id = -1
+name = "Soldier"
+img = "exclamation-shield-frame"
+is_military = 1
+
+[[unit_jobs]]
+id = -4
+name = "Caged"
+img = "lock-exclamation"

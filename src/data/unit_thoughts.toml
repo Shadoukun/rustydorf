@@ -1,0 +1,1136 @@
+[[unit_thoughts]]
+title = "Conflict"
+thought = "while in conflict"
+
+[[unit_thoughts]]
+title = "Trauma"
+thought = "after experiencing trauma"
+
+[[unit_thoughts]]
+title = "Death (Witnessed)"
+thought = "after witnessing death"
+
+[[unit_thoughts]]
+title = "Death (Unexpected)"
+thought = "at the unexpected death of somebody"
+
+[[unit_thoughts]]
+title = "Death"
+thought = "at somebody's death"
+
+[[unit_thoughts]]
+title = "Killed"
+thought = "while killing somebody"
+
+[[unit_thoughts]]
+title = "Love Separated"
+thought = "at being separated from a loved one"
+
+[[unit_thoughts]]
+title = "Love Reunited"
+thought = "after being reunited with a loved one"
+
+[[unit_thoughts]]
+title = "Conflict Joined"
+thought = "joining an existing conflict"
+
+[[unit_thoughts]]
+title = "Crafted Masterwork"
+thought = "after producing a masterwork"
+
+[[unit_thoughts]]
+title = "Crafted Artifact"
+thought = "after creating an artifact"
+
+[[unit_thoughts]]
+title = "Mastered Skill"
+thought = "upon becoming a master [skill]"
+
+[[unit_thoughts]]
+title = "New Romance"
+thought = "as they were caught up in a new romance"
+
+[[unit_thoughts]]
+title = "Birth"
+thought = "after becoming a parent"
+
+[[unit_thoughts]]
+title = "Conflict Proximity"
+thought = "being near to a conflict"
+
+[[unit_thoughts]]
+title = "Cancelled Agreement"
+thought = "after an agreement was cancelled"
+
+[[unit_thoughts]]
+title = "Traveling"
+thought = "upon joining a traveling group"
+
+[[unit_thoughts]]
+title = "Site Controlled"
+thought = "after a site was controlled"
+
+[[unit_thoughts]]
+title = "Cancelled Tribute"
+thought = "after a tribute cancellation"
+
+[[unit_thoughts]]
+title = "Incident"
+thought = "after an incident"
+
+[[unit_thoughts]]
+title = "Heard Rumor"
+thought = "after hearing a rumor"
+
+[[unit_thoughts]]
+title = "Military Removed"
+thought = "after being removed from a military group"
+
+[[unit_thoughts]]
+title = "Stranger (Weapon)"
+thought = "when a stranger advanced with a weapon"
+
+[[unit_thoughts]]
+title = "Stranger (Sneaking)"
+thought = "after seeing a stranger sneaking around"
+
+[[unit_thoughts]]
+title = "Vampire"
+thought = "after witnessing a night creature drinking blood"
+
+[[unit_thoughts]]
+title = "Complained"
+thought = ""
+subthoughts_type = 0
+
+[[unit_thoughts]]
+title = "Complaint Received"
+thought = ""
+subthoughts_type = 1
+
+[[unit_thoughts]]
+title = "Admired Building"
+thought = "seeing a [building]"
+
+[[unit_thoughts]]
+title = "Admired Own Building"
+thought = "seeing their own [building]"
+
+[[unit_thoughts]]
+title = "Admired Arranged Building"
+thought = "seeing a tastefully arranged [building]"
+
+[[unit_thoughts]]
+title = "Admired Own Arranged Building"
+thought = "seeing their own tastefully arranged [building]"
+
+[[unit_thoughts]]
+title = "Death (Pet)"
+thought = "after losing a pet"
+
+[[unit_thoughts]]
+title = "Tantrum (Thrown)"
+thought = "after throwing something"
+
+[[unit_thoughts]]
+title = "Jail (Released)"
+thought = "after being released from confinement"
+
+[[unit_thoughts]]
+title = "Miscarriage"
+thought = "after a miscarriage"
+
+[[unit_thoughts]]
+title = "Miscarriage (Spouse)"
+thought = "after their spouse's miscarriage"
+
+[[unit_thoughts]]
+title = "Clothing (Old)"
+thought = "to be wearing old clothing"
+
+[[unit_thoughts]]
+title = "Clothing (Tattered)"
+thought = "to be wearing tattered clothing"
+
+[[unit_thoughts]]
+title = "Clothing (Rotted)"
+thought = "to have clothes rot off of their body"
+
+[[unit_thoughts]]
+title = "Ghost (Nightmare)"
+thought = "after being tormented in nightmares by [dead somebody]"
+subthoughts_type = 5
+
+[[unit_thoughts]]
+title = "Ghost (Haunt)"
+thought = "after being haunted/tormented/possessed by [dead somebody]"
+subthoughts_type = 5
+
+[[unit_thoughts]]
+title = "Spar"
+thought = "after a sparring session"
+
+[[unit_thoughts]]
+title = "Complaint (Unable)"
+thought = "after being unable to [meet]"
+subthoughts_type = 3
+
+[[unit_thoughts]]
+title = "Military (Patrol)"
+thought = "during long patrol duty"
+
+[[unit_thoughts]]
+title = "Sun (Nausea)"
+thought = "after being nauseated by the sun"
+
+[[unit_thoughts]]
+title = "Sun (Irritated)"
+thought = "at being out in the sunshine again"
+
+[[unit_thoughts]]
+title = "Drowsy"
+thought = "when drowsy"
+
+[[unit_thoughts]]
+title = "Very Drowsy"
+thought = "when utterly sleep-deprived"
+
+[[unit_thoughts]]
+title = "Thirst"
+thought = "when thirsty"
+
+[[unit_thoughts]]
+title = "Dehydration"
+thought = "when dehydrated"
+
+[[unit_thoughts]]
+title = "Hunger"
+thought = "when hungry"
+
+[[unit_thoughts]]
+title = "Starvation"
+thought = "when starving"
+
+[[unit_thoughts]]
+title = "Injuries (Major)"
+thought = "after suffering a major injury"
+
+[[unit_thoughts]]
+title = "Injuries (Minor)"
+thought = "after suffering a minor injury"
+
+[[unit_thoughts]]
+title = "Sleep (Noise)"
+thought = "after "
+subthoughts_type = 4
+
+[[unit_thoughts]]
+title = "Injuries (Rest)"
+thought = "after being able to rest and recuperate"
+
+[[unit_thoughts]]
+title = "Weather (Freakish)"
+thought = "when caught in freakish weather"
+
+[[unit_thoughts]]
+title = "Weather (Rain)"
+thought = "when caught in the rain"
+
+[[unit_thoughts]]
+title = "Weather (Snow Storm)"
+thought = "when caught in a snow storm"
+
+[[unit_thoughts]]
+title = "Miasma"
+thought = "after retching on a miasma"
+
+[[unit_thoughts]]
+title = "Smoke"
+thought = "after choking on smoke underground"
+
+[[unit_thoughts]]
+title = "Waterfall"
+thought = "being near to a waterfall"
+
+[[unit_thoughts]]
+title = "Dust"
+thought = "after choking on dust underground"
+
+[[unit_thoughts]]
+title = "Demands"
+thought = "considering the state of demands"
+
+[[unit_thoughts]]
+title = "Punishment (Improper)"
+thought = "that a criminal could not be properly punished"
+
+[[unit_thoughts]]
+title = "Punishment (Reduced)"
+thought = "to have their punishment reduced"
+
+[[unit_thoughts]]
+title = "Leader (Elected)"
+thought = "to be elected"
+
+[[unit_thoughts]]
+title = "Leader (Re-elected)"
+thought = "to be re-elected"
+
+[[unit_thoughts]]
+title = "Request Approved"
+thought = "having a request approved"
+
+[[unit_thoughts]]
+title = "Request Ignored"
+thought = "having a request ignored"
+
+[[unit_thoughts]]
+title = "Punishment (None)"
+thought = "that nobody could be punished for a failure"
+
+[[unit_thoughts]]
+title = "Punishment (Delayed)"
+thought = "to have their punishment delayed"
+
+[[unit_thoughts]]
+title = "Punishment (Delayed)"
+thought = "after the delayed punishment of a criminal"
+
+[[unit_thoughts]]
+title = "Prison Equipment"
+thought = "considering the scarcity of cages and chains"
+
+[[unit_thoughts]]
+title = "Mandate (Ignored)"
+thought = "having a mandate ignored"
+
+[[unit_thoughts]]
+title = "Mandate (Missed)"
+thought = "having a mandate deadline missed"
+
+[[unit_thoughts]]
+title = "Work (Lack)"
+thought = "after the lack of work last season"
+
+[[unit_thoughts]]
+title = "Tantrum (Smashed)"
+thought = "after smashing up a building"
+
+[[unit_thoughts]]
+title = "Tantrum (Toppled)"
+thought = "after toppling something over"
+
+[[unit_thoughts]]
+title = "Nobility (Promotion)"
+thought = "after receiving a higher rank of nobility"
+
+[[unit_thoughts]]
+title = "Nobility"
+thought = "after entering the nobility"
+
+[[unit_thoughts]]
+title = "Cave-in"
+thought = "after being knocked out during a cave-in"
+
+[[unit_thoughts]]
+title = "Mandate (Met)"
+thought = "to have a mandate deadline met"
+
+[[unit_thoughts]]
+title = "Clothing (No Pants)"
+thought = "to have no pants"
+
+[[unit_thoughts]]
+title = "Clothing (No Shirt)"
+thought = "to have no shirt"
+
+[[unit_thoughts]]
+title = "Clothing (No Shoes)"
+thought = "to have no shoes"
+
+[[unit_thoughts]]
+title = "Ate Pet"
+thought = "after being forced to eat a treasured pet to survive"
+
+[[unit_thoughts]]
+title = "Ate Liked Creature"
+thought = "after being forced to eat a beloved creature to survive"
+
+[[unit_thoughts]]
+title = "Ate Vermin"
+thought = "after being forced to eat vermin to survive"
+
+[[unit_thoughts]]
+title = "Tantrum (Fight)"
+thought = "after starting a fist fight"
+
+[[unit_thoughts]]
+title = "Punishment (Administered Beating)"
+thought = "after punishing somebody with a beating"
+
+[[unit_thoughts]]
+title = "Punished"
+thought = "after being beaten"
+
+[[unit_thoughts]]
+title = "Punishment (Administered Hammering)"
+thought = "after beating somebody with a hammer"
+
+[[unit_thoughts]]
+title = "Punished (Hammerer)"
+thought = "after being beaten with a hammer"
+
+[[unit_thoughts]]
+title = "Punishment (Missing Hammer)"
+thought = "after being unable to find a hammer"
+
+[[unit_thoughts]]
+title = "Meal (Weary)"
+thought = "eating the same old food"
+
+[[unit_thoughts]]
+title = "Meal (Rotten)"
+thought = "after eating rotten food"
+
+[[unit_thoughts]]
+title = "Meal"
+thought = "after eating a [quality meal]"
+subthoughts_type = 6
+
+[[unit_thoughts]]
+title = "Drink"
+thought = "after having a [quality drink] drink"
+subthoughts_type = 7
+
+[[unit_thoughts]]
+title = "Insufficient Chests"
+thought = "not having enough chests"
+
+[[unit_thoughts]]
+title = "Insufficient Cabinets"
+thought = "not having enough cabinets"
+
+[[unit_thoughts]]
+title = "Insufficient Weapon Racks"
+thought = "not having enough weapon racks"
+
+[[unit_thoughts]]
+title = "Insufficient Armor Stands"
+thought = "not having enough armor stands"
+
+[[unit_thoughts]]
+title = "Room (Pretension)"
+thought = "by a lesser's pretentious room arrangements"
+
+[[unit_thoughts]]
+title = "Insufficient Tables"
+thought = "at the lack of dining tables"
+
+[[unit_thoughts]]
+title = "Crowded Tables"
+thought = "eating at a crowded table"
+
+[[unit_thoughts]]
+title = "Dining Room"
+thought = "dining in a [quality] dining room"
+subthoughts_type = 8
+
+[[unit_thoughts]]
+title = "Dining (None)"
+thought = "being without a proper dining room"
+
+[[unit_thoughts]]
+title = "Insufficient Chairs"
+thought = "at the lack of chairs"
+
+[[unit_thoughts]]
+title = "Training (Bond)"
+thought = "after forming a bond with an animal training partner"
+
+[[unit_thoughts]]
+title = "Rescued"
+thought = "after being rescued"
+
+[[unit_thoughts]]
+title = "Rescued Other"
+thought = "after bringing somebody to rest in bed"
+
+[[unit_thoughts]]
+title = "Work (Satisfied)"
+thought = "at work"
+
+[[unit_thoughts]]
+title = "Tax (Lost Property)"
+thought = "after losing property to the tax collector's escorts"
+
+[[unit_thoughts]]
+title = "Taxed"
+thought = "after being taxed"
+
+[[unit_thoughts]]
+title = "LackProtection"
+thought = "not having adequate protection"
+
+[[unit_thoughts]]
+title = "Tax (Inaccessible)"
+thought = "after being unable to reach a room for tax collection"
+
+[[unit_thoughts]]
+title = "Tax (Misinformed)"
+thought = "after being misinformed about a room for tax collection"
+
+[[unit_thoughts]]
+title = "Nobility (Sycophant)"
+thought = "having pleased a noble"
+
+[[unit_thoughts]]
+title = "Tax (Smooth)"
+thought = "that the tax collection went smoothly"
+
+[[unit_thoughts]]
+title = "Nobility (Disappointed)"
+thought = "having disappointed a noble"
+
+[[unit_thoughts]]
+title = "Tax (Rough)"
+thought = "that the tax collection didn't go smoothly"
+
+[[unit_thoughts]]
+title = "Social (Friend)"
+thought = "after making a friend"
+
+[[unit_thoughts]]
+title = "Social (Grudge)"
+thought = "after forming a grudge"
+
+[[unit_thoughts]]
+title = "Vermin (Annoyed)"
+thought = "after being accosted by vermin"
+
+[[unit_thoughts]]
+title = "Vermin (Proximity)"
+thought = "after being near vermin"
+
+[[unit_thoughts]]
+title = "Vermin (Pestered)"
+thought = "after being pestered by vermin"
+
+[[unit_thoughts]]
+title = "Acquisition"
+thought = "after a satisfying acquisition"
+
+[[unit_thoughts]]
+title = "Pet (Adopted)"
+thought = "after adopting a new pet"
+
+[[unit_thoughts]]
+title = "Punished (Jailed)"
+thought = "after being confined"
+
+[[unit_thoughts]]
+title = "Bath"
+thought = "after a bath"
+
+[[unit_thoughts]]
+title = "Bath (Soapy)"
+thought = "after a soapy bath"
+
+[[unit_thoughts]]
+title = "Killed (Sparring)"
+thought = "after killing somebody by accident while sparring"
+
+[[unit_thoughts]]
+title = "Attacked"
+thought = "after being attacked"
+
+[[unit_thoughts]]
+title = "Attacked (Undead)"
+thought = "after being attacked by the dead"
+
+[[unit_thoughts]]
+title = "Drink (Weary)"
+thought = "drinking the same old booze"
+
+[[unit_thoughts]]
+title = "Drank Blood"
+thought = "while forced to drink bloody water"
+
+[[unit_thoughts]]
+title = "Drank Slime"
+thought = "while forced to drink slime"
+
+[[unit_thoughts]]
+title = "Drank Vomit"
+thought = "while forced to drink vomit"
+
+[[unit_thoughts]]
+title = "Drank goo"
+thought = "while forced to drink goo"
+
+[[unit_thoughts]]
+title = "Drank ichor"
+thought = "while forced to drink ichor"
+
+[[unit_thoughts]]
+title = "Drank pus"
+thought = "while forced to drink pus"
+
+[[unit_thoughts]]
+title = "Drank Nasty Water"
+thought = "drinking nasty water"
+
+[[unit_thoughts]]
+title = "Drank Spoiled"
+thought = "after drinking something spoiled"
+
+[[unit_thoughts]]
+title = "Insufficient Wells"
+thought = "after drinking water without a well"
+
+[[unit_thoughts]]
+title = "Caged (Proximity)"
+thought = "after being near a caged animal"
+
+[[unit_thoughts]]
+title = "Insufficient Bedrooms"
+thought = "after sleeping without a proper room"
+
+[[unit_thoughts]]
+title = "Bedroom"
+thought = "after sleeping in a [quality] bedroom"
+subthoughts_type = 9
+
+[[unit_thoughts]]
+title = "Sleep (Floor)"
+thought = "after sleeping on the floor"
+
+[[unit_thoughts]]
+title = "Sleep (Mud)"
+thought = "after sleeping in the mud"
+
+[[unit_thoughts]]
+title = "Sleep (Grass)"
+thought = "after sleeping in the grass"
+
+[[unit_thoughts]]
+title = "Sleep (Rough Floor)"
+thought = "after sleeping on a rough cave floor"
+
+[[unit_thoughts]]
+title = "Sleep (Rocks)"
+thought = "after sleeping on rocks"
+
+[[unit_thoughts]]
+title = "Sleep (Ice)"
+thought = "after sleeping on ice"
+
+[[unit_thoughts]]
+title = "Sleep (Dirt)"
+thought = "after sleeping in the dirt"
+
+[[unit_thoughts]]
+title = "Sleep (Driftwood)"
+thought = "after sleeping on a pile of driftwood"
+
+[[unit_thoughts]]
+title = "Art Defacement"
+thought = "after suffering the travesty of art defacement"
+
+[[unit_thoughts]]
+title = "Evicted"
+thought = "after being evicted"
+
+[[unit_thoughts]]
+title = "Birth"
+thought = "after giving birth to a baby"
+
+[[unit_thoughts]]
+title = "Birth (Spouse)"
+thought = "after becoming a parent of a baby"
+
+[[unit_thoughts]]
+title = "Injuries (Water)"
+thought = "after receiving water"
+
+[[unit_thoughts]]
+title = "Injuries (Gave Water)"
+thought = "after giving somebody water"
+
+[[unit_thoughts]]
+title = "Injuries (Food)"
+thought = "after receiving food"
+
+[[unit_thoughts]]
+title = "Injuries (Gave Food)"
+thought = "after giving somebody food"
+
+[[unit_thoughts]]
+title = "Social (Talked)"
+thought = "talking/visiting with [relation]"
+subthoughts_type = 2
+
+[[unit_thoughts]]
+title = "Office"
+thought = "conducting a meeting in a [setting] recently"
+subthoughts_type = 10
+
+[[unit_thoughts]]
+title = "Meeting (Bedroom)"
+thought = "conducting an official meeting in a bedroom"
+
+[[unit_thoughts]]
+title = "Meeting (Dining)"
+thought = "conducting an official meeting in a dining room"
+
+[[unit_thoughts]]
+title = "Insufficient Rooms"
+thought = "not having any rooms"
+
+[[unit_thoughts]]
+title = "Tomb"
+thought = "having a [quality] tomb after gaining another year"
+subthoughts_type = 9
+
+[[unit_thoughts]]
+title = "Insufficient Tombs"
+thought = "about not having a [quality] tomb after gaining another year"
+
+[[unit_thoughts]]
+title = "Nobility (Talked)"
+thought = "after talking to a pillar of society"
+
+[[unit_thoughts]]
+title = "Pet (Interacted)"
+thought = "after interacting with a pet"
+
+[[unit_thoughts]]
+title = "Conviction (Corpse)"
+thought = "after a long-dead corpse was convicted of a crime"
+
+[[unit_thoughts]]
+title = "Conviction (Animal)"
+thought = "after an animal was convicted of a crime"
+
+[[unit_thoughts]]
+title = "Conviction (Victim)"
+thought = "after the bizarre conviction against all reason of the victim of a crime"
+
+[[unit_thoughts]]
+title = "Conviction (Justice)"
+thought = "upon receiving justice through a criminal's conviction"
+
+[[unit_thoughts]]
+title = "Conviction (Justice)"
+thought = "when a family member received justice through a criminal's conviction"
+
+[[unit_thoughts]]
+title = "Decay"
+thought = "after being forced to endure the decay of [relation]"
+subthoughts_type = 2
+
+[[unit_thoughts]]
+title = "Unfulfilled"
+thought = "after [reason] for too long"
+subthoughts_type = 12
+
+[[unit_thoughts]]
+title = "Commune (Deity)"
+thought = "after communing with a deity"
+
+[[unit_thoughts]]
+title = "Drink (No Mug)"
+thought = "after having a drink without using a goblet, cup or mug"
+
+[[unit_thoughts]]
+title = "Research (Breakthrough)"
+thought = "after making a breakthrough concerning [research]"
+
+[[unit_thoughts]]
+title = "Research (Advancement)"
+thought = "after being unable to advance the study of [research]"
+
+[[unit_thoughts]]
+title = "Research (Ponder)"
+thought = "after pondering [research]"
+
+[[unit_thoughts]]
+title = "Research (Discuss)"
+thought = "after discussing [research]"
+
+[[unit_thoughts]]
+title = "Syndrome"
+thought = "due to [syndrome]"
+
+[[unit_thoughts]]
+title = "Performing"
+thought = "while performing"
+
+[[unit_thoughts]]
+title = "Performance (Watch)"
+thought = "after watching a performance"
+
+[[unit_thoughts]]
+title = "Troupe (Removed)"
+thought = "after being removed from a performance troupe"
+
+[[unit_thoughts]]
+title = "Learning (Topic)"
+thought = "after learning about [topic]"
+
+[[unit_thoughts]]
+title = "Learning (Skill)"
+thought = "after learning about [skill]"
+
+[[unit_thoughts]]
+title = "Learning (Book)"
+thought = "after learning [book]"
+
+[[unit_thoughts]]
+title = "Learning (Interaction)"
+thought = "after learning [interaction]"
+
+[[unit_thoughts]]
+title = "Learning (Poetry)"
+thought = "after learning [poetry]"
+
+[[unit_thoughts]]
+title = "Learning (Music)"
+thought = "after learning [music]"
+
+[[unit_thoughts]]
+title = "Learning (Dance)"
+thought = "after learning [dance]"
+
+[[unit_thoughts]]
+title = "Teaching (Topic)"
+thought = "after teaching [topic]"
+
+[[unit_thoughts]]
+title = "Teaching (Skill)"
+thought = "after teaching [skill]"
+
+[[unit_thoughts]]
+title = "Reading"
+thought = "after reading [book]"
+
+[[unit_thoughts]]
+title = "Writing"
+thought = "after writing [book]"
+
+[[unit_thoughts]]
+title = "Immigration (Residency)"
+thought = "after being granted residency"
+
+[[unit_thoughts]]
+title = "Immigration (Citizenship)"
+thought = "after being granted citizenship"
+
+[[unit_thoughts]]
+title = "Immigration (Residency Denied)"
+thought = "after being denied residency"
+
+[[unit_thoughts]]
+title = "Immigration (Citizenship Denied)"
+thought = "after being denied citizenship"
+
+[[unit_thoughts]]
+title = "Troupe (Left)"
+thought = "after leaving a performance troupe"
+
+[[unit_thoughts]]
+title = "Play (Make Believe)"
+thought = "after playing make believe"
+
+[[unit_thoughts]]
+title = "Play (Toy)"
+thought = "after playing with a toy"
+
+[[unit_thoughts]]
+title = "Dream About"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Dream"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Nightmare"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Argument"
+thought = "after getting into an argument"
+
+[[unit_thoughts]]
+title = "Military (Drills)"
+thought = "after combat drills"
+
+[[unit_thoughts]]
+title = "Military (Archery)"
+thought = "after practicing at the archery target"
+
+[[unit_thoughts]]
+title = "Improvement"
+thought = "upon improving [skill]"
+
+[[unit_thoughts]]
+title = "Clothing (Equipped)"
+thought = "after putting on a [quality item] item"
+subthoughts_type = 11
+
+[[unit_thoughts]]
+title = "Realize Value"
+thought = "after realizing the [level] of [value]"
+
+[[unit_thoughts]]
+title = "Opinion Storyteller"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Recitation"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Instrument Simulation"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Instrument Player"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Singer"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Chanter"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Dancer"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Story"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Poetry"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Music"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Opinion Dance"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Defeated"
+thought = "after defeating somebody"
+
+[[unit_thoughts]]
+title = "Favorite Possession"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Preserve Body"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Murdered"
+thought = "after murdering somebody"
+
+[[unit_thoughts]]
+title = "Historical Event Collection"
+thought = "during a historical event"
+
+[[unit_thoughts]]
+title = "View Own Display"
+thought = "after viewing a piece in a personal museum"
+
+[[unit_thoughts]]
+title = "View Display"
+thought = "after viewing a piece on display"
+
+[[unit_thoughts]]
+title = "Acquire Artifact"
+thought = "after acquiring an artifact"
+
+[[unit_thoughts]]
+title = "Deny Sanctuary"
+thought = "after a child was turned away from sanctuary"
+
+[[unit_thoughts]]
+title = "Caught Sneaking"
+thought = "after being caught sneaking"
+
+[[unit_thoughts]]
+title = "Gave Artifact"
+thought = "after an artifact was given away"
+
+[[unit_thoughts]]
+title = "See Dead Body"
+thought = "after seeing a dead body"
+
+[[unit_thoughts]]
+title = "Expelled"
+thought = "after being expelled"
+
+[[unit_thoughts]]
+title = "Relative Expelled"
+thought = "after a relative was expelled"
+
+[[unit_thoughts]]
+title = "Prey On Blood"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Unnaturally Ageless"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Scholarly Lecture"
+thought = "after a scholarly lecture"
+
+[[unit_thoughts]]
+title = "Performance"
+thought = "after a performance"
+
+[[unit_thoughts]]
+title = "Accepted Bribe"
+thought = "after accepting bribes in exchange for leniency"
+
+[[unit_thoughts]]
+title = "Embezzled Funds"
+thought = "after embezzling funds"
+
+[[unit_thoughts]]
+title = "Cut Of Corrupt Funds"
+thought = "after receiving a cut of corruptly-obtained funds"
+
+[[unit_thoughts]]
+title = "Abducted"
+thought = "after abducting somebody"
+
+[[unit_thoughts]]
+title = "From Afar"
+thought = "from afar"
+
+[[unit_thoughts]]
+title = "Temple Petition Accepted"
+thought = "after the acceptance of a petition for a temple"
+
+[[unit_thoughts]]
+title = "Temple Establishment"
+thought = "after the establishment of a temple"
+
+[[unit_thoughts]]
+title = "Temple Petition Rejected"
+thought = "after the rejection of a petition for a temple"
+
+[[unit_thoughts]]
+title = "Temple Petition Ignored"
+thought = "after a petition for a temple was ignored"
+
+[[unit_thoughts]]
+title = "Temple Establishment Abandoned"
+thought = "after an agreement to construct a temple was abandoned"
+
+[[unit_thoughts]]
+title = "Unknown 257"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Guildhall Petition Accepted"
+thought = "after the acceptance of a petition for a guildhall"
+
+[[unit_thoughts]]
+title = "Guildhall Establishment"
+thought = "after the establishment of a guildhall"
+
+[[unit_thoughts]]
+title = "Guildhall Petition Rejected"
+thought = "after the rejection of a petition for a guildhall"
+
+[[unit_thoughts]]
+title = "Guildhall Petition Ignored"
+thought = "after a petition for a guildhall was ignored"
+
+[[unit_thoughts]]
+title = "Guildhall Establishment Abandoned"
+thought = "after an agreement to construct a guildhall was abandoned"
+
+[[unit_thoughts]]
+title = "Infiltration Mission"
+thought = "during an infiltration mission"
+
+[[unit_thoughts]]
+title = "Break Up"
+thought = "after a break up"
+
+[[unit_thoughts]]
+title = "Divorced"
+thought = "after getting divorced"
+
+[[unit_thoughts]]
+title = "Unknown 266"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Unknown 267"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Unknown 268"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Unknown 269"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Unknown 270"
+thought = "??"
+
+[[unit_thoughts]]
+title = "Intellectual discussion"
+thought = "having an intellectual discussion with [relation]"
+subthoughts_type = 2
+
+[[unit_thoughts]]
+title = "Shared Own Insight"
+thought = "sharing a personal insight with [relation]"
+subthoughts_type = 2
+
+[[unit_thoughts]]
+title = "Shared Other Insight"
+thought = "sharing [relation]'s personal insight"
+subthoughts_type = 2
+
+[[unit_thoughts]]
+title = "Discussing Own Problems"
+thought = "discussing their problems with [relation]"
+subthoughts_type = 2
+
+[[unit_thoughts]]
+title = "Discussing Other Problems"
+thought = "discussing [relation]'s problems"
+subthoughts_type = 2
+
+[[unit_thoughts]]
+title = "Performing Rite Dedicated Temple"
+thought = "after performing the rites in a dedicated temple"
+
+[[unit_thoughts]]
+title = "Performing Rite Improperly Dedicated Temple"
+thought = "after incompletely performing the rites in an improperly dedicated temple"
+
+[[unit_thoughts]]
+title = "Performing Rite Undedicated Temple"
+thought = "after incompletely performing the rites in an undedicated temple"
+
+[[unit_thoughts]]
+title = "Commune Dedicated Temple"
+thought = "after communing with a deity in a dedicated temple"

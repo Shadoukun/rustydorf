@@ -1,0 +1,944 @@
+[[professions]]
+id = 0
+name = "Miner"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 1
+name = "Woodworker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 2
+name = "Carpenter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 3
+name = "Bowyer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 4
+name = "Woodcutter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 5
+name = "Stoneworker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 6
+name = "Stonecutter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 7
+name = "Stone Carver"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 8
+name = "Engraver"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 9
+name = "Mason"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 10
+name = "Ranger"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 11
+name = "Animal Caretaker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 12
+name = "Animal Trainer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 13
+name = "Hunter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 14
+name = "Trapper"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 15
+name = "Animal Dissector"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 16
+name = "Metalsmith"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 17
+name = "Furnace Operator"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 18
+name = "Weaponsmith"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 19
+name = "Armorer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 20
+name = "Blacksmith"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 21
+name = "Metalcrafter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 22
+name = "Jeweler"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 23
+name = "Gem Cutter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 24
+name = "Gem Setter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 25
+name = "Craftsman"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 26
+name = "Woodcrafter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 27
+name = "Stonecrafter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 28
+name = "Leatherworker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 29
+name = "Bone Carver"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 30
+name = "Weaver"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 31
+name = "Clothier"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 32
+name = "Glassmaker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 33
+name = "Potter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 34
+name = "Glazer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 35
+name = "Wax Worker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 36
+name = "Strand Extractor"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 37
+name = "Fishery Worker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 38
+name = "Fisherman"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 39
+name = "Fish Dissector"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 40
+name = "Fish Cleaner"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 41
+name = "Farmer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 42
+name = "Cheesemaker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 43
+name = "Milker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 44
+name = "Cook"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 45
+name = "Thresher"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 46
+name = "Miller"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 47
+name = "Butcher"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 48
+name = "Tanner"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 49
+name = "Dyer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 50
+name = "Planter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 51
+name = "Herbalist"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 52
+name = "Brewer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 53
+name = "Soap Maker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 54
+name = "Potash Maker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 55
+name = "Lye Maker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 56
+name = "Wood Burner"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 57
+name = "Shearer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 58
+name = "Spinner"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 59
+name = "Presser"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 60
+name = "Beekeeper"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 61
+name = "Engineer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 62
+name = "Mechanic"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 63
+name = "Siege Engineer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 64
+name = "Siege Operator"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 65
+name = "Pump Operator"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 66
+name = "Clerk"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 67
+name = "Administrator"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 68
+name = "Trader"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 69
+name = "Doctor"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 70
+name = "Diagnoser"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 71
+name = "Bone Doctor"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 72
+name = "Suturer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 73
+name = "Surgeon"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 74
+name = "Merchant"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 75
+name = "Hammerman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 76
+name = "Hammer Lord"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 77
+name = "Spearman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 78
+name = "Spearmaster"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 79
+name = "Crossbowman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 80
+name = "Elite Crossbowman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 81
+name = "Wrestler"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 82
+name = "Elite Wrestler"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 83
+name = "Axeman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 84
+name = "Axe Lord"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 85
+name = "Swordsman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 86
+name = "Swordsmaster"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 87
+name = "Maceman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 88
+name = "Mace Lord"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 89
+name = "Pikeman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 90
+name = "Pikemaster"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 91
+name = "Bowman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 92
+name = "Elite Bowman"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 93
+name = "Blowgunner"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 94
+name = "Master Blowgunner"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 95
+name = "Lasher"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 96
+name = "Master Lasher"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 97
+name = "Recruit"
+is_military = true
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 98
+name = "Trained Hunter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 99
+name = "Trained War"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 100
+name = "Master Thief"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 101
+name = "Thief"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 102
+name = "Peasant"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 103
+name = "Child"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 104
+name = "Baby"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 105
+name = "Drunk"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 106
+name = "Monster Slayer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 107
+name = "Scout"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 108
+name = "Beast Hunter"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 109
+name = "Snatcher"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 110
+name = "Mercenary"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 111
+name = "Gelder"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 112
+name = "Performer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 113
+name = "Poet"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 114
+name = "Bard"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 115
+name = "Dancer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 116
+name = "Sage"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 117
+name = "Scholar"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 118
+name = "Philosopher"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 119
+name = "Mathematician"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 120
+name = "Historian"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 121
+name = "Astronomer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 122
+name = "Naturalist"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 123
+name = "Chemist"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 124
+name = "Geographer"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 125
+name = "Scribe"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 126
+name = "Papermaker"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 127
+name = "Bookbinder"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 128
+name = "Tavern Keeper"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 129
+name = "Criminal"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 130
+name = "Peddler"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 131
+name = "Prophet"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 132
+name = "Pilgrim"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 133
+name = "Monk"
+is_military = false
+can_assign_labors = false
+can_assign_military = false
+
+[[professions]]
+id = 134
+name = "Messenger"
+is_military = false
+can_assign_labors = false
+can_assign_military = false

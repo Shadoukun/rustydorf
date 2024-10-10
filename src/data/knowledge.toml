@@ -1,0 +1,381 @@
+[[knowledge]]
+name = "Philosophy"
+
+[knowledge.topics]
+1 = { area = "logic", subject = "formal reasoning"}
+2 = { area = "logic", subject = "deductive reasoning"}
+3 = { area = "logic", subject = "syllogistic logic"}
+4 = { area = "logic", subject = "hypothetical sylogisms"}
+5 = { area = "logic", subject = "propositional logic"}
+6 = { area = "logic", subject = "dialectic reasoning"}
+7 = { area = "logic", subject = "analogical inference"}
+8 = { area = "ethics", subject = "applied medical"}
+9 = { area = "ethics", subject = "individual value"}
+10 = { area = "ethics", subject = "state consequentialism"}
+11 = { area = "epistemology", subject = "truth"}
+12 = { area = "epistemology", subject = "perception"}
+13 = { area = "epistemology", subject = "justification"}
+14 = { area = "epistemology", subject = "belief"}
+15 = { area = "metaphysics", subject = "existence"}
+16 = { area = "metaphysics", subject = "time"}
+17 = { area = "metaphysics", subject = "mind body"}
+18 = { area = "metaphysics", subject = "objects and properties"}
+19 = { area = "metaphysics", subject = "wholes and parts"}
+20 = { area = "metaphysics", subject = "events"}
+21 = { area = "metaphysics", subject = "processes"}
+22 = { area = "metaphysics", subject = "causation"}
+23 = { area = "ethics", subject = "applied military"}
+24 = { area = "ethics", subject = "applied interpersonal conduct"}
+25 = { area = "specialized", subject = "law"}
+26 = { area = "specialized", subject = "education"}
+27 = { area = "specialized", subject = "language grammar"}
+28 = { area = "specialized", subject = "language etymology"}
+29 = { area = "specialized", subject = "politics diplomacy"}
+30 = { area = "specialized", subject = "politics government forms"}
+31 = { area = "specialized", subject = "politics economic policy"}
+32 = { area = "specialized", subject = "politics social welfare"}
+
+[[knowledge]]
+name = "Philosophy"
+
+[knowledge.topics]
+1 = { area = "logic", subject = "inductive reasoning" }
+2 = { area = "logic", subject = "direct inference" }
+3 = { area = "aesthetics", subject = "nature of beauty" }
+4 = { area = "aesthetics", subject = "value of art" }
+5 = { area = "specialized", subject = "language dictionary" }
+
+[[knowledge]]
+name = "Mathematics"
+
+[knowledge.topics]
+1 = { area = "method", subject = "proof by contradiction" }
+2 = { area = "notation", subject = "zero" }
+3 = { area = "notation", subject = "negative numbers" }
+4 = { area = "notation", subject = "large numbers" }
+5 = { area = "notation", subject = "positional" }
+6 = { area = "geometry", subject = "basic objects" }
+7 = { area = "method", subject = "exhaustion" }
+8 = { area = "geometry", subject = "similar and congruent triangles" }
+9 = { area = "geometry", subject = "geometric mean theorem" }
+10 = { area = "geometry", subject = "isosceles base angles equal" }
+11 = { area = "geometry", subject = "inscribed triangle on diameter is right" }
+12 = { area = "geometry", subject = "pythagorean theorem" }
+13 = { area = "geometry", subject = "pythagorean triples small" }
+14 = { area = "geometry", subject = "pythagorean triples 3 digit" }
+15 = { area = "geometry", subject = "pythagorean triples 4 digit" }
+16 = { area = "geometry", subject = "existence of incommensurable ratios" }
+17 = { area = "method", subject = "axiomatic reasoning" }
+18 = { area = "numbers", subject = "unique prime factorization" }
+19 = { area = "numbers", subject = "algorithm for computing greatest common denominator" }
+20 = { area = "geometry", subject = "volume of pyramid" }
+21 = { area = "geometry", subject = "volume of cone" }
+22 = { area = "geometry", subject = "volume of sphere" }
+23 = { area = "geometry", subject = "pi to 4 digits" }
+24 = { area = "numbers", subject = "division algorithm" }
+25 = { area = "geometry", subject = "table of chord values" }
+26 = { area = "geometry", subject = "area of triangle from side lengths" }
+27 = { area = "geometry", subject = "area of circle" }
+28 = { area = "geometry", subject = "pi to 6 digits" }
+29 = { area = "geometry", subject = "definitions and basic properties of conic sections" }
+30 = { area = "numbers", subject = "chinese remainder algorithm" }
+31 = { area = "geometry", subject = "area enclosed by line and parabola" }
+32 = { area = "numbers", subject = "sieve algorithm for primes" }
+
+[[knowledge]]
+name = "Mathematics"
+
+[knowledge.topics]
+1 = { area = "numbers", subject = "root 2 to 5 digits" }
+2 = { area = "numbers", subject = "infinite primes" }
+3 = { area = "numbers", subject = "root 2 irrational" }
+4 = { area = "geometry", subject = "surface area of sphere" }
+5 = { area = "algebra", subject = "finite summation formulas" }
+6 = { area = "algebra", subject = "solving linear systems" }
+7 = { area = "algebra", subject = "balancing and completion" }
+8 = { area = "algebra", subject = "quadratic by completing square" }
+9 = { area = "algebra", subject = "quadratic formula" }
+10 = { area = "notation", subject = "syncopated algebra" }
+11 = { area = "geometry", subject = "law of sines" }
+12 = { area = "geometry", subject = "angle sum difference trig identities" }
+13 = { area = "algebra", subject = "pascals triangle" }
+14 = { area = "algebra", subject = "solving higher order polynomials" }
+15 = { area = "notation", subject = "early symbols for operations" }
+16 = { area = "algebra", subject = "divergence of harmonic series" }
+17 = { area = "geometry", subject = "properties of chords" }
+
+[[knowledge]]
+name = "History"
+
+[knowledge.topics]
+1 = { area = "sourcing", subject = "basic reliability" }
+2 = { area = "sourcing", subject = "role of systemic bias" }
+3 = { area = "sourcing", subject = "role of state bias and propaganda" }
+4 = { area = "sourcing", subject = "personal interviews" }
+5 = { area = "theory", subject = "historical causation" }
+6 = { area = "theory", subject = "historical cycles" }
+7 = { area = "theory", subject = "social cohesion" }
+8 = { area = "theory", subject = "social conflict" }
+9 = { area = "form", subject = "biography" }
+10 = { area = "form", subject = "comparative biography" }
+11 = { area = "form", subject = "biographical dictionaries" }
+12 = { area = "form", subject = "autobiographical adventure" }
+13 = { area = "form", subject = "genealogy" }
+14 = { area = "form", subject = "encyclopedia" }
+15 = { area = "form", subject = "cultural history" }
+16 = { area = "form", subject = "cultural comparison" }
+17 = { area = "sourcing", subject = "role of cultural differences" }
+18 = { area = "form", subject = "alternate history" }
+19 = { area = "sourcing", subject = "basic archaeology" }
+20 = { area = "form", subject = "treatise on tech evolution" }
+
+[[knowledge]]
+name = "Astronomy"
+
+[knowledge.topics]
+1 = { area = "phases", subject = "of the moon" }
+2 = { area = "summer", subject = "winter moon" }
+3 = { area = "path", subject = "of the moon" }
+4 = { area = "tides", subject = "and the moon" }
+5 = { area = "height", subject = "of tides vs moon and sun" }
+6 = { area = "summer", subject = "winter sun" }
+7 = { area = "relationship", subject = "between lunar solar year" }
+8 = { area = "daylight", subject = "variation with solar year" }
+9 = { area = "geocentric", subject = "model" }
+10 = { area = "heliocentric", subject = "model" }
+11 = { area = "dates", subject = "of lunar and solar eclipses" }
+12 = { area = "star", subject = "charts" }
+13 = { area = "star", subject = "catalogues 100" }
+14 = { area = "stars", subject = "catalogues 1000" }
+15 = { area = "stars", subject = "color classification" }
+16 = { area = "stars", subject = "magnitude classification" }
+17 = { area = "shapes", subject = "of the world" }
+18 = { area = "precession", subject = "of equinoxes" }
+19 = { area = "method", subject = "empirical observation" }
+20 = { area = "method", subject = "path models" }
+
+[[knowledge]]
+name = "Naturalist"
+
+[knowledge.topics]
+1 = { area = "method", subject = "dissection" }
+2 = { area = "observation", subject = "anatomy" }
+3 = { area = "theory", subject = "comparative anatomy" }
+4 = { area = "theory", subject = "classification by physical features" }
+5 = { area = "observation", subject = "migration patterns" }
+6 = { area = "observation", subject = "reproductive behavior" }
+7 = { area = "observation", subject = "foraging behavior and diet" }
+8 = { area = "theory", subject = "food chain" }
+9 = { area = "observation", subject = "social behavior" }
+10 = { area = "observation", subject = "diseases" }
+11 = { area = "theory", subject = "climactic adaptation" }
+12 = { area = "observation", subject = "embryological development" }
+13 = { area = "theory", subject = "struggle for existence" }
+
+[[knowledge]]
+name = "Chemistry"
+
+[knowledge.topics]
+1 = { area = "classification", subject = "combustibles" }
+2 = { area = "classification", subject = "ores" }
+3 = { area = "metallurgy", subject = "alloys" }
+4 = { area = "classification", subject = "scratch test" }
+5 = { area = "classification", subject = "elemental theory" }
+6 = { area = "chemicals", subject = "adhesives" }
+7 = { area = "laboratory", subject = "blast furnace" }
+8 = { area = "laboratory", subject = "alembic" }
+9 = { area = "laboratory", subject = "theory of liquid liquid extraction" }
+10 = { area = "laboratory", subject = "theory of distillation" }
+11 = { area = "laboratory", subject = "theory of evaporation" }
+12 = { area = "classification", subject = "alkali and acids" }
+13 = { area = "laboratory", subject = "systematic experiments" }
+14 = { area = "laboratory", subject = "glass flask" }
+15 = { area = "laboratory", subject = "glass beaker" }
+16 = { area = "laboratory", subject = "glass vial" }
+17 = { area = "laboratory", subject = "glass funnel" }
+18 = { area = "laboratory", subject = "crucible" }
+19 = { area = "chemicals", subject = "nitric acid" }
+20 = { area = "chemicals", subject = "sulfuric acid" }
+21 = { area = "chemicals", subject = "aqua regia" }
+22 = { area = "laboratory", subject = "glass ampoule" }
+23 = { area = "laboratory", subject = "glass retort" }
+24 = { area = "laboratory", subject = "lab ovens" }
+
+[[knowledge]]
+name = "Geography"
+
+[knowledge.topics]
+1 = { area = "surveying", subject = "basic" }
+2 = { area = "surveying", subject = "staff" }
+3 = { area = "cartography", subject = "basic" }
+4 = { area = "surveying", subject = "triangulation" }
+5 = { area = "surveying", subject = "cartographical" }
+6 = { area = "surveying", subject = "land" }
+7 = { area = "surveying", subject = "military" }
+8 = { area = "surveying", subject = "engineering" }
+9 = { area = "cartography", subject = "geological" }
+10 = { area = "cartography", subject = "grid system" }
+11 = { area = "cartography", subject = "distance scale" }
+12 = { area = "cartography", subject = "height measurements" }
+13 = { area = "method", subject = "economic data collection" }
+14 = { area = "cartography", subject = "economic" }
+15 = { area = "form", subject = "atlas" }
+16 = { area = "theory", subject = "delta formation" }
+17 = { area = "theory", subject = "wind patterns" }
+18 = { area = "theory", subject = "origin of rainfall from evaporation and condensation" }
+19 = { area = "theory", subject = "water cycle" }
+20 = { area = "theory", subject = "latitude climate zones" }
+21 = { area = "cartography", subject = "accurate maps" }
+22 = { area = "cartography", subject = "map projections" }
+
+[[knowledge]]
+name = "Medicine"
+
+[knowledge.topics]
+1 = { area = "theory", subject = "disease and fouled water" }
+2 = { area = "method", subject = "physical examination" }
+3 = { area = "method", subject = "autopsy" }
+4 = { area = "theory", subject = "prognosis" }
+5 = { area = "tool", subject = "herbal remedies" }
+6 = { area = "tool", subject = "animal remedies" }
+7 = { area = "tool", subject = "mineral remedies" }
+8 = { area = "tool", subject = "bandages" }
+9 = { area = "theory", subject = "disease classification" }
+10 = { area = "theory", subject = "toxicology" }
+11 = { area = "theory", subject = "acute and chronic conditions" }
+12 = { area = "theory", subject = "endemic disease" }
+13 = { area = "theory", subject = "epidemic disease" }
+14 = { area = "theory", subject = "exacerbation" }
+15 = { area = "theory", subject = "paroxysm" }
+16 = { area = "theory", subject = "relapse" }
+17 = { area = "theory", subject = "convalescence" }
+18 = { area = "method", subject = "treatment of traumatic injuries" }
+19 = { area = "method", subject = "fracture treatment" }
+20 = { area = "theory", subject = "fracture classification" }
+21 = { area = "tool", subject = "traction bench" }
+22 = { area = "method", subject = "fracture immobilization" }
+23 = { area = "tool", subject = "orthopedic cast" }
+24 = { area = "method", subject = "surgery excision" }
+25 = { area = "method", subject = "surgery incision" }
+26 = { area = "method", subject = "hernia surgery" }
+27 = { area = "method", subject = "tracheotomy surgery" }
+28 = { area = "method", subject = "lithotomy of surgery" }
+29 = { area = "method", subject = "surgery scraping" }
+30 = { area = "method", subject = "surgery draining" }
+31 = { area = "method", subject = "surgery probing" }
+32 = { area = "method", subject = "surgery suturing" }
+
+[[knowledge]]
+name = "Medicine"
+
+[knowledge.topics]
+1 = { area = "method", subject = "surgery ligature" }
+2 = { area = "theory", subject = "surgical models" }
+3 = { area = "tool", subject = "mud bags as surgical models" }
+4 = { area = "tool", subject = "plants as surgical models" }
+5 = { area = "tool", subject = "animals as surgical models" }
+6 = { area = "theory", subject = "specialized surgical instruments" }
+7 = { area = "tool", subject = "forceps" }
+8 = { area = "tool", subject = "scalpel" }
+9 = { area = "tool", subject = "surgical scissors" }
+10 = { area = "tool", subject = "surgical needles" }
+11 = { area = "method", subject = "cataract surgery" }
+12 = { area = "method", subject = "cauterization" }
+13 = { area = "method", subject = "anesthesia" }
+14 = { area = "theory", subject = "pulmonary medicine" }
+15 = { area = "theory", subject = "anatomical studies" }
+16 = { area = "theory", subject = "classification of bodily fluids" }
+17 = { area = "theory", subject = "eye anatomy" }
+18 = { area = "theory", subject = "motor vs sensory nerves" }
+19 = { area = "theory", subject = "nervous system function" }
+20 = { area = "theory", subject = "reaction time" }
+21 = { area = "theory", subject = "blood vessels" }
+22 = { area = "theory", subject = "pulmonary circulation" }
+23 = { area = "theory", subject = "comparative anatomy" }
+24 = { area = "theory", subject = "the voice" }
+25 = { area = "theory", subject = "classification of muscles" }
+26 = { area = "theory", subject = "classification of mental illnesses" }
+27 = { area = "theory", subject = "treatment of mental illnesses" }
+28 = { area = "tool", subject = "dedicated hospitals" }
+29 = { area = "method", subject = "professional hospital staff" }
+30 = { area = "method", subject = "specialized wards" }
+31 = { area = "method", subject = "hospital lab" }
+32 = { area = "method", subject = "medical school" }
+
+[[knowledge]]
+name = "Medicine"
+
+[knowledge.topics]
+1 = { area = "method", subject = "asylum for mentally ill" }
+
+[[knowledge]]
+name = "Engineering"
+
+[knowledge.topics]
+1 = { area = "horology", subject = "the shadow clock" }
+2 = { area = "horology", subject = "the water clock" }
+3 = { area = "horology", subject = "the conical water clock" }
+4 = { area = "horology", subject = "water clock reservoir" }
+5 = { area = "horology", subject = "the astrarium" }
+6 = { area = "horology", subject = "the hourglass" }
+7 = { area = "horology", subject = "the mechanical clock" }
+8 = { area = "machine", subject = "theory of pulley" }
+9 = { area = "machine", subject = "the pulley" }
+10 = { area = "machine", subject = "theory of screw" }
+11 = { area = "machine", subject = "the screw" }
+12 = { area = "machine", subject = "theory of wheel and axle" }
+13 = { area = "machine", subject = "the windlass" }
+14 = { area = "machine", subject = "theory of wedge" }
+15 = { area = "machine", subject = "theory of lever" }
+16 = { area = "machine", subject = "the lever" }
+17 = { area = "machine", subject = "straight beam balance" }
+18 = { area = "machine", subject = "theory of gears" }
+19 = { area = "machine", subject = "the warded lock" }
+20 = { area = "machine", subject = "the tumbler lock" }
+21 = { area = "machine", subject = "the padlock" }
+22 = { area = "machine", subject = "the camshaft" }
+23 = { area = "machine", subject = "the crankshaft" }
+24 = { area = "machine", subject = "water powered sawmill" }
+25 = { area = "machine", subject = "the chariot odometer" }
+26 = { area = "machine", subject = "the chain drive" }
+27 = { area = "machine", subject = "the mechanical compass" }
+28 = { area = "machine", subject = "the differential gear" }
+29 = { area = "machine", subject = "the combination lock" }
+30 = { area = "machine", subject = "verge escapement" }
+31 = { area = "machine", subject = "the balance wheel" }
+32 = { area = "fluid", subject = "theory of siphon" }
+
+[[knowledge]]
+name = "Engineering"
+
+[knowledge.topics]
+1 = { area = "fluid", subject = "valves" }
+2 = { area = "fluid", subject = "force pump" }
+3 = { area = "optics", subject = "crystal lens" }
+4 = { area = "optics", subject = "water filled spheres" }
+5 = { area = "optics", subject = "glass lens" }
+6 = { area = "optics", subject = "camera obscura" }
+7 = { area = "optics", subject = "parabolic mirror" }
+8 = { area = "optics", subject = "theory of color" }
+9 = { area = "optics", subject = "theory of rainbows" }
+10 = { area = "optics", subject = "law of refraction" }
+11 = { area = "design", subject = "models and templates" }
+12 = { area = "construction", subject = "wood lamination" }
+13 = { area = "astronomy", subject = "dioptra" }
+14 = { area = "astronomy", subject = "astrolabe" }
+15 = { area = "astronomy", subject = "armillary sphere" }
+16 = { area = "astronomy", subject = "spherical astrolabe" }
+17 = { area = "astronomy", subject = "mural instrument" }
+18 = { area = "astronomy", subject = "orrery" }
+19 = { area = "machine", subject = "water powered trip hammer" }
+20 = { area = "machine", subject = "double acting piston bellows" }
+21 = { area = "fluid", subject = "archimedes principle" }
+22 = { area = "optics", subject = "atmospheric refraction" }
+23 = { area = "optics", subject = "cause of twilight" }
+24 = { area = "optics", subject = "height of atmosphere" }
+25 = { area = "machine", subject = "piston" }
+26 = { area = "machine", subject = "crank" }
+27 = { area = "machine", subject = "bellows" }
+28 = { area = "machine", subject = "water powered piston bellows" }
+29 = { area = "machine", subject = "water wheel" }
+30 = { area = "machine", subject = "trip hammer" }

@@ -1,0 +1,151 @@
+[[needs]]
+name = "Socialize"
+positive = "spending time with people"
+negative = "being away from people"
+
+[[needs]]
+name = "Drink Alcohol"
+positive = "drinking"
+negative = "being kept from alcohol"
+
+[[needs]]
+name = "Pray/Meditate"
+positive = "meditation"
+negative = "being unable to pray"
+positive_deity = "communing with %1"
+negative_deity = "being unable to pray to %1"
+
+[[needs]]
+name = "Stay Occupied"
+positive = "staying occupied"
+negative = "being unoccupied"
+
+[[needs]]
+name = "Be Creative"
+positive = "doing something creative"
+negative = "doing nothing creative"
+
+[[needs]]
+name = "Excitement"
+positive = "doing something exciting"
+negative = "leading an unexciting life"
+
+[[needs]]
+name = "Learn Something"
+positive = "learning something"
+negative = "not learning anything"
+
+[[needs]]
+name = "Be With Family"
+positive = "being with family"
+negative = "being away from family"
+
+[[needs]]
+name = "Be With Friends"
+positive = "being with friends"
+negative = "being away from friends"
+
+[[needs]]
+name = "Hear Eloquence"
+positive = "hearing eloquent speech"
+negative = "being unable to hear eloquent speech"
+
+[[needs]]
+name = "Uphold Tradition"
+positive = "upholding tradition"
+negative = "being away from traditions"
+
+[[needs]]
+name = "Self-Examination"
+positive = "self-examination"
+negative = "a lack of introspection"
+
+[[needs]]
+name = "Make Merry"
+positive = "making merry"
+negative = "being unable to make merry"
+
+[[needs]]
+name = "Craft Object"
+positive = "practicing a craft"
+negative = "being unable to practice a craft"
+
+[[needs]]
+name = "Martial Training"
+positive = "practicing a martial art"
+negative = "being unable to practice a martial art"
+
+[[needs]]
+name = "Practice Skill"
+positive = "practicing a skill"
+negative = "being unable to practice a skill"
+
+[[needs]]
+name = "Take It Easy"
+positive = "taking it easy"
+negative = "being unable to take it easy"
+
+[[needs]]
+name = "Make Romance"
+positive = "making romance"
+negative = "being unable to make romance"
+
+[[needs]]
+name = "See Animal"
+positive = "seeing animals"
+negative = "being away from animals"
+
+[[needs]]
+name = "See Great Beast"
+positive = "seeing a great beast"
+negative = "being away from great beasts"
+
+[[needs]]
+name = "Acquire Object"
+positive = "acquiring something"
+negative = "being unable to acquire something"
+
+[[needs]]
+name = "Eat Good Meal"
+positive = "eating a good meal"
+negative = "a lack of decent meal"
+
+[[needs]]
+name = "Fight"
+positive = "fighting"
+negative = "being unable to fight"
+
+[[needs]]
+name = "Cause Trouble"
+positive = "causing trouble"
+negative = "a lack of trouble-making"
+
+[[needs]]
+name = "Argue"
+positive = "arguing"
+negative = "being unable to argue"
+
+[[needs]]
+name = "Be Extravagant"
+positive = "being extravagant"
+negative = "being unable to be extravagant"
+
+[[needs]]
+name = "Wander"
+positive = "wandering"
+negative = "being unable to wander"
+
+[[needs]]
+name = "Help Somebody"
+positive = "helping somebody"
+negative = "being unable to help anybody"
+
+[[needs]]
+name = "Think Abstractly"
+positive = "thinking abstractly"
+negative = "a lack of abstract thinking"
+
+[[needs]]
+name = "Admire Art"
+positive = "admiring art"
+negative = "being unable to admire art"

@@ -1,0 +1,118 @@
+[[unit_activities]]
+name = "Military: Train"
+img = "shield-brown"
+is_military = true
+sub.1 = { id = 0, name = "Training Session"}
+sub.2 = { id = 1, name = "Combat Training"}
+sub.3 = { id = 2, name = "Individual Combat Drill"}
+
+[[unit_activities]]
+name = "Military: Skill Demonstration"
+img = "shield-purple"
+is_military = true
+sub.1 = { id = 2, name = "Skill Demonstration" }
+sub.2 = { id = 200, name = "Lead [skill] Demonstration" }
+sub.3 = { id = 201, name = "Watch [skill] Demonstration" }
+
+[[unit_activities]]
+id = 4
+name = "Military: Spar"
+img = "shield-teal"
+is_military = true
+
+[[unit_activities]]
+id = 5
+name = "Military: Archery Practice"
+img = "target"
+is_military = true
+
+[[unit_activities]]
+id = 6
+name = "Harass"
+
+[[unit_activities]]
+id = 7
+name = "Talk"
+img = "balloon"
+
+[[unit_activities]]
+id = 8
+name = "Conflict"
+
+[[unit_activities]]
+id = 9
+name = "Guard"
+img = "shield"
+is_military = true
+
+[[unit_activities]]
+id = 10
+name = "Reunion"
+
+[[unit_activities]]
+name = "Worship"
+img = "church"
+sub.1 = { id = 13, name = "Worship" }
+sub.2 = { id = 11, name = "Pray" }
+sub.3 = { id = 300, name = "Meditate", img = "yin-yang" }
+
+[[unit_activities]]
+id = 12
+name = "Socialize"
+img = "balloon"
+
+[[unit_activities]]
+name = "Performance"
+img = "music-beam-16"
+sub.1 = { id = 14, name = "Performance" }
+sub.2 = { id = 100, name = "Tell Story", img = "balloon-quotation" }
+sub.3 = { id = 101, name = "Recite Poetry", img = "edit-quotation" }
+sub.4 = { id = 102, name = "Play Music" }
+sub.5 = { id = 103, name = "Dance" }
+sub.6 = { id = 104, name = "Audience", img = "spectacle-lorgnette" }
+sub.7 = { id = 105, name = "Play Instrument", img = "guitar" }
+sub.8 = { id = 106, name = "Sing" }
+sub.9 = { id = 107, name = "Listen", img = "ear-listen" }
+
+[[unit_activities]]
+name = "Ponder/Research"
+img = "brain"
+sub.1 = { id = 15, name = "Research", img = "flask" }
+sub.2 = { id = 16, name = "Ponder" }
+
+[[unit_activities]]
+id = 17
+img = "balloon-ellipsis"
+name = "Discussion"
+
+[[unit_activities]]
+id = 18
+name = "Read"
+img = "book-open-bookmark"
+
+[[unit_activities]]
+id = 19
+name = "Fulfill Service Order"
+img = "service-bell--arrow"
+
+[[unit_activities]]
+id = 20
+name = "Write"
+img = "quill"
+
+[[unit_activities]]
+id = 21
+name = "Copy Written"
+img = "quill--plus"
+
+[[unit_activities]]
+id = 22
+name = "Teach Topic"
+img = "chalkboard"
+
+[[unit_activities]]
+name = "Play"
+img = "board-game-go"
+sub.1 = { id = 23, name = "Play" }
+sub.2 = { id = 24, name = "Play Make Believe" }
+sub.3 = { id = 25, name = "Play with a Toy" }

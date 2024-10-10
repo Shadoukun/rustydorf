@@ -1,0 +1,29 @@
+[[unit_orders]]
+name = "Military: Order"
+img = "exclamation-shield-frame"
+is_military = 1
+
+[[unit_orders.sub]]
+id = 0
+name = "Order: Move"
+img = "shield--arrow"
+
+[[unit_orders.sub]]
+id = 1
+name = "Order: Kill"
+img = "skull-mad"
+
+[[unit_orders.sub]]
+id = 2
+name = "Order: Defend"
+img = "exclamation-shield-frame"
+
+[[unit_orders.sub]]
+id = 3
+name = "Order: Patrol"
+img = "arrow-repeat"
+
+[[unit_orders.sub]]
+id = 4
+name = "Train"
+img = "shield-brown"

@@ -1,0 +1,395 @@
+[[beliefs]]
+name = "Law"
+
+[[beliefs.levels]]
+1 = "is an absolute believer in the rule of law"
+2 = "has a great deal of respect for the law"
+3 =  "respects the law"
+4 = "doesn't feel strongly about the law"
+5 = "does not respect the law"
+6 = "disdains the law"
+0 = "finds the idea of laws abhorrent"
+
+[[beliefs]]
+name = "Loyalty"
+
+[[beliefs.levels]]
+6 = "has the highest regard for loyalty"
+5 = "greatly prizes loyalty"
+4 = "values loyalty"
+3 = "doesn't particularly value loyalty"
+2 = "views loyalty unfavorably"
+1 = "disdains loyalty"
+0 = "is disgusted by the idea of loyalty"
+
+[[beliefs]]
+name = "Family"
+
+[[beliefs.levels]]
+6 = "sees family as one of the most important things in life"
+5 = "values family greatly"
+4 = "values family"
+3 = "does not care about family one way or the other"
+2 = "is put off by family"
+1 = "lacks any respect for family"
+0 = "finds the idea of family loathsome"
+
+[[beliefs]]
+name = "Friendship"
+
+[[beliefs.levels]]
+6 = "believes friendship is a key to the ideal life"
+5 = "sees friendship as one of the finer things in life"
+4 = "thinks friendship is important"
+3 = "does not care about friendship"
+2 = "finds friendship burdensome"
+1 = "is completely put off by the idea of friends"
+0 = "finds the whole idea of friendship disgusting"
+
+[[beliefs]]
+name = "Power"
+
+[[beliefs.levels]]
+6 = "believes that the acquisition of power over others is the ideal goal in life"
+5 = "sees power over others as something to strive for"
+4 = "respects power"
+3 = "doesn't find power particularly praiseworthy"
+2 = "has a negative view of those who exercise power over others"
+1 = "hates those who wield power over others"
+0 = "finds the acquisition and use of power abhorrent"
+
+[[beliefs]]
+name = "Truth"
+
+[[beliefs.levels]]
+6 = "believes the truth is inviolable regardless of the cost"
+5 = "believes that honesty is a high ideal"
+4 = "values honesty"
+3 = "does not particularly value the truth"
+2 = "finds blind honesty foolish"
+1 = "sees lying as an important means to an end"
+0 = "is repelled by the idea of honesty"
+
+[[beliefs]]
+name = "Cunning"
+
+[[beliefs.levels]]
+6 = "holds well-laid plans and shrewd deceptions in the highest regard"
+5 = "greatly respects the guileful"
+4 = "values cunning"
+3 = "does not really value cunning"
+2 = "sees cunning as indirect and somewhat worthless"
+1 = "holds shrewd individuals in the lowest esteem"
+0 = "is utterly disgusted by guile"
+
+[[beliefs]]
+name = "Eloquence"
+
+[[beliefs.levels]]
+6 = "believes that eloquent expression are of the highest ideals"
+5 = "deeply respects eloquent speakers"
+4 = "values eloquence"
+3 = "doesn't value eloquence so much"
+2 = "finds eloquence off-putting"
+1 = "somewhat disgusted with eloquent speakers"
+0 = "sees eloquence as a wasteful form of deliberate deception"
+
+[[beliefs]]
+name = "Fairness"
+
+[[beliefs.levels]]
+6 = "holds fairness as one of the highest ideals"
+5 = "has great respect for fairness"
+4 = "respects fairness"
+3 = "does not care about fairness"
+2 = "sees life as unfair and doesn't mind"
+1 = "finds the idea of fairness foolish"
+0 = "will freely cheat anybody at any time"
+
+[[beliefs]]
+name = "Decorum"
+
+[[beliefs.levels]]
+6 = "views decorum as a high ideal and is deeply offended by those that fail to maintain it"
+5 = "greatly respects those that observe decorum"
+4 = "values decorum, dignity and proper behavior"
+3 = "doesn't care very much about decorum"
+2 = "finds maintaining decorum a waste of time"
+1 = "sees attempting dignified and proper behavior as vain and offensive"
+0 = "is affronted by the whole notion of maintaining decorum"
+
+[[beliefs]]
+name = "Tradition"
+
+[[beliefs.levels]]
+6 = "holds the maintenance of tradition as one of the highest ideals"
+5 = "is a firm believer in the value of tradition"
+4 = "values tradition"
+3 = "doesn't have any strong feelings about tradition"
+2 = "disregards tradition"
+1 = "finds tradition foolish and limiting"
+0 = "is disgusted by tradition"
+
+[[beliefs]]
+name = "Artwork"
+
+[[beliefs.levels]]
+6 = "believes that the creation and appreciation of artwork is one of the highest ideals"
+5 = "greatly respects artists and their works"
+4 = "values artwork"
+3 = "doesn't care about art"
+2 = "finds artwork boring"
+1 = "sees the whole pursuit of art as silly"
+0 = "finds art offensive"
+
+[[beliefs]]
+name = "Cooperation"
+
+[[beliefs.levels]]
+6 = "places cooperation as one of the highest ideals"
+5 = "sees cooperation as very important in life"
+4 = "values cooperation"
+3 = "doesn't see cooperation as valuable"
+2 = "dislikes cooperation"
+1 = "views cooperation as a low ideal"
+0 = "is thoroughly disgusted by cooperation"
+
+[[beliefs]]
+name = "Independence"
+
+[[beliefs.levels]]
+6 = "believes that freedom and independence are completely non-negotiable and would fight to defend them"
+5 = "treasures independence"
+4 = "values independence"
+3 = "doesn't really value independence"
+2 = "finds the ideas of independence and freedom somewhat foolish"
+1 = "sees freedom and independence as completely worthless"
+0 = "hates freedom"
+
+[[beliefs]]
+name = "Stoicism"
+
+[[beliefs.levels]]
+6 = "views any show of emotion as offensive"
+5 = "thinks it is of the utmost importance to present a bold face and never show emotion"
+4 = "believes it is important to conceal emotions and not complain"
+3 = "doesn't see much value in being stoic"
+2 = "sees no value in holding back complaints and concealing emotions"
+1 = "feels that attempting to conceal emotions is vain and foolish"
+0 = "sees concealment of emotions as a betrayal"
+
+[[beliefs]]
+name = "Introspection"
+
+[[beliefs.levels]]
+6 = "feels that introspection and self-examination are the keys to a good life and worthy of respect"
+5 = "deeply values introspection"
+4 = "sees introspection as important"
+3 = "doesn't really see the value in self-examination"
+2 = "finds introspection to be a waste of time"
+1 = "thinks that introspection is valueless and self-examination wasteful"
+0 = "finds the whole idea of introspection completely offensive"
+
+[[beliefs]]
+name = "Self Control"
+
+[[beliefs.levels]]
+6 = "believes that self-mastery and the denial of impulses are of the highest ideals"
+5 = "finds moderation and self-control to be very important"
+4 = "values self-control"
+3 = "doesn't particularly value self-control"
+2 = "finds those that deny their impulses somewhat stiff"
+1 = "sees the denial of impulses as a vain and foolish pursuit"
+0 = "has abandoned any attempt at self-control"
+
+[[beliefs]]
+name = "Tranquility"
+
+[[beliefs.levels]]
+6 = "views tranquility as one of the highest ideals"
+5 = "strongly values tranquility and quiet"
+4 = "values tranquility and a peaceful day"
+3 = "doesn't have a preference between tranquility and tumult"
+2 = "prefers a noisy, bustling life to boring days without activity"
+1 = "is greatly disturbed by quiet and a peaceful existence"
+0 = "is disgusted by tranquility"
+
+[[beliefs]]
+name = "Harmony"
+
+[[beliefs.levels]]
+6 = "would have the world operate in complete harmony"
+5 = "strongly believes that a peaceful society without dissent is best"
+4 = "values a harmonious existence"
+3 = "sees equal parts of harmony and discord as part of life"
+2 = "doesn't respect a society without debate and strife"
+1 = "can't fathom why anyone would want to live in an orderly and harmonious society"
+0 = "believes deeply that chaos and disorder are the truest expressions of life"
+
+[[beliefs]]
+name = "Merriment"
+
+[[beliefs.levels]]
+6 = "believes that little is better in life than a good party"
+5 = "truly values merrymaking and parties"
+4 = "finds merrymaking and partying worthwhile activities"
+3 = "doesn't really value merrymaking"
+2 = "is put off by merrymaking"
+1 = "is disgusted by merrymakers"
+0 = "is appalled by merrymaking and parties"
+
+[[beliefs]]
+name = "Craftsmanship"
+
+[[beliefs.levels]]
+6 = "holds craftsmanship to be of the highest ideals and celebrates talented artisans and their masterworks"
+5 = "has a great deal of respect for worthy craftsmanship"
+4 = "values good craftsmanship"
+3 = "doesn't particularly care about craftsmanship"
+2 = "considers craftsmanship to be relatively worthless"
+1 = "sees the pursuit of good craftsmanship as a total waste"
+0 = "views craftsmanship with disgust and would desecrate a so-called masterwork"
+
+[[beliefs]]
+name = "Martial Prowess"
+
+[[beliefs.levels]]
+6 = "believes that martial prowess defines good character"
+5 = "deeply respects skill at arms"
+4 = "values martial prowess"
+3 = "does not really value skills related to fighting"
+2 = "finds those that develop martial skills distasteful"
+1 = "thinks that the pursuit of martial skills is a low pursuit"
+0 = "abhors those that pursue martial skills"
+
+[[beliefs]]
+name = "Skill"
+
+[[beliefs.levels]]
+6 = "believes that the mastery of a skill is one of the highest pursuits"
+5 = "really respects those that take the time to master a skill"
+4 = "respects the development of skill"
+3 = "doesn't care if others take the time to master skills"
+2 = "finds the pursuit of skill mastery off-putting"
+1 = "believes that the time taken to master a skill is a horrible waste"
+0 = "sees the whole idea of taking time to master a skill as appalling"
+
+[[beliefs]]
+name = "Hard Work"
+
+[[beliefs.levels]]
+6 = "believes that hard work is one of the highest ideals"
+5 = "deeply respects those that work hard at their labors"
+4 = "values hard work"
+3 = "doesn't really see the point of working hard"
+2 = "sees working hard as a foolish waste of time"
+1 = "thinks working hard is an abject idiocy"
+0 = "finds the idea that one should work hard in life utterly abhorrent"
+
+[[beliefs]]
+name = "Sacrifice"
+
+[[beliefs.levels]]
+6 = "finds sacrifice to be one of the highest ideals"
+5 = "believes that those who sacrifice for others should be deeply respected"
+4 = "values sacrifice"
+3 = "doesn't particularly respect sacrifice as a virtue"
+2 = "sees sacrifice as wasteful and foolish"
+1 = "finds sacrifice to be the height of folly"
+0 = "finds the entire concept of self-sacrifice disgusting"
+
+[[beliefs]]
+name = "Competition"
+
+[[beliefs.levels]]
+6 = "holds the idea of competition among the most important"
+5 = "views competition as a crucial driving force in the world"
+4 = "sees competition as reasonably important"
+3 = "doesn't have strong views on competition"
+2 = "sees competition as wasteful and silly"
+1 = "deeply dislikes competition"
+0 = "finds the very idea of competition obscene"
+
+[[beliefs]]
+name = "Perseverance"
+
+[[beliefs.levels]]
+6 = "believes that perseverance is a great personal quality"
+5 = "greatly respects individuals that persevere through trials and labors"
+4 = "respects perseverance"
+3 = "doesn't think much about the idea of perseverance"
+2 = "sees perseverance in the face of adversity as bull-headed and foolish"
+1 = "thinks there is something deeply wrong with people that persevere through adversity"
+0 = "finds the notion that one would persevere through adversity completely abhorrent"
+
+[[beliefs]]
+name = "Leisure Time"
+
+[[beliefs.levels]]
+6 = "believes that it would be a fine thing if all time were leisure time"
+5 = "treasures leisure time and thinks it is very important in life"
+4 = "values leisure time"
+3 = "doesn't think one way or the other about leisure time"
+2 = "finds leisure time wasteful"
+1 = "is offended by leisure time and leisurely living"
+0 = "believes that those that take leisure time are evil"
+
+[[beliefs]]
+name = "Commerce"
+
+[[beliefs.levels]]
+6 = "sees engaging in commerce as a high ideal in life"
+5 = "really respects commerce and those that engage in trade"
+4 = "respects commerce"
+3 = "doesn't particularly respect commerce"
+2 = "is somewhat put off by trade and commerce"
+1 = "finds those that engage in trade and commerce to be fairly disgusting"
+0 = "holds the view that commerce is a vile obscenity"
+
+[[beliefs]]
+name = "Romance"
+
+[[beliefs.levels]]
+6 = "sees romance as one of the highest ideals"
+5 = "thinks romance is very important in life"
+4 = "values romance"
+3 = "doesn't care one way or the other about romance"
+2 = "finds romance distasteful"
+1 = "is somewhat disgusted by romance"
+0 = "finds even the abstract idea of romance repellent"
+
+[[beliefs]]
+name = "Nature"
+
+[[beliefs.levels]]
+6 = "holds nature to be of the absolute highest value"
+5 = "has a deep respect for animals, plants and the natural world"
+4 = "values nature"
+3 = "doesn't care about nature one way or another"
+2 = "finds nature somewhat disturbing"
+1 = "has a deep dislike of the natural world"
+0 = "would just as soon have nature and the great outdoors burned to ashes"
+
+[[beliefs]]
+name = "Peace"
+
+[[beliefs.levels]]
+6 = "believes the idea of war is utterly repellent"
+5 = "believes that peace is always preferable to war"
+4 = "values peace over war"
+3 = "doesn't particularly care between war and peace"
+2 = "sees war as a useful means to an end"
+1 = "believes war is preferable to peace in general"
+0 = "thinks that the world should be engaged in perpetual warfare"
+
+[[beliefs]]
+name = "Knowledge"
+
+[[beliefs.levels]]
+6 = "finds the quest for knowledge to be of the very highest value"
+5 = "views the pursuit of knowledge as deeply important"
+4 = "values knowledge"
+3 = "doesn't see the attainment of knowledge as important"
+2 = "finds the pursuit of knowledge to be a waste of effort"
+1 = "thinks the quest for knowledge is a delusional fantasy"
+0 = "sees the attainment of knowledge as an offensive enterprise engaged in by arrogant fools"

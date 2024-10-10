@@ -1,0 +1,74 @@
+[[unit_moods]]
+name = "Fey"
+description = "has the aspect of one fey!"
+color = "#7C7C7C"
+
+[[unit_moods]]
+name = "Secretive"
+description = "peculiarly secretive..."
+color = "#7C7C7C"
+
+[[unit_moods]]
+name = "Possessed"
+description = "possessed by unknown forces!"
+color = "#FF00FF"
+
+[[unit_moods]]
+name = "Macabre"
+description = "brooding darkly..."
+color = "#808080"
+
+[[unit_moods]]
+name = "Fell"
+description = "has a horrible fell look!"
+color = "#800080"
+
+[[unit_moods]]
+name = "Melancholy"
+description = "stricken by melancholy..."
+color = "#2B4FFF"
+
+[[unit_moods]]
+name = "Insane"
+description = "stark raving mad!"
+color = "#00A5B8"
+
+[[unit_moods]]
+name = "Berserk"
+description = "in a berserk rage!"
+color = "#CA0000"
+
+[[unit_moods]]
+name = "Baby"
+description = "is a baby"
+color = "#000000"
+
+[[unit_moods]]
+name = "Catatonic"
+description = "staring off into space..."
+color = "#008000"
+
+[[unit_moods]]
+name = "Martial Trance"
+description = "in a martial trance!"
+color = "#00C300"
+
+[[unit_moods]]
+name = "Enraged"
+description = "enraged!"
+color = "#800000"
+
+[[unit_moods]]
+name = "Tantrum"
+description = "throwing a tantrum!"
+color = "#B8B209"
+
+[[unit_moods]]
+name = "Depressed"
+description = "sunk into depression..."
+color = "#808000"
+
+[[unit_moods]]
+name = "Oblivious"
+description = "stumbling obliviously..."
+color = "#008080"

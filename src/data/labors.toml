@@ -1,0 +1,437 @@
+[[labors]]
+id = 0
+name = "Mining"
+skill = 0
+requires_equipment = 0
+excludes = { 1 = 10, 2 = 44 }
+
+[[labors]]
+name = "Carpentry"
+id = 11
+skill = 2
+
+[[labors]]
+name = "Crossbow Making"
+id = 59
+skill = 48
+
+[[labors]]
+name = "Wood Cutting"
+id = 10
+skill = 1
+requires_equipment = true
+excludes = { 1 = 0, 2 = 44 }
+
+[[labors]]
+name = "Masonry"
+id = 15
+skill = 4
+
+[[labors]]
+name = "Stonecutting"
+id = 12
+skill = 135
+
+[[labors]]
+name = "Stone Carving"
+id = 13
+skill = 136
+
+[[labors]]
+name = "Engraving"
+id = 14
+skill = 3
+
+[[labors]]
+name = "Animal Training"
+id = 16
+skill = 5
+
+[[labors]]
+name = "Animal Care"
+id = 17
+skill = 6
+
+[[labors]]
+name = "Hunting"
+id = 44
+skill = 56
+requires_equipment = true
+excludes = { 1 = 0, 2 = 10 }
+
+[[labors]]
+name = "Trapping"
+id = 26
+skill = 11
+
+[[labors]]
+name = "Small Animal Dissection"
+id = 27
+skill = 8
+
+[[labors]]
+name = "Diagnosis"
+id = 18
+skill = 58
+
+[[labors]]
+name = "Surgery"
+id = 19
+skill = 59
+
+[[labors]]
+name = "Setting Bones"
+id = 20
+skill = 60
+
+[[labors]]
+name = "Suturing"
+id = 21
+skill = 61
+
+[[labors]]
+name = "Dressing Wounds"
+id = 22
+skill = 57
+
+[[labors]]
+name = "Feed Patients/Prisoners"
+id = 23
+skill = -1
+
+[[labors]]
+name = "Recovering Wounded"
+id = 24
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Butchery"
+id = 25
+skill = 10
+
+[[labors]]
+name = "Tanning"
+id = 29
+skill = 12
+
+[[labors]]
+name = "Farming (Fields)"
+id = 39
+skill = 21
+
+[[labors]]
+name = "Dyeing"
+id = 63
+skill = 67
+
+[[labors]]
+name = "Soap Making"
+id = 31
+skill = 65
+
+[[labors]]
+name = "Wood Burning"
+id = 64
+skill = 63
+
+[[labors]]
+name = "Potash Making"
+id = 61
+skill = 66
+
+[[labors]]
+name = "Lye Making"
+id = 62
+skill = 64
+
+[[labors]]
+name = "Milling"
+id = 34
+skill = 16
+
+[[labors]]
+name = "Brewing"
+id = 30
+skill = 14
+
+[[labors]]
+name = "Plant Gathering"
+id = 40
+skill = 22
+
+[[labors]]
+name = "Plant Processing"
+id = 35
+skill = 17
+
+[[labors]]
+name = "Cheese Making"
+id = 36
+skill = 18
+
+[[labors]]
+name = "Milking"
+id = 37
+skill = 19
+
+[[labors]]
+name = "Cooking"
+id = 38
+skill = 20
+
+[[labors]]
+name = "Fishing"
+id = 41
+skill = 23
+
+[[labors]]
+name = "Fish Cleaning"
+id = 42
+skill = 9
+
+[[labors]]
+name = "Fish Dissection"
+id = 43
+skill = 7
+
+[[labors]]
+name = "Furnace Operating"
+id = 45
+skill = 24
+
+[[labors]]
+name = "Weaponsmithing"
+id = 46
+skill = 26
+
+[[labors]]
+name = "Armoring"
+id = 47
+skill = 27
+
+[[labors]]
+name = "Blacksmithing"
+id = 48
+skill = 28
+
+[[labors]]
+name = "Metalcrafting"
+id = 49
+skill = 33
+
+[[labors]]
+name = "Gem Cutting"
+id = 50
+skill = 29
+
+[[labors]]
+name = "Gem Setting"
+id = 51
+skill = 30
+
+[[labors]]
+name = "Leatherworking"
+id = 28
+skill = 35
+
+[[labors]]
+name = "Woodcrafting"
+id = 52
+skill = 31
+
+[[labors]]
+name = "Stonecrafting"
+id = 53
+skill = 32
+
+[[labors]]
+name = "Bone Carving"
+id = 54
+skill = 36
+
+[[labors]]
+name = "Glassmaking"
+id = 55
+skill = 34
+
+[[labors]]
+name = "Weaving"
+id = 32
+skill = 13
+
+[[labors]]
+name = "Clothesmaking"
+id = 33
+skill = 15
+
+[[labors]]
+name = "Strand Extraction"
+id = 56
+skill = 25
+
+[[labors]]
+name = "Siege Engineering"
+id = 57
+skill = 46
+
+[[labors]]
+name = "Siege Operating"
+id = 58
+skill = 47
+
+[[labors]]
+name = "Mechanics"
+id = 60
+skill = 54
+
+[[labors]]
+name = "Pump Operating"
+id = 65
+skill = 68
+
+[[labors]]
+name = "Stone Hauling"
+id = 1
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Wood Hauling"
+id = 2
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Item Hauling"
+id = 6
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Burial"
+id = 3
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Food Hauling"
+id = 4
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Refuse Hauling"
+id = 5
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Furniture Hauling"
+id = 7
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Animal Hauling"
+id = 8
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Cleaning"
+id = 9
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Shearing"
+id = 66
+skill = 107
+
+[[labors]]
+name = "Spinning"
+id = 67
+skill = 108
+
+[[labors]]
+name = "Pottery"
+id = 68
+skill = 109
+
+[[labors]]
+name = "Glazing"
+id = 69
+skill = 110
+
+[[labors]]
+name = "Pressing"
+id = 70
+skill = 111
+
+[[labors]]
+name = "Bee Keeping"
+id = 71
+skill = 112
+
+[[labors]]
+name = "Wax Working"
+id = 72
+skill = 113
+
+[[labors]]
+name = "Push/Haul Vehicles"
+id = 73
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Trade Good Hauling"
+id = 74
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Lever Operation"
+id = 75
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Construction Removal"
+id = 76
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Water Hauling"
+id = 77
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Gelding"
+id = 78
+skill = 115
+
+[[labors]]
+name = "Road Building"
+id = 79
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Construction"
+id = 80
+skill = -1
+hauling = 1
+
+[[labors]]
+name = "Papermaking"
+id = 81
+skill = 131
+
+[[labors]]
+name = "Bookbinding"
+id = 82
+skill = 132
