@@ -1,0 +1,30 @@
+[[happiness_levels]]
+name = "miserable"
+threshold = 50000
+desc = "is utterly harrowed by the nightmare that is their tragic life"
+
+[[happiness_levels]]
+name = "very_unhappy"
+threshold = 25000
+desc = "is haggard and drawn due to the tremendous stresses placed on them"
+
+[[happiness_levels]]
+name = "unhappy"
+threshold = 10000
+desc = "is under a great deal of stress"
+
+[[happiness_levels]]
+name = "fine"
+threshold = -10000
+
+[[happiness_levels]]
+name = "content"
+threshold = -25000
+
+[[happiness_levels]]
+name = "happy"
+threshold = -50000
+
+[[happiness_levels]]
+name = "ecstatic"
+threshold = -100000

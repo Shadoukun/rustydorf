@@ -1,7 +1,7 @@
 [[unit_orders]]
 name = "Military: Order"
 img = "exclamation-shield-frame"
-is_military = 1
+is_military = true
 
 [[unit_orders.sub]]
 id = 0

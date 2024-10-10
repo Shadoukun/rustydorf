@@ -5,6 +5,8 @@ mod language;
 mod win;
 use std::collections::HashMap;
 
+mod gamedata;
+use gamedata::GameData;
 use language::language::{Languages, Translation, Word};
 mod race;
 mod util;
@@ -178,6 +180,7 @@ impl DFInstance {
 
 fn main() {
     let memory_layout = load_memory_layout();
+    let game_data = gamedata::load_game_data();
     let df = unsafe { DFInstance::new(); };
     // unsafe {
         // let year = read_field::<usize>(&proc, 0, &memory_layout, MemorySection::Addresses, "current_year").unwrap();

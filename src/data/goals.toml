@@ -1,74 +1,74 @@
 [[goals]]
 id = 0
 name = "survival"
-desc = "stay alive"
+description = "stay alive"
 
 [[goals]]
 id = 1
 name = "traditional"
-desc = "maintain entity status"
+description = "maintain entity status"
 
 [[goals]]
 id = 2
 name = "family"
-desc = "dreams of raising a family"
+description = "dreams of raising a family"
 
 [[goals]]
 id = 3
 name = "sovereign"
-desc = "dreams of ruling the world"
+description = "dreams of ruling the world"
 
 [[goals]]
 id = 4
 name = "artist"
-desc = "dreams of creating a great work of art"
+description = "dreams of creating a great work of art"
 
 [[goals]]
 id = 5
 name = "masterwork"
-desc = "dreams of crafting a masterwork someday"
+description = "dreams of crafting a masterwork someday"
 
 [[goals]]
 id = 6
 name = "peace"
-desc = "dreams of bringing lasting peace to the world"
+description = "dreams of bringing lasting peace to the world"
 
 [[goals]]
 id = 7
 name = "legendary warrior"
-desc = "dreams of becoming a legendary warrior"
+description = "dreams of becoming a legendary warrior"
 
 [[goals]]
 id = 8
 name = "skill mastery"
-desc = "dreams of mastering a skill"
+description = "dreams of mastering a skill"
 
 [[goals]]
 id = 9
 name = "romantic"
-desc = "dreams of falling in love"
+description = "dreams of falling in love"
 
 [[goals]]
 id = 10
 name = "explorer"
-desc = "dreams of seeing the great natural places of the world"
+description = "dreams of seeing the great natural places of the world"
 
 [[goals]]
 id = 11
 name = "immortality"
-desc = "dreams of becoming immortal"
+description = "dreams of becoming immortal"
 
 [[goals]]
 id = 12
 name = "scholar"
-desc = "dreams of making a great discovery"
+description = "dreams of making a great discovery"
 
 [[goals]]
 id = 13
 name = "noble"
-desc = "dreams of attaining rank in society"
+description = "dreams of attaining rank in society"
 
 [[goals]]
 id = 14
 name = "choas"
-desc = "dreams of bathing the world in chaos"
+description = "dreams of bathing the world in chaos"

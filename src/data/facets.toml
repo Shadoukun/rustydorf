@@ -58,7 +58,7 @@ inverted = true
 4 = "is often sad and dejected"
 5 = "is frequently depressed"
 
-[[facets.special]]
+[facets.special]
 limit = 60
 msg = "More likely to slip into depression and be stricken by melancholy."
 
@@ -74,7 +74,7 @@ inverted = true
 4 = "is very quick to anger"
 5 = "is in a constant state of internal rage"
 
-[[facets.special]]
+[facets.special]
 limit = 60
 msg = "More likely to throw tantrums and go berserk."
 
@@ -90,7 +90,7 @@ inverted = true
 4 = "is always tense and jittery"
 5 = "is a nervous wreck"
 
-[[facets.special]]
+[facets.special]
 limit = 60
 msg = "More likely to stumble obliviously and go stark raving mad."
 
@@ -117,7 +117,7 @@ inverted = true
 4 = "cracks easily under pressure"
 5 = "completely helpless in stressful situations"
 
-[[facets.special]]
+[facets.special]
 limit = 90
 msg = "50% chance to become catatonic when if stressed."
 
@@ -596,7 +596,7 @@ name = "Detachment"
 2 = "Is a hardened individual"
 3 = "Doesn't really care about anything anymore"
 
-[[facets.special]]
+[facets.special]
 limit = 56
 msg = "Greater detachment results in being less affected by tragedies"
 
@@ -609,11 +609,11 @@ inverted = true
 1 = "Mild cave adaptation"
 2 = "Severe cave adaptation"
 
-[[facets.limits]]
+[facets.limits]
 1 = 40
 2 = 73
 3 = 90
 
-[[facets.special]]
+[facets.special]
 limit = 73
 msg = "Will receive unhappy thoughts and adverse physical symptoms in the sun"

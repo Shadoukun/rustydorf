@@ -1,7 +1,7 @@
 [[beliefs]]
 name = "Law"
 
-[[beliefs.levels]]
+[beliefs.levels]
 1 = "is an absolute believer in the rule of law"
 2 = "has a great deal of respect for the law"
 3 =  "respects the law"
@@ -13,7 +13,7 @@ name = "Law"
 [[beliefs]]
 name = "Loyalty"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "has the highest regard for loyalty"
 5 = "greatly prizes loyalty"
 4 = "values loyalty"
@@ -25,7 +25,7 @@ name = "Loyalty"
 [[beliefs]]
 name = "Family"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "sees family as one of the most important things in life"
 5 = "values family greatly"
 4 = "values family"
@@ -37,7 +37,7 @@ name = "Family"
 [[beliefs]]
 name = "Friendship"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes friendship is a key to the ideal life"
 5 = "sees friendship as one of the finer things in life"
 4 = "thinks friendship is important"
@@ -49,7 +49,7 @@ name = "Friendship"
 [[beliefs]]
 name = "Power"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that the acquisition of power over others is the ideal goal in life"
 5 = "sees power over others as something to strive for"
 4 = "respects power"
@@ -61,7 +61,7 @@ name = "Power"
 [[beliefs]]
 name = "Truth"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes the truth is inviolable regardless of the cost"
 5 = "believes that honesty is a high ideal"
 4 = "values honesty"
@@ -73,7 +73,7 @@ name = "Truth"
 [[beliefs]]
 name = "Cunning"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "holds well-laid plans and shrewd deceptions in the highest regard"
 5 = "greatly respects the guileful"
 4 = "values cunning"
@@ -85,7 +85,7 @@ name = "Cunning"
 [[beliefs]]
 name = "Eloquence"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that eloquent expression are of the highest ideals"
 5 = "deeply respects eloquent speakers"
 4 = "values eloquence"
@@ -97,7 +97,7 @@ name = "Eloquence"
 [[beliefs]]
 name = "Fairness"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "holds fairness as one of the highest ideals"
 5 = "has great respect for fairness"
 4 = "respects fairness"
@@ -109,7 +109,7 @@ name = "Fairness"
 [[beliefs]]
 name = "Decorum"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "views decorum as a high ideal and is deeply offended by those that fail to maintain it"
 5 = "greatly respects those that observe decorum"
 4 = "values decorum, dignity and proper behavior"
@@ -121,7 +121,7 @@ name = "Decorum"
 [[beliefs]]
 name = "Tradition"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "holds the maintenance of tradition as one of the highest ideals"
 5 = "is a firm believer in the value of tradition"
 4 = "values tradition"
@@ -133,7 +133,7 @@ name = "Tradition"
 [[beliefs]]
 name = "Artwork"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that the creation and appreciation of artwork is one of the highest ideals"
 5 = "greatly respects artists and their works"
 4 = "values artwork"
@@ -145,7 +145,7 @@ name = "Artwork"
 [[beliefs]]
 name = "Cooperation"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "places cooperation as one of the highest ideals"
 5 = "sees cooperation as very important in life"
 4 = "values cooperation"
@@ -157,7 +157,7 @@ name = "Cooperation"
 [[beliefs]]
 name = "Independence"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that freedom and independence are completely non-negotiable and would fight to defend them"
 5 = "treasures independence"
 4 = "values independence"
@@ -169,7 +169,7 @@ name = "Independence"
 [[beliefs]]
 name = "Stoicism"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "views any show of emotion as offensive"
 5 = "thinks it is of the utmost importance to present a bold face and never show emotion"
 4 = "believes it is important to conceal emotions and not complain"
@@ -181,7 +181,7 @@ name = "Stoicism"
 [[beliefs]]
 name = "Introspection"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "feels that introspection and self-examination are the keys to a good life and worthy of respect"
 5 = "deeply values introspection"
 4 = "sees introspection as important"
@@ -193,7 +193,7 @@ name = "Introspection"
 [[beliefs]]
 name = "Self Control"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that self-mastery and the denial of impulses are of the highest ideals"
 5 = "finds moderation and self-control to be very important"
 4 = "values self-control"
@@ -205,7 +205,7 @@ name = "Self Control"
 [[beliefs]]
 name = "Tranquility"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "views tranquility as one of the highest ideals"
 5 = "strongly values tranquility and quiet"
 4 = "values tranquility and a peaceful day"
@@ -217,7 +217,7 @@ name = "Tranquility"
 [[beliefs]]
 name = "Harmony"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "would have the world operate in complete harmony"
 5 = "strongly believes that a peaceful society without dissent is best"
 4 = "values a harmonious existence"
@@ -229,7 +229,7 @@ name = "Harmony"
 [[beliefs]]
 name = "Merriment"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that little is better in life than a good party"
 5 = "truly values merrymaking and parties"
 4 = "finds merrymaking and partying worthwhile activities"
@@ -241,7 +241,7 @@ name = "Merriment"
 [[beliefs]]
 name = "Craftsmanship"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "holds craftsmanship to be of the highest ideals and celebrates talented artisans and their masterworks"
 5 = "has a great deal of respect for worthy craftsmanship"
 4 = "values good craftsmanship"
@@ -253,7 +253,7 @@ name = "Craftsmanship"
 [[beliefs]]
 name = "Martial Prowess"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that martial prowess defines good character"
 5 = "deeply respects skill at arms"
 4 = "values martial prowess"
@@ -265,7 +265,7 @@ name = "Martial Prowess"
 [[beliefs]]
 name = "Skill"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that the mastery of a skill is one of the highest pursuits"
 5 = "really respects those that take the time to master a skill"
 4 = "respects the development of skill"
@@ -277,7 +277,7 @@ name = "Skill"
 [[beliefs]]
 name = "Hard Work"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that hard work is one of the highest ideals"
 5 = "deeply respects those that work hard at their labors"
 4 = "values hard work"
@@ -289,7 +289,7 @@ name = "Hard Work"
 [[beliefs]]
 name = "Sacrifice"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "finds sacrifice to be one of the highest ideals"
 5 = "believes that those who sacrifice for others should be deeply respected"
 4 = "values sacrifice"
@@ -301,7 +301,7 @@ name = "Sacrifice"
 [[beliefs]]
 name = "Competition"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "holds the idea of competition among the most important"
 5 = "views competition as a crucial driving force in the world"
 4 = "sees competition as reasonably important"
@@ -313,7 +313,7 @@ name = "Competition"
 [[beliefs]]
 name = "Perseverance"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that perseverance is a great personal quality"
 5 = "greatly respects individuals that persevere through trials and labors"
 4 = "respects perseverance"
@@ -325,7 +325,7 @@ name = "Perseverance"
 [[beliefs]]
 name = "Leisure Time"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes that it would be a fine thing if all time were leisure time"
 5 = "treasures leisure time and thinks it is very important in life"
 4 = "values leisure time"
@@ -337,7 +337,7 @@ name = "Leisure Time"
 [[beliefs]]
 name = "Commerce"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "sees engaging in commerce as a high ideal in life"
 5 = "really respects commerce and those that engage in trade"
 4 = "respects commerce"
@@ -349,7 +349,7 @@ name = "Commerce"
 [[beliefs]]
 name = "Romance"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "sees romance as one of the highest ideals"
 5 = "thinks romance is very important in life"
 4 = "values romance"
@@ -361,7 +361,7 @@ name = "Romance"
 [[beliefs]]
 name = "Nature"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "holds nature to be of the absolute highest value"
 5 = "has a deep respect for animals, plants and the natural world"
 4 = "values nature"
@@ -373,7 +373,7 @@ name = "Nature"
 [[beliefs]]
 name = "Peace"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "believes the idea of war is utterly repellent"
 5 = "believes that peace is always preferable to war"
 4 = "values peace over war"
@@ -385,7 +385,7 @@ name = "Peace"
 [[beliefs]]
 name = "Knowledge"
 
-[[beliefs.levels]]
+[beliefs.levels]
 6 = "finds the quest for knowledge to be of the very highest value"
 5 = "views the pursuit of knowledge as deeply important"
 4 = "values knowledge"
