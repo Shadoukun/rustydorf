@@ -1,42 +1,32 @@
 
 #![allow(dead_code)]
-use std::collections::HashMap;
+use std::{collections::HashMap, hash::Hash};
 use serde::Deserialize;
 use toml;
 use std::fs;
 
 #[derive(Default, Deserialize, Debug)]
 pub struct GameData {
-    skill_levels: HashMap<String, String>,
-    professions: Vec<Profession>,
-    attributes: Vec<Attribute>,
-    labors: Vec<Labor>,
-    skills: Vec<Skill>,
-    goals: Vec<Goal>,
-    beliefs: Vec<Beliefs>,
-    facets: Vec<Facet>,
-    unit_jobs: Vec<UnitJobs>,
-    unit_activities: Vec<UnitActivities>,
-    unit_orders: Vec<UnitOrders>,
-    unit_moods: Vec<UnitMoods>,
-    unit_thoughts: Vec<UnitThoughts>,
-    unit_subthoughts: Vec<SubThoughts>,
-    health_info: Vec<HealthInfo>,
-    knowledge: Vec<Knowledge>,
-    needs: Vec<Need>,
-    unit_emotions: Vec<UnitEmotion>,
-    sphere_names: Vec<SphereName>,
-    happiness_levels: Vec<HappinessLevel>,
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct Profession {
-    id: i32,
-    name: String,
-    is_military: bool,
-    can_assign_labors: bool,
-    can_assign_military: bool
+    attributes:         Vec<Attribute>,
+    beliefs:            Vec<Beliefs>,
+    facets:             Vec<Facet>,
+    goals:              Vec<Goal>,
+    happiness_levels:   Vec<HappinessLevel>,
+    health_info:        Vec<HealthInfo>,
+    knowledge:          Vec<Knowledge>,
+    labors:             Vec<Labor>,
+    needs:              Vec<Need>,
+    professions:        Vec<Profession>,
+    skills:             Vec<Skill>,
+    skill_levels:       HashMap<i32, String>,
+    sphere_names:       HashMap<i32, String>,
+    unit_activities:    Vec<UnitActivities>,
+    unit_emotions:      Vec<UnitEmotion>,
+    unit_jobs:          Vec<UnitJobs>,
+    unit_moods:         Vec<UnitMoods>,
+    unit_orders:        Vec<UnitOrders>,
+    unit_thoughts:      Vec<UnitThoughts>,
+    unit_subthoughts:   Vec<SubThoughts>,
 }
 
 #[derive(Default, Deserialize, Debug)]
@@ -44,33 +34,6 @@ struct Attribute {
     id: i32,
     name: String,
     levels: HashMap<String, String>
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct Labor {
-    name: String,
-    id: i32,
-    skill: i32,
-    requires_equipment: bool,
-    excludes: HashMap<String, i32>
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct Skill {
-    name: String,
-    noun: String,
-    profession_id: i32,
-    mood: i32
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct Goal {
-    id: i32,
-    name: String,
-    description: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
@@ -96,6 +59,99 @@ struct FacetsSpecial {
     limit: i32,
     msg: String
 
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct Goal {
+    id: i32,
+    name: String,
+    description: String,
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct HappinessLevel {
+    name: String,
+    threshold: i32,
+    desc: String,
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct HealthInfo {
+    id: i32,
+    name: String,
+    color: String,
+    descriptions: Vec<HealthDescription>,
+    r#type: i32,
+
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct HealthDescription {
+    desc: String,
+    symbol: String
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct Knowledge {
+    name: String,
+    topics: Vec<KnowledgeTopic>,
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct KnowledgeTopic {
+    area: String,
+    subject: String,
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct Labor {
+    name: String,
+    id: i32,
+    skill: i32,
+    requires_equipment: bool,
+    excludes: HashMap<String, i32>
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct Need {
+    name: String,
+    positive: String,
+    negative: String,
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct Profession {
+    id: i32,
+    name: String,
+    is_military: bool,
+    can_assign_labors: bool,
+    can_assign_military: bool
+}
+
+
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct Skill {
+    name: String,
+    noun: String,
+    profession_id: i32,
+    mood: i32
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct SphereName {
+    name: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
@@ -178,60 +234,6 @@ struct UnitEmotion {
     emotion: String,
     color:  i32,
     divider: i32,
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct HealthInfo {
-    id: i32,
-    name: String,
-    color: String,
-    descriptions: Vec<HealthDescription>,
-    r#type: i32,
-
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct HealthDescription {
-    desc: String,
-    symbol: String
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct Knowledge {
-    name: String,
-    topics: Vec<KnowledgeTopic>,
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct KnowledgeTopic {
-    area: String,
-    subject: String,
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct HappinessLevel {
-    name: String,
-    threshold: i32,
-    desc: String,
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct Need {
-    name: String,
-    positive: String,
-    negative: String,
-}
-
-#[derive(Default, Deserialize, Debug)]
-#[serde(default)]
-struct SphereName {
-    name: String,
 }
 
 pub fn load_game_data() -> GameData {

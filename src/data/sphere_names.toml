@@ -1,389 +1,130 @@
-[[sphere_names]]
-name = "Agriculture"
-
-[[sphere_names]]
-name = "Animals"
-
-[[sphere_names]]
-name = "Art"
-
-[[sphere_names]]
-name = "Balance"
-
-[[sphere_names]]
-name = "Beauty"
-
-[[sphere_names]]
-name = "Birth"
-
-[[sphere_names]]
-name = "Blight"
-
-[[sphere_names]]
-name = "Boundaries"
-
-[[sphere_names]]
-name = "Caverns"
-
-[[sphere_names]]
-name = "Chaos"
-
-[[sphere_names]]
-name = "Charity"
-
-[[sphere_names]]
-name = "Children"
-
-[[sphere_names]]
-name = "Coasts"
-
-[[sphere_names]]
-name = "Consolation"
-
-[[sphere_names]]
-name = "Courage"
-
-[[sphere_names]]
-name = "Crafts"
-
-[[sphere_names]]
-name = "Creation"
-
-[[sphere_names]]
-name = "Dance"
-
-[[sphere_names]]
-name = "Darkness"
-
-[[sphere_names]]
-name = "Dawn"
-
-[[sphere_names]]
-name = "Day"
-
-[[sphere_names]]
-name = "Death"
-
-[[sphere_names]]
-name = "Deformity"
-
-[[sphere_names]]
-name = "Depravity"
-
-[[sphere_names]]
-name = "Discipline"
-
-[[sphere_names]]
-name = "Disease"
-
-[[sphere_names]]
-name = "Dreams"
-
-[[sphere_names]]
-name = "Dusk"
-
-[[sphere_names]]
-name = "Duty"
-
-[[sphere_names]]
-name = "Earth"
-
-[[sphere_names]]
-name = "Family"
-
-[[sphere_names]]
-name = "Fame"
-
-[[sphere_names]]
-name = "Fate"
-
-[[sphere_names]]
-name = "Fertility"
-
-[[sphere_names]]
-name = "Festivals"
-
-[[sphere_names]]
-name = "Fire"
-
-[[sphere_names]]
-name = "Fish"
-
-[[sphere_names]]
-name = "Fishing"
-
-[[sphere_names]]
-name = "Food"
-
-[[sphere_names]]
-name = "Forgiveness"
-
-[[sphere_names]]
-name = "Fortresses"
-
-[[sphere_names]]
-name = "Freedom"
-
-[[sphere_names]]
-name = "Gambling"
-
-[[sphere_names]]
-name = "Games"
-
-[[sphere_names]]
-name = "Generosity"
-
-[[sphere_names]]
-name = "Happiness"
-
-[[sphere_names]]
-name = "Healing"
-
-[[sphere_names]]
-name = "Hospitality"
-
-[[sphere_names]]
-name = "Hunting"
-
-[[sphere_names]]
-name = "Inspiration"
-
-[[sphere_names]]
-name = "Jealousy"
-
-[[sphere_names]]
-name = "Jewels"
-
-[[sphere_names]]
-name = "Justice"
-
-[[sphere_names]]
-name = "Labor"
-
-[[sphere_names]]
-name = "Lakes"
-
-[[sphere_names]]
-name = "Laws"
-
-[[sphere_names]]
-name = "Lies"
-
-[[sphere_names]]
-name = "Light"
-
-[[sphere_names]]
-name = "Lightning"
-
-[[sphere_names]]
-name = "Longevity"
-
-[[sphere_names]]
-name = "Love"
-
-[[sphere_names]]
-name = "Loyalty"
-
-[[sphere_names]]
-name = "Luck"
-
-[[sphere_names]]
-name = "Lust"
-
-[[sphere_names]]
-name = "Marriage"
-
-[[sphere_names]]
-name = "Mercy"
-
-[[sphere_names]]
-name = "Metals"
-
-[[sphere_names]]
-name = "Minerals"
-
-[[sphere_names]]
-name = "Misery"
-
-[[sphere_names]]
-name = "Mist"
-
-[[sphere_names]]
-name = "Moon"
-
-[[sphere_names]]
-name = "Mountains"
-
-[[sphere_names]]
-name = "Muck"
-
-[[sphere_names]]
-name = "Murder"
-
-[[sphere_names]]
-name = "Music"
-
-[[sphere_names]]
-name = "Nature"
-
-[[sphere_names]]
-name = "Night"
-
-[[sphere_names]]
-name = "Nightmares"
-
-[[sphere_names]]
-name = "Oaths"
-
-[[sphere_names]]
-name = "Oceans"
-
-[[sphere_names]]
-name = "Order"
-
-[[sphere_names]]
-name = "Painting"
-
-[[sphere_names]]
-name = "Peace"
-
-[[sphere_names]]
-name = "Persuasion"
-
-[[sphere_names]]
-name = "Plants"
-
-[[sphere_names]]
-name = "Poetry"
-
-[[sphere_names]]
-name = "Pregnancy"
-
-[[sphere_names]]
-name = "Rain"
-
-[[sphere_names]]
-name = "Rainbows"
-
-[[sphere_names]]
-name = "Rebirth"
-
-[[sphere_names]]
-name = "Revelry"
-
-[[sphere_names]]
-name = "Revenge"
-
-[[sphere_names]]
-name = "Rivers"
-
-[[sphere_names]]
-name = "Rulership"
-
-[[sphere_names]]
-name = "Rumors"
-
-[[sphere_names]]
-name = "Sacrifice"
-
-[[sphere_names]]
-name = "Salt"
-
-[[sphere_names]]
-name = "Scholarship"
-
-[[sphere_names]]
-name = "Seasons"
-
-[[sphere_names]]
-name = "Silence"
-
-[[sphere_names]]
-name = "Sky"
-
-[[sphere_names]]
-name = "Song"
-
-[[sphere_names]]
-name = "Speech"
-
-[[sphere_names]]
-name = "Stars"
-
-[[sphere_names]]
-name = "Storms"
-
-[[sphere_names]]
-name = "Strength"
-
-[[sphere_names]]
-name = "Suicide"
-
-[[sphere_names]]
-name = "Sun"
-
-[[sphere_names]]
-name = "Theft"
-
-[[sphere_names]]
-name = "Thralldom"
-
-[[sphere_names]]
-name = "Thunder"
-
-[[sphere_names]]
-name = "Torture"
-
-[[sphere_names]]
-name = "Trade"
-
-[[sphere_names]]
-name = "Travelers"
-
-[[sphere_names]]
-name = "Treachery"
-
-[[sphere_names]]
-name = "Trees"
-
-[[sphere_names]]
-name = "Trickery"
-
-[[sphere_names]]
-name = "Truth"
-
-[[sphere_names]]
-name = "Twilight"
-
-[[sphere_names]]
-name = "Valor"
-
-[[sphere_names]]
-name = "Victory"
-
-[[sphere_names]]
-name = "Volcanos"
-
-[[sphere_names]]
-name = "War"
-
-[[sphere_names]]
-name = "Water"
-
-[[sphere_names]]
-name = "Wealth"
-
-[[sphere_names]]
-name = "Weather"
-
-[[sphere_names]]
-name = "Wind"
-
-[[sphere_names]]
-name = "Wisdom"
-
-[[sphere_names]]
-name = "Writing"
-
-[[sphere_names]]
-name = "Youth"
+[sphere_names]
+1 = "Animals"
+2 = "Art"
+3 = "Balance"
+4 = "Beauty"
+5 = "Birth"
+6 = "Blight"
+7 = "Boundaries"
+8 = "Caverns"
+9 = "Chaos"
+10 = "Charity"
+11 = "Children"
+12 = "Coasts"
+13 = "Consolation"
+14 = "Courage"
+15 = "Crafts"
+16 = "Creation"
+17 = "Dance"
+18 = "Darkness"
+19 = "Dawn"
+20 = "Day"
+21 = "Death"
+22 = "Deformity"
+23 = "Depravity"
+24 = "Discipline"
+25 = "Disease"
+26 = "Dreams"
+27 = "Dusk"
+28 = "Duty"
+29 = "Earth"
+30 = "Family"
+31 = "Fame"
+32 = "Fate"
+33 = "Fertility"
+34 = "Festivals"
+35 = "Fire"
+36 = "Fish"
+37 = "Fishing"
+38 = "Food"
+39 = "Forgiveness"
+40 = "Fortresses"
+41 = "Freedom"
+42 = "Gambling"
+43 = "Games"
+44 = "Generosity"
+45 = "Happiness"
+46 = "Healing"
+47 = "Hospitality"
+48 = "Hunting"
+49 = "Inspiration"
+50 = "Jealousy"
+51 = "Jewels"
+52 = "Justice"
+53 = "Labor"
+54 = "Lakes"
+55 = "Laws"
+56 = "Lies"
+57 = "Light"
+58 = "Lightning"
+59 = "Longevity"
+60 = "Love"
+61 = "Loyalty"
+62 = "Luck"
+63 = "Lust"
+64 = "Marriage"
+65 = "Mercy"
+66 = "Metals"
+67 = "Minerals"
+68 = "Misery"
+69 = "Mist"
+70 = "Moon"
+71 = "Mountains"
+72 = "Muck"
+73 = "Murder"
+74 = "Music"
+75 = "Nature"
+76 = "Night"
+77 = "Nightmares"
+78 = "Oaths"
+79 = "Oceans"
+80 = "Order"
+81 = "Painting"
+82 = "Peace"
+83 = "Persuasion"
+84 = "Plants"
+85 = "Poetry"
+86 = "Pregnancy"
+87 = "Rain"
+88 = "Rainbows"
+89 = "Rebirth"
+90 = "Revelry"
+91 = "Revenge"
+92 = "Rivers"
+93 = "Rulership"
+94 = "Rumors"
+95 = "Sacrifice"
+96 = "Salt"
+97 = "Scholarship"
+98 = "Seasons"
+99 = "Silence"
+100 = "Sky"
+101 = "Song"
+102 = "Speech"
+103 = "Stars"
+104 = "Storms"
+105 = "Strength"
+106 = "Suicide"
+107 = "Sun"
+108 = "Theft"
+109 = "Thralldom"
+110 = "Thunder"
+111 = "Torture"
+112 = "Trade"
+113 = "Travelers"
+114 = "Treachery"
+115 = "Trees"
+116 = "Trickery"
+117 = "Truth"
+118 = "Twilight"
+119 = "Valor"
+120 = "Victory"
+121 = "Volcanos"
+122 = "War"
+123 = "Water"
+124 = "Wealth"
+125 = "Weather"
+126 = "Wind"
+127 = "Wisdom"
+128 = "Writing"
+129 = "Youth"
