@@ -1,198 +1,204 @@
 [[unit_subthoughts]]
 id = 0
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -1, thought = "after complaining"}
-2 = { id = 25, thought = "after bringing up job scarcity in a meeting" }
-3 = { id = 26, thought = "after making suggestions about work allocation" }
-4 = { id = 27, thought = "after requesting weapon production" }
-5 = { id = 28, thought = "while yelling at somebody in charge" }
-6 = { id = 29, thought = "while crying on somebody in charge" }
+subthoughts = [
+    { id = -1, thought = "after complaining"},
+    { id = 25, thought = "after bringing up job scarcity in a meeting" },
+    { id = 26, thought = "after making suggestions about work allocation" },
+    { id = 27, thought = "after requesting weapon production" },
+    { id = 28, thought = "while yelling at somebody in charge" },
+    { id = 29, thought = "while crying on somebody in charge" },
+]
 
 [[unit_subthoughts]]
 id = 1
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -1, thought = "while being yelled at" }
-2 = { id = 28, thought = "while being yelled at by an unhappy citizen" }
-3 = { id = 29, thought = "while being cried on by an unhappy citizen" }
+subthoughts = [
+    { id = -1, thought = "while being yelled at" },
+    { id = 28, thought = "while being yelled at by an unhappy citizen" },
+    { id = 29, thought = "while being cried on by an unhappy citizen" },
+]
 
 [[unit_subthoughts]]
 id = 2
 placeholder = "[relation]"
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -1, thought = "a creature" }
-2 = { id = 0, thought = "a pet" }
-3 = { id = 1, thought = "their spouse" }
-4 = { id = 2, thought = "their mother" }
-5 = { id = 3, thought = "their father" }
-6 = { id = 9, thought = "their lover" }
-7 = { id = 11, thought = "their sibling" }
-8 = { id = 12, thought = "a child" }
-9 = { id = 13, thought = "a friend" }
-10 = { id = 14, thought = "somebody annoying" }
-11 = { id = 15, thought = "someone they worship" }
-12 = { id = 16, thought = "a longtime acquaintance" }
-13 = { id = 17, thought = "a passing acquaintance" }
-14 = { id = 18, thought = "an animal training partner" }
-15 = { id = 23, thought = "someone on friendly terms" }
+subthoughts = [
+    { id = -1, thought = "a creature" },
+    { id = 0, thought = "a pet" },
+    { id = 1, thought = "their spouse" },
+    { id = 2, thought = "their mother" },
+    { id = 3, thought = "their father" },
+    { id = 9, thought = "their lover" },
+    { id = 11, thought = "their sibling" },
+    { id = 12, thought = "a child" },
+    { id = 13, thought = "a friend" },
+    { id = 14, thought = "somebody annoying" },
+    { id = 15, thought = "someone they worship" },
+    { id = 16, thought = "a longtime acquaintance" },
+    { id = 17, thought = "a passing acquaintance" },
+    { id = 18, thought = "an animal training partner" },
+    { id = 23, thought = "someone on friendly terms" },
+]
 
 [[unit_subthoughts]]
 id = 3
 placeholder = "[meet]"
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -1, thought = "meet with somebody" }
-2 = { id = 25, thought = "find somebody to complain to about job scarcity" }
-3 = { id = 26, thought = "make suggestions about work allocation" }
-4 = { id = 27, thought = "request weapon production" }
-5 = { id = 28, thought = "find somebody in charge to yell at" }
-6 = { id = 29, thought = "find somebody in charge to cry on" }
+subthoughts = [
+    { id = -1, thought = "meet with somebody" },
+    { id = 25, thought = "find somebody to complain to about job scarcity" },
+    { id = 26, thought = "make suggestions about work allocation" },
+    { id = 27, thought = "request weapon production" },
+    { id = 28, thought = "find somebody in charge to yell at" },
+    { id = 29, thought = "find somebody in charge to cry on" },
+]
 
 [[unit_subthoughts]]
 id = 4
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -1, thought = "sleeping fitfully" }
-2 = { id = 0, thought = "sleeping uneasily due to noise" }
-3 = { id = 1, thought = "being disturbed during sleep by loud noises" }
-4 = { id = 2, thought = "loud noises made it impossible to sleep" }
+subthoughts = [
+    { id = -1, thought = "sleeping fitfully" },
+    { id = 0, thought = "sleeping uneasily due to noise" },
+    { id = 1, thought = "being disturbed during sleep by loud noises" },
+    { id = 2, thought = "loud noises made it impossible to sleep" },
+]
 
 [[unit_subthoughts]]
 id = 5
 placeholder = "[dead somebody]"
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -1, thought = "a dead creature" }
-2 = { id = 0, thought = "a dead pet" }
-3 = { id = 1, thought = "their dead spouse" }
-4 = { id = 2, thought = "their dead mother" }
-5 = { id = 3, thought = "their dead father" }
-6 = { id = 9, thought = "their dead lover" }
-7 = { id = 11, thought = "their dead sibling" }
-8 = { id = 12, thought = "a dead child" }
-9 = { id = 13, thought = "a dead friend" }
-10 = { id = 14, thought = "a dead annoying acquaintance" }
-11 = { id = 18, thought = "a dead animal training partner" }
-12 = { id = 22, thought = "a dead animal" }
+subthoughts = [
+    { id = -1, thought = "a dead creature" },
+    { id = 0, thought = "a dead pet" },
+    { id = 1, thought = "their dead spouse" },
+    { id = 2, thought = "their dead mother" },
+    { id = 3, thought = "their dead father" },
+    { id = 9, thought = "their dead lover" },
+    { id = 11, thought = "their dead sibling" },
+    { id = 12, thought = "a dead child" },
+    { id = 13, thought = "a dead friend" },
+    { id = 14, thought = "a dead annoying acquaintance" },
+    { id = 18, thought = "a dead animal training partner" },
+    { id = 22, thought = "a dead animal" },
+]
 
 [[unit_subthoughts]]
 id = 6
 placeholder = "[quality meal]"
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -1, thought = "meal" }
-2 = { id = 1, thought = "pretty decent meal" }
-3 = { id = 2, thought = "fine dish" }
-4 = { id = 3, thought = "wonderful dish" }
-5 = { id = 4, thought = "truly decadent dish" }
-6 = { id = 5, thought = "legendary meal" }
+subthoughts = [
+    { id = -1, thought = "meal" },
+    { id = 1, thought = "pretty decent meal" },
+    { id = 2, thought = "fine dish" },
+    { id = 3, thought = "wonderful dish" },
+    { id = 4, thought = "truly decadent dish" },
+    { id = 5, thought = "legendary meal" },
+]
 
 [[unit_subthoughts]]
 id = 7
 placeholder = "[quality drink]"
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -1, thought = "" }
-2 = { id = 1, thought = "pretty decent" }
-3 = { id = 2, thought = "fine" }
-4 = { id = 3, thought = "wonderful" }
-5 = { id = 4, thought = "truly decadent" }
-6 = { id = 5, thought = "legendary" }
+subthoughts = [
+    { id = -1, thought = "drink" },
+    { id = 1, thought = "pretty decent drink" },
+    { id = 2, thought = "fine drink" },
+    { id = 3, thought = "wonderful drink" },
+    { id = 4, thought = "truly decadent drink" },
+    { id = 5, thought = "legendary drink" },
+]
 
 [[unit_subthoughts]]
 id = 8
 placeholder = "[quality]"
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -5, thought = "horribly substandard" }
-2 = { id = -4, thought = "horrible" }
-3 = { id = -3, thought = "awful" }
-4 = { id = -2, thought = "very poor" }
-5 = { id = -1, thought = "poor" }
-6 = { id = 1, thought = "good" }
-7 = { id = 2, thought = "very good" }
-8 = { id = 3, thought = "great" }
-9 = { id = 4, thought = "fantastic" }
-10 = { id = 5, thought = "legendary" }
+subthoughts = [
+    { id = -5, thought = "horribly substandard" },
+    { id = -4, thought = "horrible" },
+    { id = -3, thought = "awful" },
+    { id = -2, thought = "very poor" },
+    { id = -1, thought = "poor" },
+    { id = 1, thought = "good" },
+    { id = 2, thought = "very good" },
+    { id = 3, thought = "great" },
+    { id = 4, thought = "fantastic" },
+    { id = 5, thought = "legendary" },
+]
 
 [[unit_subthoughts]]
 id = 9
 placeholder = "[quality]"
+subthoughts = [
+    { id = -5, thought = "horribly substandard" },
+    { id = -4, thought = "horrible" },
+    { id = -3, thought = "awful" },
+    { id = -2, thought = "very poor" },
+    { id = -1, thought = "poor" },
+    { id = 1, thought = "good" },
+    { id = 2, thought = "very good" },
+    { id = 3, thought = "great" },
+    { id = 4, thought = "fantastic" },
+    { id = 5, thought = "palatial" },
+]
 
-[[unit_subthoughts.subthoughts]]
-1 = { id = -5, thought = "horribly substandard" }
-2 = { id = -4, thought = "horrible" }
-3 = { id = -3, thought = "awful" }
-4 = { id = -2, thought = "very poor" }
-5 = { id = -1, thought = "poor" }
-6 = { id = 1, thought = "good" }
-7 = { id = 2, thought = "very good" }
-8 = { id = 3, thought = "great" }
-9 = { id = 4, thought = "fantastic" }
-10 = { id = 5, thought = "palatial" }
+[[unit_subthoughts]]
 
 [[unit_subthoughts]]
 id = 10
 placeholder = "[setting]"
 
-[[unit_subthoughts.subthoughts]]
-1 = { id = -5, thought = "horribly substandard setting" }
-2 = { id = -4, thought = "horrible setting" }
-3 = { id = -3, thought = "awful setting" }
-4 = { id = -2, thought = "very poor setting" }
-5 = { id = -1, thought = "poor setting" }
-6 = { id = 1, thought = "good setting" }
-7 = { id = 2, thought = "very good setting" }
-8 = { id = 3, thought = "great setting" }
-9 = { id = 4, thought = "fantastic setting" }
-10 = { id = 5, thought = "setting worthy of legends" }
+[[unit_subthoughts]]
+id = 10
+placeholder = "[setting]"
+subthoughts = [
+    { id = -5, thought = "horribly substandard setting" },
+    { id = -4, thought = "horrible setting" },
+    { id = -3, thought = "awful setting" },
+    { id = -2, thought = "very poor setting" },
+    { id = -1, thought = "poor setting" },
+    { id = 1, thought = "good setting" },
+    { id = 2, thought = "very good setting" },
+    { id = 3, thought = "great setting" },
+    { id = 4, thought = "fantastic setting" },
+    { id = 5, thought = "setting worthy of legends" },
+]
 
 [[unit_subthoughts]]
 id = 11
 placeholder = "[quality item]"
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = -1, thought = "" }
-2 = { id = 1, thought = "well-crafted" }
-3 = { id = 2, thought = "finely-crafted" }
-4 = { id = 3, thought = "superior" }
-5 = { id = 4, thought = "exceptional" }
-6 = { id = 5, thought = "truly splendid" }
+subthoughts = [
+    { id = -1, thought = "" },
+    { id = 1, thought = "well-crafted" },
+    { id = 2, thought = "finely-crafted" },
+    { id = 3, thought = "superior" },
+    { id = 4, thought = "exceptional" },
+    { id = 5, thought = "truly splendid" },
+]
 
 [[unit_subthoughts]]
 id = 12
 placeholder = "[reason]"
-
-[[unit_subthoughts.subthoughts]]
-1 = { id = 0, thought = "being away from people" }
-2 = { id = 1, thought = "kept from alcohol" }
-3 = { id = 2, thought = "being unable to pray" }
-4 = { id = 3, thought = "being unoccupied" }
-5 = { id = 4, thought = "being uncreative" }
-6 = { id = 5, thought = "leading unexciting life" }
-7 = { id = 6, thought = "not learning anything" }
-8 = { id = 7, thought = "being away from family" }
-9 = { id = 8, thought = "being away from friends" }
-10 = { id = 9, thought = "missing an eloquent speech" }
-11 = { id = 10, thought = "being away from traditions" }
-12 = { id = 11, thought = "a lack of introspection" }
-13 = { id = 12, thought = "being unable to make merry" }
-14 = { id = 13, thought = "being unable to practice a craft" }
-15 = { id = 14, thought = "being unable to practice a martial art" }
-16 = { id = 15, thought = "being unable to practice skill" }
-17 = { id = 16, thought = "being unable to take it easy" }
-18 = { id = 17, thought = "unable to make romance" }
-19 = { id = 18, thought = "a lack of animals" }
-20 = { id = 19, thought = "a lack of great beasts" }
-21 = { id = 20, thought = "being unable to acquire something" }
-22 = { id = 21, thought = "a lack of decent meals" }
-23 = { id = 22, thought = "unable to fight" }
-24 = { id = 23, thought = "a lack of trouble-making" }
-25 = { id = 24, thought = "being unable to argue" }
-26 = { id = 25, thought = "being unable to be extravagant" }
-27 = { id = 26, thought = "being unable to wander" }
-28 = { id = 27, thought = "being unable to help anybody" }
-29 = { id = 28, thought = "a lack of abstract thinking" }
-30 = { id = 29, thought = "being unable to admire art" }
+subthoughts = [
+    { id = 0, thought = "being away from people" },
+    { id = 1, thought = "kept from alcohol" },
+    { id = 2, thought = "being unable to pray" },
+    { id = 3, thought = "being unoccupied" },
+    { id = 4, thought = "being uncreative" },
+    { id = 5, thought = "leading unexciting life" },
+    { id = 6, thought = "not learning anything" },
+    { id = 7, thought = "being away from family" },
+    { id = 8, thought = "being away from friends" },
+    { id = 9, thought = "missing an eloquent speech" },
+    { id = 10, thought = "being away from traditions" },
+    { id = 11, thought = "a lack of introspection" },
+    { id = 12, thought = "being unable to make merry" },
+    { id = 13, thought = "being unable to practice a craft" },
+    { id = 14, thought = "being unable to practice a martial art" },
+    { id = 15, thought = "being unable to practice skill" },
+    { id = 16, thought = "being unable to take it easy" },
+    { id = 17, thought = "unable to make romance" },
+    { id = 18, thought = "a lack of animals" },
+    { id = 19, thought = "a lack of great beasts" },
+    { id = 20, thought = "being unable to acquire something" },
+    { id = 21, thought = "a lack of decent meals" },
+    { id = 22, thought = "unable to fight" },
+    { id = 23, thought = "a lack of trouble-making" },
+    { id = 24, thought = "being unable to argue" },
+    { id = 25, thought = "being unable to be extravagant" },
+    { id = 26, thought = "being unable to wander" },
+    { id = 27, thought = "being unable to help anybody" },
+    { id = 28, thought = "a lack of abstract thinking" },
+    { id = 29, thought = "being unable to admire art" },
+]

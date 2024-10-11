@@ -1,171 +1,849 @@
-[unit_emotions]
-1 = { emotion = "Nothing", color = 7, divider = 0 }
-2 = { emotion = "Acceptance", color = 7, divider = -8 }
-3 = { emotion = "Adoration", color = 11, divider = -1 }
-4 = { emotion = "Affection", color = 11, divider = -2 }
-5 = { emotion = "Agitation", color = 6, divider = 4 }
-6 = { emotion = "Aggravation", color = 6, divider = 4 }
-7 = { emotion = "Agony", color = 14, divider = 1 }
-8 = { emotion = "Alarm", color = 12, divider = 4 }
-9 = { emotion = "Alienation", color = 6, divider = 8 }
-10 = { emotion = "Amazement", color = 9, divider = 0 }
-11 = { emotion = "Ambivalence", color = 7, divider = 0 }
-12 = { emotion = "Amusement", color = 10, divider = -4 }
-13 = { emotion = "Anger", color = 12, divider = 2 }
-14 = { emotion = "Existential Crisis", color = 14, divider = 1 }
-15 = { emotion = "Anguish", color = 14, divider = 1 }
-16 = { emotion = "Annoyed", color = 6, divider = 8 }
-17 = { emotion = "Unknown", color = 7, divider = 0 }
-18 = { emotion = "Anxiety", color = 6, divider = 4 }
-19 = { emotion = "Apathy", color = 7, divider = 0 }
-20 = { emotion = "Unknown", color = 7, divider = 0 }
-21 = { emotion = "Arousal", color = 11, divider = -8 }
-22 = { emotion = "Astonishment", color = 9, divider = 0 }
-23 = { emotion = "Unknown", color = 7, divider = 0 }
-24 = { emotion = "Aversion", color = 6, divider = 4 }
-25 = { emotion = "Awe", color = 9, divider = 0 }
-26 = { emotion = "Bitterness", color = 6, divider = 2 }
-27 = { emotion = "Bliss", color = 10, divider = -1 }
-28 = { emotion = "Boredom", color = 6, divider = 8 }
-29 = { emotion = "Caring", color = 11, divider = -2 }
-30 = { emotion = "Unknown", color = 7, divider = 0 }
-31 = { emotion = "Confusion", color = 6, divider = 8 }
-32 = { emotion = "Contempt", color = 6, divider = 4 }
-33 = { emotion = "Contentment", color = 10, divider = -8 }
-34 = { emotion = "Unknown", color = 7, divider = 0 }
-35 = { emotion = "Unknown", color = 7, divider = 0 }
-36 = { emotion = "Defeated", color = 14, divider = 2 }
-37 = { emotion = "Dejection", color = 6, divider = 4 }
-38 = { emotion = "Delight", color = 10, divider = -1 }
-39 = { emotion = "Unknown", color = 7, divider = 0 }
-40 = { emotion = "Unknown", color = 7, divider = 0 }
-41 = { emotion = "Despair", color = 14, divider = 1 }
-42 = { emotion = "Disappointment", color = 6, divider = 8 }
-43 = { emotion = "Disgust", color = 14, divider = 4 }
-44 = { emotion = "Disillusionment", color = 6, divider = 8 }
-45 = { emotion = "Dislike", color = 6, divider = 8 }
-46 = { emotion = "Dismay", color = 14, divider = 2 }
-47 = { emotion = "Displeasure", color = 6, divider = 8 }
-48 = { emotion = "Distress", color = 14, divider = 2 }
-49 = { emotion = "Doubt", color = 6, divider = 8 }
-50 = { emotion = "Unknown", color = 7, divider = 0 }
-51 = { emotion = "Eagerness", color = 9, divider = -4 }
-52 = { emotion = "Unknown", color = 7, divider = 0 }
-53 = { emotion = "Elation", color = 10, divider = -2 }
-54 = { emotion = "Embarrassment", color = 6, divider = 8 }
-55 = { emotion = "Empathy", color = 11, divider = -2 }
-56 = { emotion = "Emptiness", color = 14, divider = 4 }
-57 = { emotion = "Enjoyment", color = 10, divider = -8 }
-58 = { emotion = "Unknown", color = 7, divider = 0 }
-59 = { emotion = "Enthusiastic", color = 10, divider = -8 }
-60 = { emotion = "Unknown", color = 7, divider = 0 }
-61 = { emotion = "Euphoric", color = 10, divider = -1 }
-62 = { emotion = "Exasperation", color = 6, divider = 8 }
-63 = { emotion = "Excited", color = 9, divider = 0 }
-64 = { emotion = "Exhilaration", color = 9, divider = -2 }
-65 = { emotion = "Expectant", color = 10, divider = -8 }
-66 = { emotion = "Afraid", color = 12, divider = 1 }
-67 = { emotion = "Ferocity", color = 12, divider = 2 }
-68 = { emotion = "Fondness", color = 11, divider = -8 }
-69 = { emotion = "Freedom", color = 10, divider = -4 }
-70 = { emotion = "Fright", color = 14, divider = 2 }
-71 = { emotion = "Frustration", color = 6, divider = 8 }
-72 = { emotion = "Unknown", color = 7, divider = 0 }
-73 = { emotion = "Gaiety", color = 10, divider = -2 }
-74 = { emotion = "Unknown", color = 7, divider = 0 }
-75 = { emotion = "Glee", color = 10, divider = -2 }
-76 = { emotion = "Gloom", color = 6, divider = 4 }
-77 = { emotion = "Glum", color = 6, divider = 8 }
-78 = { emotion = "Gratitude", color = 11, divider = -4 }
-79 = { emotion = "Unknown", color = 7, divider = 0 }
-80 = { emotion = "Grief", color = 14, divider = 2 }
-81 = { emotion = "Grim Satisfaction", color = 13, divider = 0 }
-82 = { emotion = "Grouchiness", color = 6, divider = 8 }
-83 = { emotion = "Grumpiness", color = 6, divider = 8 }
-84 = { emotion = "Guilt", color = 6, divider = 4 }
-85 = { emotion = "Happiness", color = 10, divider = -2 }
-86 = { emotion = "Hatred", color = 12, divider = 2 }
-87 = { emotion = "Unknown", color = 7, divider = 0 }
-88 = { emotion = "Hope", color = 10, divider = -2 }
-89 = { emotion = "Hopelessness", color = 14, divider = 2 }
-90 = { emotion = "Horrified", color = 12, divider = 1 }
-91 = { emotion = "Unknown", color = 7, divider = 0 }
-92 = { emotion = "Humiliation", color = 14, divider = 4 }
-93 = { emotion = "Unknown", color = 7, divider = 0 }
-94 = { emotion = "Unknown", color = 7, divider = 0 }
-95 = { emotion = "Unknown", color = 7, divider = 0 }
-96 = { emotion = "Unknown", color = 7, divider = 0 }
-97 = { emotion = "Insulted", color = 6, divider = 4 }
-98 = { emotion = "Interest", color = 9, divider = -8 }
-99 = { emotion = "Irritation", color = 6, divider = 8 }
-100 = { emotion = "Isolation", color = 6, divider = 4 }
-101 = { emotion = "Unknown", color = 7, divider = 0 }
-102 = { emotion = "Jolliness", color = 10, divider = -4 }
-103 = { emotion = "Jovialty", color = 10, divider = -2 }
-104 = { emotion = "Joy", color = 10, divider = -1 }
-105 = { emotion = "Jubilation", color = 10, divider = -1 }
-106 = { emotion = "Loathing", color = 12, divider = 2 }
-107 = { emotion = "Loneliness", color = 6, divider = 4 }
-108 = { emotion = "Unknown", color = 7, divider = 0 }
-109 = { emotion = "Love", color = 11, divider = -1 }
-110 = { emotion = "Unknown", color = 7, divider = 0 }
-111 = { emotion = "Lust", color = 11, divider = -8 }
-112 = { emotion = "Unknown", color = 7, divider = 0 }
-113 = { emotion = "Misery", color = 14, divider = 1 }
-114 = { emotion = "Mortification", color = 14, divider = 2 }
-115 = { emotion = "Unknown", color = 7, divider = 0 }
-116 = { emotion = "Nervousness", color = 6, divider = 8 }
-117 = { emotion = "Nostalgia", color = 9, divider = -8 }
-118 = { emotion = "Optimism", color = 10, divider = -4 }
-119 = { emotion = "Outrage", color = 12, divider = 2 }
-120 = { emotion = "Panic", color = 14, divider = 1 }
-121 = { emotion = "Patience", color = 7, divider = -8 }
-122 = { emotion = "Passion", color = 11, divider = -2 }
-123 = { emotion = "Pessimistic", color = 6, divider = 8 }
-124 = { emotion = "Unknown", color = 7, divider = 0 }
-125 = { emotion = "Pleasure", color = 11, divider = -4 }
-126 = { emotion = "Pride", color = 11, divider = -4 }
-127 = { emotion = "Rage", color = 12, divider = 1 }
-128 = { emotion = "Rapture", color = 11, divider = -1 }
-129 = { emotion = "Rejection", color = 6, divider = 4 }
-130 = { emotion = "Relief", color = 10, divider = -2 }
-131 = { emotion = "Regret", color = 6, divider = 8 }
-132 = { emotion = "Remorse", color = 6, divider = 4 }
-133 = { emotion = "Repentance", color = 9, divider = -2 }
-134 = { emotion = "Resentment", color = 6, divider = 8 }
-135 = { emotion = "Unknown", color = 7, divider = 0 }
-136 = { emotion = "Indignant", color = 6, divider = 8 }
-137 = { emotion = "Sadness", color = 14, divider = 4 }
-138 = { emotion = "Satisfied", color = 10, divider = -8 }
-139 = { emotion = "Unknown", color = 7, divider = 0 }
-140 = { emotion = "Self Pity", color = 6, divider = 8 }
-141 = { emotion = "Unknown", color = 7, divider = 0 }
-142 = { emotion = "Servile", color = 9, divider = 0 }
-143 = { emotion = "Shaken", color = 14, divider = 1 }
-144 = { emotion = "Shame", color = 14, divider = 4 }
-145 = { emotion = "Shock", color = 14, divider = 1 }
-146 = { emotion = "Unknown", color = 7, divider = 0 }
-147 = { emotion = "Unknown", color = 7, divider = 0 }
-148 = { emotion = "Unknown", color = 7, divider = 0 }
-149 = { emotion = "Unknown", color = 7, divider = 0 }
-150 = { emotion = "Suspicion", color = 13, divider = 8 }
-151 = { emotion = "Sympathy", color = 11, divider = -8 }
-152 = { emotion = "Tenderness", color = 11, divider = -2 }
-153 = { emotion = "Unknown", color = 7, divider = 0 }
-154 = { emotion = "Terror", color = 12, divider = 1 }
-155 = { emotion = "Thrill", color = 9, divider = -2 }
-156 = { emotion = "Unknown", color = 7, divider = 0 }
-157 = { emotion = "Triumph", color = 10, divider = -2 }
-158 = { emotion = "Uneasiness", color = 6, divider = 8 }
-159 = { emotion = "Unhappiness", color = 6, divider = 4 }
-160 = { emotion = "Vengeful", color = 12, divider = 4 }
-161 = { emotion = "Unknown", color = 7, divider = 0 }
-162 = { emotion = "Wonder", color = 9, divider = -8 }
-163 = { emotion = "Worry", color = 6, divider = 8 }
-164 = { emotion = "Wrath", color = 12, divider = 1 }
-165 = { emotion = "Zeal", color = 9, divider = -4 }
-166 = { emotion = "Unknown", color = 7, divider = 0 }
-167 = { emotion = "Unknown", color = 7, divider = 0 }
-168 = { emotion = "Unknown", color = 7, divider = 0 }
-169 = { emotion = "Restless", color = 6, divider = 8 }
-170 = { emotion = "Admiration", color = 11, divider = -8 }
+[[unit_emotions]]
+
+emotion = "Nothing"
+color = 7
+divider = 0
+
+
+[[unit_emotions]]
+emotion = "Acceptance"
+color = 7
+divider = -8
+
+[[unit_emotions]]
+emotion = "Adoration"
+color = 11
+divider = -1
+
+[[unit_emotions]]
+emotion = "Affection"
+color = 11
+divider = -2
+
+[[unit_emotions]]
+emotion = "Agitation"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Aggravation"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Agony"
+color = 14
+divider = 1
+
+[[unit_emotions]]
+emotion = "Alarm"
+color = 12
+divider = 4
+
+[[unit_emotions]]
+emotion = "Alienation"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Amazement"
+color = 9
+divider = 0
+
+[[unit_emotions]]
+emotion = "Ambivalence"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Amusement"
+color = 10
+divider = -4
+
+[[unit_emotions]]
+emotion = "Anger"
+color = 12
+divider = 2
+
+[[unit_emotions]]
+emotion = "Existential Crisis"
+color = 14
+divider = 1
+
+[[unit_emotions]]
+emotion = "Anguish"
+color = 14
+divider = 1
+
+[[unit_emotions]]
+emotion = "Annoyed"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Anxiety"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Apathy"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Arousal"
+color = 11
+divider = -8
+
+[[unit_emotions]]
+emotion = "Astonishment"
+color = 9
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Aversion"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Awe"
+color = 9
+divider = 0
+
+[[unit_emotions]]
+emotion = "Bitterness"
+color = 6
+divider = 2
+
+[[unit_emotions]]
+emotion = "Bliss"
+color = 10
+divider = -1
+
+[[unit_emotions]]
+emotion = "Boredom"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Caring"
+color = 11
+divider = -2
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+[[unit_emotions]]
+emotion = "Confusion"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Contempt"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Contentment"
+color = 10
+divider = -8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Defeated"
+color = 14
+divider = 2
+
+[[unit_emotions]]
+emotion = "Dejection"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Delight"
+color = 10
+divider = -1
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Despair"
+color = 14
+divider = 1
+
+[[unit_emotions]]
+emotion = "Disappointment"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Disgust"
+color = 14
+divider = 4
+
+[[unit_emotions]]
+emotion = "Disillusionment"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Dislike"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Dismay"
+color = 14
+divider = 2
+
+[[unit_emotions]]
+emotion = "Displeasure"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Distress"
+color = 14
+divider = 2
+
+[[unit_emotions]]
+emotion = "Doubt"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Eagerness"
+color = 9
+divider = -4
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Elation"
+color = 10
+divider = -2
+
+[[unit_emotions]]
+emotion = "Embarrassment"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Empathy"
+color = 11
+divider = -2
+
+[[unit_emotions]]
+emotion = "Emptiness"
+color = 14
+divider = 4
+
+[[unit_emotions]]
+emotion = "Enjoyment"
+color = 10
+divider = -8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Enthusiastic"
+color = 10
+divider = -8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Euphoric"
+color = 10
+divider = -1
+
+[[unit_emotions]]
+emotion = "Exasperation"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Excited"
+color = 9
+divider = 0
+
+[[unit_emotions]]
+emotion = "Exhilaration"
+color = 9
+divider = -2
+
+[[unit_emotions]]
+emotion = "Expectant"
+color = 10
+divider = -8
+
+[[unit_emotions]]
+emotion = "Afraid"
+color = 12
+divider = 1
+
+[[unit_emotions]]
+emotion = "Ferocity"
+color = 12
+divider = 2
+
+[[unit_emotions]]
+emotion = "Fondness"
+color = 11
+divider = -8
+
+[[unit_emotions]]
+emotion = "Freedom"
+color = 10
+divider = -4
+
+[[unit_emotions]]
+emotion = "Fright"
+color = 14
+divider = 2
+
+[[unit_emotions]]
+emotion = "Frustration"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Gaiety"
+color = 10
+divider = -2
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Glee"
+color = 10
+divider = -2
+
+[[unit_emotions]]
+emotion = "Gloom"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Glum"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Gratitude"
+color = 11
+divider = -4
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Grief"
+color = 14
+divider = 2
+
+[[unit_emotions]]
+emotion = "Grim Satisfaction"
+color = 13
+divider = 0
+
+[[unit_emotions]]
+emotion = "Grouchiness"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Grumpiness"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Guilt"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Happiness"
+color = 10
+divider = -2
+
+[[unit_emotions]]
+emotion = "Hatred"
+color = 12
+divider = 2
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Hope"
+color = 10
+divider = -2
+
+[[unit_emotions]]
+emotion = "Hopelessness"
+color = 14
+divider = 2
+
+[[unit_emotions]]
+emotion = "Horrified"
+color = 12
+divider = 1
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Humiliation"
+color = 14
+divider = 4
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Insulted"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Interest"
+color = 9
+divider = -8
+
+[[unit_emotions]]
+emotion = "Irritation"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Isolation"
+color = 6
+divider = 4
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Jolliness"
+color = 10
+divider = -4
+
+[[unit_emotions]]
+emotion = "Jovialty"
+color = 10
+divider = -2
+
+[[unit_emotions]]
+emotion = "Joy"
+color = 10
+divider = -1
+
+[[unit_emotions]]
+emotion = "Jubilation"
+color = 10
+divider = -1
+
+[[unit_emotions]]
+emotion = "Loathing"
+color = 12
+divider = 2
+
+[[unit_emotions]]
+emotion = "Loneliness"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Love"
+color = 11
+divider = -1
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Lust"
+color = 11
+divider = -8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Misery"
+color = 14
+divider = 1
+
+[[unit_emotions]]
+emotion = "Mortification"
+color = 14
+divider = 2
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Nervousness"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Nostalgia"
+color = 9
+divider = -8
+
+[[unit_emotions]]
+emotion = "Optimism"
+color = 10
+divider = -4
+
+[[unit_emotions]]
+emotion = "Outrage"
+color = 12
+divider = 2
+
+[[unit_emotions]]
+emotion = "Panic"
+color = 14
+divider = 1
+
+[[unit_emotions]]
+emotion = "Patience"
+color = 7
+divider = -8
+
+[[unit_emotions]]
+emotion = "Passion"
+color = 11
+divider = -2
+
+[[unit_emotions]]
+emotion = "Pessimistic"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Pleasure"
+color = 11
+divider = -4
+
+[[unit_emotions]]
+emotion = "Pride"
+color = 11
+divider = -4
+
+[[unit_emotions]]
+emotion = "Rage"
+color = 12
+divider = 1
+
+[[unit_emotions]]
+emotion = "Rapture"
+color = 11
+divider = -1
+
+[[unit_emotions]]
+emotion = "Rejection"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Relief"
+color = 10
+divider = -2
+
+[[unit_emotions]]
+emotion = "Regret"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Remorse"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Repentance"
+color = 9
+divider = -2
+
+[[unit_emotions]]
+emotion = "Resentment"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Indignant"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Sadness"
+color = 14
+divider = 4
+
+[[unit_emotions]]
+emotion = "Satisfied"
+color = 10
+divider = -8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Self Pity"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Servile"
+color = 9
+divider = 0
+
+[[unit_emotions]]
+emotion = "Shaken"
+color = 14
+divider = 1
+
+[[unit_emotions]]
+emotion = "Shame"
+color = 14
+divider = 4
+
+[[unit_emotions]]
+emotion = "Shock"
+color = 14
+divider = 1
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Suspicion"
+color = 13
+divider = 8
+
+[[unit_emotions]]
+emotion = "Sympathy"
+color = 11
+divider = -8
+
+[[unit_emotions]]
+emotion = "Tenderness"
+color = 11
+divider = -2
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Terror"
+color = 12
+divider = 1
+
+[[unit_emotions]]
+emotion = "Thrill"
+color = 9
+divider = -2
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Triumph"
+color = 10
+divider = -2
+
+[[unit_emotions]]
+emotion = "Uneasiness"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Unhappiness"
+color = 6
+divider = 4
+
+[[unit_emotions]]
+emotion = "Vengeful"
+color = 12
+divider = 4
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Wonder"
+color = 9
+divider = -8
+
+[[unit_emotions]]
+emotion = "Worry"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Wrath"
+color = 12
+divider = 1
+
+[[unit_emotions]]
+emotion = "Zeal"
+color = 9
+divider = -4
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Unknown"
+color = 7
+divider = 0
+
+[[unit_emotions]]
+emotion = "Restless"
+color = 6
+divider = 8
+
+[[unit_emotions]]
+emotion = "Admiration"
+color = 11
+divider = -8

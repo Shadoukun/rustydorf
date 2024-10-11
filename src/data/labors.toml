@@ -2,7 +2,7 @@
 id = 0
 name = "Mining"
 skill = 0
-requires_equipment = 0
+requires_equipment = false
 excludes = { 1 = 10, 2 = 44 }
 
 [[labors]]

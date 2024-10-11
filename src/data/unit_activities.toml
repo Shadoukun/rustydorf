@@ -2,17 +2,21 @@
 name = "Military: Train"
 img = "shield-brown"
 is_military = true
-sub.1 = { id = 0, name = "Training Session"}
-sub.2 = { id = 1, name = "Combat Training"}
-sub.3 = { id = 2, name = "Individual Combat Drill"}
+sub = [
+    { id = 0, name = "Training Session" },
+    { id = 1, name = "Combat Training" },
+    { id = 2, name = "Individual Combat Drill" }
+]
 
 [[unit_activities]]
 name = "Military: Skill Demonstration"
 img = "shield-purple"
 is_military = true
-sub.1 = { id = 2, name = "Skill Demonstration" }
-sub.2 = { id = 200, name = "Lead [skill] Demonstration" }
-sub.3 = { id = 201, name = "Watch [skill] Demonstration" }
+sub = [
+    { id = 2, name = "Skill Demonstration" },
+    { id = 200, name = "Lead [skill] Demonstration" },
+    { id = 201, name = "Watch [skill] Demonstration" }
+]
 
 [[unit_activities]]
 id = 4
@@ -52,9 +56,11 @@ name = "Reunion"
 [[unit_activities]]
 name = "Worship"
 img = "church"
-sub.1 = { id = 13, name = "Worship" }
-sub.2 = { id = 11, name = "Pray" }
-sub.3 = { id = 300, name = "Meditate", img = "yin-yang" }
+sub = [
+    { id = 13, name = "Worship" },
+    { id = 11, name = "Pray" },
+    { id = 300, name = "Meditate", img = "yin-yang" }
+]
 
 [[unit_activities]]
 id = 12
@@ -64,21 +70,25 @@ img = "balloon"
 [[unit_activities]]
 name = "Performance"
 img = "music-beam-16"
-sub.1 = { id = 14, name = "Performance" }
-sub.2 = { id = 100, name = "Tell Story", img = "balloon-quotation" }
-sub.3 = { id = 101, name = "Recite Poetry", img = "edit-quotation" }
-sub.4 = { id = 102, name = "Play Music" }
-sub.5 = { id = 103, name = "Dance" }
-sub.6 = { id = 104, name = "Audience", img = "spectacle-lorgnette" }
-sub.7 = { id = 105, name = "Play Instrument", img = "guitar" }
-sub.8 = { id = 106, name = "Sing" }
-sub.9 = { id = 107, name = "Listen", img = "ear-listen" }
+sub = [
+    { id = 14, name = "Performance" },
+    { id = 100, name = "Tell Story", img = "balloon-quotation" },
+    { id = 101, name = "Recite Poetry", img = "edit-quotation" },
+    { id = 102, name = "Play Music" },
+    { id = 103, name = "Dance" },
+    { id = 104, name = "Audience", img = "spectacle-lorgnette" },
+    { id = 105, name = "Play Instrument", img = "guitar" },
+    { id = 106, name = "Sing" },
+    { id = 107, name = "Listen", img = "ear-listen" }
+]
 
 [[unit_activities]]
 name = "Ponder/Research"
 img = "brain"
-sub.1 = { id = 15, name = "Research", img = "flask" }
-sub.2 = { id = 16, name = "Ponder" }
+sub = [
+    { id = 15, name = "Research", img = "flask" },
+    { id = 16, name = "Ponder" }
+]
 
 [[unit_activities]]
 id = 17
@@ -113,6 +123,8 @@ img = "chalkboard"
 [[unit_activities]]
 name = "Play"
 img = "board-game-go"
-sub.1 = { id = 23, name = "Play" }
-sub.2 = { id = 24, name = "Play Make Believe" }
-sub.3 = { id = 25, name = "Play with a Toy" }
+sub = [
+    { id = 23, name = "Play" },
+    { id = 24, name = "Play Make Believe" },
+    { id = 25, name = "Play with a Toy" }
+]

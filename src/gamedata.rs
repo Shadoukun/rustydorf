@@ -4,33 +4,33 @@ use std::collections::HashMap;
 use serde::Deserialize;
 use toml;
 use std::fs;
-use std::path::Path;
 
 #[derive(Default, Deserialize, Debug)]
 pub struct GameData {
-    // skill_levels: HashMap<i32, String>,
-    // professions: Vec<Profession>,
+    skill_levels: HashMap<String, String>,
+    professions: Vec<Profession>,
     attributes: Vec<Attribute>,
-    // labors: Vec<Labor>,
-    // skills: Vec<Skill>,
-    // goals: Vec<Goal>,
+    labors: Vec<Labor>,
+    skills: Vec<Skill>,
+    goals: Vec<Goal>,
     beliefs: Vec<Beliefs>,
     facets: Vec<Facet>,
-    // unit_jobs: Vec<UnitJobs>,
-    // unit_activities: Vec<UnitActivities>,
-    // unit_orders: Vec<UnitOrders>,
-    // unit_moods: Vec<UnitMoods>,
-    // unit_thoughts: Vec<UnitThoughts>,
-    // sub_thoughts: Vec<SubThoughts>,
-    // health_info: Vec<HealthInfo>,
-    // knowledge: Vec<Knowledge>,
-    // needs: Vec<Need>,
-    // unit_emotions: Vec<UnitEmotion>,
-    // sphere_names: HashMap<i32, String>,
-    // happiness_levels: Vec<HappinessLevel>,
+    unit_jobs: Vec<UnitJobs>,
+    unit_activities: Vec<UnitActivities>,
+    unit_orders: Vec<UnitOrders>,
+    unit_moods: Vec<UnitMoods>,
+    unit_thoughts: Vec<UnitThoughts>,
+    unit_subthoughts: Vec<SubThoughts>,
+    health_info: Vec<HealthInfo>,
+    knowledge: Vec<Knowledge>,
+    needs: Vec<Need>,
+    unit_emotions: Vec<UnitEmotion>,
+    sphere_names: Vec<SphereName>,
+    happiness_levels: Vec<HappinessLevel>,
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct Profession {
     id: i32,
     name: String,
@@ -47,15 +47,17 @@ struct Attribute {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct Labor {
     name: String,
     id: i32,
     skill: i32,
     requires_equipment: bool,
-    excludes: HashMap<i32, i32>
+    excludes: HashMap<String, i32>
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct Skill {
     name: String,
     noun: String,
@@ -64,6 +66,7 @@ struct Skill {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct Goal {
     id: i32,
     name: String,
@@ -71,6 +74,7 @@ struct Goal {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct Beliefs {
     name: String,
     levels: HashMap<String, String>
@@ -87,6 +91,7 @@ struct Facet {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct FacetsSpecial {
     limit: i32,
     msg: String
@@ -94,6 +99,7 @@ struct FacetsSpecial {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct UnitJobs {
     id: i32,
     name: String,
@@ -102,12 +108,15 @@ struct UnitJobs {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct SubJob {
     id: i32,
     name: String,
+    img: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct UnitActivities {
     id: i32,
     name: String,
@@ -117,6 +126,7 @@ struct UnitActivities {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct SubActivity {
     id: i32,
     name: String,
@@ -124,14 +134,15 @@ struct SubActivity {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct UnitOrders {
     id: i32,
     name: String,
     img: String,
-    is_military: bool
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct UnitMoods {
     name: String,
     description: String,
@@ -139,6 +150,7 @@ struct UnitMoods {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct UnitThoughts {
     title: String,
     thought: String,
@@ -146,6 +158,7 @@ struct UnitThoughts {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct SubThoughts {
     id: i32,
     placeholder: String,
@@ -153,19 +166,22 @@ struct SubThoughts {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct Subthought {
     id: i32,
     thought: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct UnitEmotion {
     emotion: String,
-    color: String,
+    color:  i32,
     divider: i32,
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct HealthInfo {
     id: i32,
     name: String,
@@ -176,24 +192,28 @@ struct HealthInfo {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct HealthDescription {
     desc: String,
     symbol: String
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct Knowledge {
-    field: String,
+    name: String,
     topics: Vec<KnowledgeTopic>,
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct KnowledgeTopic {
     area: String,
     subject: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct HappinessLevel {
     name: String,
     threshold: i32,
@@ -201,10 +221,17 @@ struct HappinessLevel {
 }
 
 #[derive(Default, Deserialize, Debug)]
+#[serde(default)]
 struct Need {
     name: String,
     positive: String,
     negative: String,
+}
+
+#[derive(Default, Deserialize, Debug)]
+#[serde(default)]
+struct SphereName {
+    name: String,
 }
 
 pub fn load_game_data() -> GameData {
