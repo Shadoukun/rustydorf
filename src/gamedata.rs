@@ -71,12 +71,12 @@ pub struct Goal {
     pub description: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct HappinessLevel {
-    name: String,
-    threshold: i32,
-    desc: String,
+    pub name: String,
+    pub threshold: i32,
+    pub desc: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
@@ -210,9 +210,9 @@ pub struct UnitMoods {
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
 pub struct UnitThoughts {
-    title: String,
-    thought: String,
-    subthoughts_type: i32,
+    pub title: String,
+    pub thought: String,
+    pub subthoughts_type: i32,
 }
 
 #[derive(Default, Deserialize, Debug)]
@@ -230,12 +230,12 @@ pub struct Subthought {
     thought: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct UnitEmotion {
-    emotion: String,
-    color:  i32,
-    divider: i32,
+    pub emotion: String,
+    pub color:  i32,
+    pub divider: i32,
 }
 
 pub fn load_game_data() -> GameData {

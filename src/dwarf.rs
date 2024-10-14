@@ -42,6 +42,9 @@ pub mod dwarf {
         pub goals: Vec<(Goal, i16)>,
         pub goals_realized: i32,
 
+        pub emotions: Vec<UnitEmotion>,
+        pub thoughts: Vec<i32>,
+
         pub squad_id: i32,
         pub squad_position: i32,
         pub pending_squad_id: i32,
@@ -51,6 +54,7 @@ pub mod dwarf {
 
 
         // Happiness
+        happiness_level: HappinessLevel,
         stress_level: i32,
         // Mood
 
@@ -75,6 +79,7 @@ pub mod dwarf {
             d.read_states(df);
             d.read_soul(df);
             d.read_personality(df);
+            d.read_emotions(df);
             // TODO: age and migration
             d.read_profession(df);
             // TODO: profession
@@ -93,13 +98,14 @@ pub mod dwarf {
                 println!("Belief: {:?} | Value: {}", b.0.name, b.1);
             }
 
-            for t in d.traits.iter() {
-                println!("Trait: {:?} | Value: {}", t.0.name, t.1);
-            }
+            // for t in d.traits.iter() {
+            //     println!("Trait: {:?} | Value: {}", t.0.name, t.1);
+            // }
 
             for g in d.goals.iter() {
                 println!("Goal: {:?} | Value: {}", g.0.name, g.1);
             }
+            println!("\n");
             Ok(d)
 
         }
@@ -254,8 +260,6 @@ pub mod dwarf {
                 name: "Combat Hardened".to_string(),
                 ..Default::default()
             };
-
-            println!("Combat Hardened: {}", combat_hardened);
             self.traits.push((combat_hardened_trait, combat_hardened));
             // TODO: cave adapt/other special traits
 
@@ -274,10 +278,52 @@ pub mod dwarf {
                     self.goals.push((goal, val));
                 }
             }
-
-
         }
 
+        pub unsafe fn read_emotions(&mut self, df: &DFInstance) {
+            let personality_addr = self.souls[0] + df.memory_layout.field_offset(MemorySection::Soul, "personality");
+            let emotions_addr = personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "emotions");
+            for e in enum_mem_vec(&df.proc.handle, emotions_addr) {
+                let emotion_type = read_mem::<i32>(&df.proc.handle, e + df.memory_layout.field_offset(MemorySection::Emotion, "emotion_type"));
+                let thought_id = read_mem::<i32>(&df.proc.handle, e + df.memory_layout.field_offset(MemorySection::Emotion, "thought_id"));
+                println!("Emotion Type: {}", emotion_type);
+
+                if !self.thoughts.contains(&thought_id) {
+                    self.emotions.push(df.game_data.unit_emotions[emotion_type as usize].clone());
+                }
+
+                // TODO: sort in descending order
+                if thought_id >= 0 {
+                    self.thoughts.push(thought_id);
+                }
+
+                for e in self.emotions.iter() {
+                    println!("Emotion: {:?}", e.emotion);
+                }
+                println!("\nThoughts: ");
+                for t in self.thoughts.iter() {
+                    println!("{:?}", df.game_data.unit_thoughts[*t as usize - 1]);
+                }
+
+                // TODO: stress effects
+
+                // TODO: dated emotions
+                self.read_happiness_level(df, personality_addr);
+            }
+        }
+
+        pub unsafe fn read_happiness_level(&mut self, df: &DFInstance, personality_addr: usize) {
+            let stress_level_addr = personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "stress_level");
+            self.stress_level = read_mem::<i32>(&df.proc.handle, stress_level_addr);
+            let mut happiness_level = df.game_data.happiness_levels[0].clone();
+            for h in &df.game_data.happiness_levels {
+                if (self.stress_level - h.threshold).abs() < (self.stress_level - happiness_level.threshold).abs() {
+                    happiness_level = h.clone();
+                }
+            }
+            println!("Stress Level: {:?}", happiness_level);
+            self.happiness_level = happiness_level;
+    }
         pub unsafe fn read_mood(&mut self, df: &DFInstance) {
             let mood_id = read_field::<i16>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "mood").unwrap();
             let mut mood = Mood::from(mood_id);
