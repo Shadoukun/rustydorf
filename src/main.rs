@@ -27,6 +27,7 @@ pub const DEFAULT_BASE_ADDR: u64 = 0x140000000;
 struct DFInstance {
     pub proc: Process,
     pub memory_layout: MemoryLayout,
+    pub game_data: GameData,
     pub dwarf_race_id: i32,
     pub dwarf_civ_id: i32,
     creature_vector: Vec<usize>,
@@ -50,6 +51,7 @@ impl DFInstance {
         let mut df = DFInstance {
             proc,
             memory_layout: load_memory_layout(),
+            game_data: gamedata::load_game_data(),
             ..Default::default()
         };
 
@@ -149,10 +151,10 @@ impl DFInstance {
             dwarves.push(d);
         }
 
-        for d in &dwarves {
-            println!("Dwarf: {}", d.first_name);
-            println!("Dwarf Caste: {}", d.caste.tag);
-        }
+        // for d in &dwarves {
+        //     println!("Dwarf: {}", d.first_name);
+        //     println!("Dwarf Caste: {}", d.caste.tag);
+        // }
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
             // // if !last_name.is_empty() && last_name.len() > 2 {
             // //     let first_name = read_mem_as_string(&self.proc, c + name_offset + first_name_offset);
@@ -179,8 +181,6 @@ impl DFInstance {
 
 
 fn main() {
-    let memory_layout = load_memory_layout();
-    let game_data = gamedata::load_game_data();
     let df = unsafe { DFInstance::new(); };
     // unsafe {
         // let year = read_field::<usize>(&proc, 0, &memory_layout, MemorySection::Addresses, "current_year").unwrap();

@@ -24,8 +24,9 @@ pub struct Translation {
 impl Languages {
 
     pub unsafe fn language_word(&self, df: &DFInstance, addr: usize) -> String {
-        let language_id = read_field::<i32>(&df.proc, addr, &df.memory_layout, MemorySection::Word, "language_id").unwrap();
-
+        // front_compound, rear_compound, first_adjective, second_adjective, hypen_compound
+        // the_x, of_x
+        let language_id = read_field::<i32>(&df.proc, addr, &df.memory_layout, MemorySection::Word, "language_id").expect("Failed to read language_id");
         let mut words: Vec<String> = vec![];
         for i in 0..7 {
             let word = read_field::<i32>(&df.proc, addr, &df.memory_layout, MemorySection::Word, "words").unwrap();

@@ -7,71 +7,73 @@ use std::fs;
 
 #[derive(Default, Deserialize, Debug)]
 pub struct GameData {
-    attributes:         Vec<Attribute>,
-    beliefs:            Vec<Beliefs>,
-    facets:             Vec<Facet>,
-    goals:              Vec<Goal>,
-    happiness_levels:   Vec<HappinessLevel>,
-    health_info:        Vec<HealthInfo>,
-    knowledge:          Vec<Knowledge>,
-    labors:             Vec<Labor>,
-    needs:              Vec<Need>,
-    professions:        Vec<Profession>,
-    skills:             Vec<Skill>,
-    skill_levels:       HashMap<i32, String>,
-    sphere_names:       HashMap<i32, String>,
-    unit_activities:    Vec<UnitActivities>,
-    unit_emotions:      Vec<UnitEmotion>,
-    unit_jobs:          Vec<UnitJobs>,
-    unit_moods:         Vec<UnitMoods>,
-    unit_orders:        Vec<UnitOrders>,
-    unit_thoughts:      Vec<UnitThoughts>,
-    unit_subthoughts:   Vec<SubThoughts>,
+    pub attributes:         Vec<Attribute>,
+    pub beliefs:            Vec<Beliefs>,
+    pub facets:             Vec<Facet>,
+    pub goals:              Vec<Goal>,
+    pub happiness_levels:   Vec<HappinessLevel>,
+    pub health_info:        Vec<HealthInfo>,
+    pub knowledge:          Vec<Knowledge>,
+    pub labors:             Vec<Labor>,
+    pub needs:              Vec<Need>,
+    pub professions:        Vec<Profession>,
+    pub skills:             Vec<Skill>,
+    pub skill_levels:       HashMap<String, String>,
+    pub sphere_names:       HashMap<String, String>,
+    pub unit_activities:    Vec<UnitActivities>,
+    pub unit_emotions:      Vec<UnitEmotion>,
+    pub unit_jobs:          Vec<UnitJobs>,
+    pub unit_moods:         Vec<UnitMoods>,
+    pub unit_orders:        Vec<UnitOrders>,
+    pub unit_thoughts:      Vec<UnitThoughts>,
+    pub unit_subthoughts:   Vec<SubThoughts>,
 }
 
 #[derive(Default, Deserialize, Debug)]
-struct Attribute {
+pub struct Attribute {
     id: i32,
     name: String,
     levels: HashMap<String, String>
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
-struct Beliefs {
-    name: String,
-    levels: HashMap<String, String>
+pub struct Beliefs {
+    pub name: String,
+    pub trait_conflicts: Vec<i32>,
+    pub levels: HashMap<String, String>
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Deserialize, Debug, Clone)]
 #[serde(default)]
-struct Facet {
-    name: String,
-    belief_conflicts: HashMap<String, i32>,
-    levels: HashMap<String, String>,
-    limits: HashMap<String, i32>,
-    special: FacetsSpecial
+pub struct Facet {
+    pub name: String,
+    pub id: i32,
+    pub belief_conflicts: HashMap<String, i32>,
+    pub levels: HashMap<String, String>,
+    pub limits: HashMap<String, i32>,
+    pub special: FacetsSpecial
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Deserialize, Debug, Clone)]
 #[serde(default)]
-struct FacetsSpecial {
+pub struct FacetsSpecial {
     limit: i32,
     msg: String
 
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Deserialize, Debug, Clone)]
 #[serde(default)]
-struct Goal {
-    id: i32,
-    name: String,
-    description: String,
+pub struct Goal {
+    pub id: i32,
+    pub name: String,
+    pub description: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct HappinessLevel {
+pub struct HappinessLevel {
     name: String,
     threshold: i32,
     desc: String,
@@ -79,7 +81,7 @@ struct HappinessLevel {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct HealthInfo {
+pub struct HealthInfo {
     id: i32,
     name: String,
     color: String,
@@ -90,28 +92,28 @@ struct HealthInfo {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct HealthDescription {
+pub struct HealthDescription {
     desc: String,
     symbol: String
 }
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct Knowledge {
+pub struct Knowledge {
     name: String,
     topics: Vec<KnowledgeTopic>,
 }
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct KnowledgeTopic {
+pub struct KnowledgeTopic {
     area: String,
     subject: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct Labor {
+pub struct Labor {
     name: String,
     id: i32,
     skill: i32,
@@ -121,27 +123,27 @@ struct Labor {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct Need {
+pub struct Need {
     name: String,
     positive: String,
     negative: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Deserialize, Debug, Clone)]
 #[serde(default)]
-struct Profession {
-    id: i32,
-    name: String,
-    is_military: bool,
-    can_assign_labors: bool,
-    can_assign_military: bool
+pub struct Profession {
+    pub id: i32,
+    pub name: String,
+    pub is_military: bool,
+    pub can_assign_labors: bool,
+    pub can_assign_military: bool
 }
 
 
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct Skill {
+pub struct Skill {
     name: String,
     noun: String,
     profession_id: i32,
@@ -150,13 +152,13 @@ struct Skill {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct SphereName {
+pub struct SphereName {
     name: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct UnitJobs {
+pub struct UnitJobs {
     id: i32,
     name: String,
     img: String,
@@ -165,7 +167,7 @@ struct UnitJobs {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct SubJob {
+pub struct SubJob {
     id: i32,
     name: String,
     img: String,
@@ -173,7 +175,7 @@ struct SubJob {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct UnitActivities {
+pub struct UnitActivities {
     id: i32,
     name: String,
     img: String,
@@ -183,7 +185,7 @@ struct UnitActivities {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct SubActivity {
+pub struct SubActivity {
     id: i32,
     name: String,
     img: String,
@@ -191,7 +193,7 @@ struct SubActivity {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct UnitOrders {
+pub struct UnitOrders {
     id: i32,
     name: String,
     img: String,
@@ -199,7 +201,7 @@ struct UnitOrders {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct UnitMoods {
+pub struct UnitMoods {
     name: String,
     description: String,
     color: String,
@@ -207,7 +209,7 @@ struct UnitMoods {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct UnitThoughts {
+pub struct UnitThoughts {
     title: String,
     thought: String,
     subthoughts_type: i32,
@@ -215,7 +217,7 @@ struct UnitThoughts {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct SubThoughts {
+pub struct SubThoughts {
     id: i32,
     placeholder: String,
     subthoughts: Vec<Subthought>,
@@ -223,14 +225,14 @@ struct SubThoughts {
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct Subthought {
+pub struct Subthought {
     id: i32,
     thought: String,
 }
 
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
-struct UnitEmotion {
+pub struct UnitEmotion {
     emotion: String,
     color:  i32,
     divider: i32,

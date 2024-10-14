@@ -589,6 +589,7 @@ belief_conflicts = { 1 = 11, 2 = 30 }
 
 [[facets]]
 name = "Detachment"
+id = -1
 
 [facets.levels]
 0 = "Has experienced some tragedy"
@@ -602,6 +603,7 @@ msg = "Greater detachment results in being less affected by tragedies"
 
 [[facets]]
 name = "Cave Adaptation"
+id = -2
 inverted = true
 
 [facets.levels]
