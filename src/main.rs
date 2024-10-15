@@ -151,10 +151,36 @@ impl DFInstance {
             dwarves.push(d);
         }
 
-        // for d in &dwarves {
-        //     println!("Dwarf: {}", d.first_name);
-        //     println!("Dwarf Caste: {}", d.caste.tag);
-        // }
+        for d in &dwarves {
+            println!("----------------------------");
+            println!("-Dwarf-");
+            println!("Name: {}", d.first_name);
+            println!("Profession: {}", d.profession.name);
+            println!("----------------------------");
+            println!("Traits");
+            println!("----------------------------");
+            for t in d.traits.iter() {
+                println!("{} | Value: {}", t.0.name, t.1);
+            }
+            println!("\n----------------------------");
+            println!("Beliefs");
+            println!("----------------------------");
+            for b in d.beliefs.iter() {
+                println!("{:?} | Value: {}", b.0.name, b.1);
+            }
+            println!("\n----------------------------");
+            println!("Goals");
+            println!("----------------------------");
+            for g in d.goals.iter() {
+                println!("{:?} | Value: {}", g.0.name, g.1);
+            }
+            println!("\n");
+            println!("Mood: {:?}", d.mood);
+            println!("Sex: {:?}, ", d.sex);
+            println!("Sexual Orientation: {:?} ", d.orientation);
+            println!("[Male Interest: {:?} | Female Interest: {:?}]", d.orient_vec[0], d.orient_vec[1]);
+            println!();
+        }
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
             // // if !last_name.is_empty() && last_name.len() > 2 {
             // //     let first_name = read_mem_as_string(&self.proc, c + name_offset + first_name_offset);

@@ -23,6 +23,7 @@ pub mod dwarf {
         pub caste: Caste,
         pub souls: Vec<usize>,
 
+        // TODO: FIX NAMES
         pub first_name: String,
         pub nickname: String,
         pub last_name: String,
@@ -42,22 +43,19 @@ pub mod dwarf {
         pub goals: Vec<(Goal, i16)>,
         pub goals_realized: i32,
 
+        pub personality_addr: usize,
         pub emotions: Vec<UnitEmotion>,
         pub thoughts: Vec<i32>,
+        pub stress_level: i32,
+        pub happiness_level: HappinessLevel,
+        pub mood: Mood,
+        pub locked_mood: bool,
 
         pub squad_id: i32,
         pub squad_position: i32,
         pub pending_squad_id: i32,
         pub pending_squad_position: i32,
         pub pending_squad_name: String,
-
-
-
-        // Happiness
-        happiness_level: HappinessLevel,
-        stress_level: i32,
-        // Mood
-
     }
 
     impl Dwarf {
@@ -77,37 +75,28 @@ pub mod dwarf {
 
             d.read_names(df);
             d.read_states(df);
-            d.read_soul(df);
-            d.read_personality(df);
-            d.read_emotions(df);
-            // TODO: age and migration
             d.read_profession(df);
-            // TODO: profession
-
+            // TODO: age and migration
             // TODO: adult/non_citizen filters
-
             // TODO: fake identities
             // TODO: squad info
-            // d.read_dwarf_gender_orientation(df);
-            // TODO: profession
-            // d.read_dwarf_mood(df);
+            // TODO: current job
             // TODO: labors
-            println!("Name: {}", d.first_name);
-            println!("Profession: {}", d.profession.name);
-            for b in d.beliefs.iter() {
-                println!("Belief: {:?} | Value: {}", b.0.name, b.1);
-            }
-
-            // for t in d.traits.iter() {
-            //     println!("Trait: {:?} | Value: {}", t.0.name, t.1);
-            // }
-
-            for g in d.goals.iter() {
-                println!("Goal: {:?} | Value: {}", g.0.name, g.1);
-            }
-            println!("\n");
+            // TODO: uniform
+            // TODO: syndromes
+            // TODO: body size
+            // TODO: curse
+            // TODO: noble position
+            d.read_soul(df);
+            d.read_mood(df);
+            d.read_emotions(df);
+            d.read_beliefs(df);
+            d.read_traits(df);
+            d.read_goals(df);
+            d.read_gender_orientation(df);
+            // TODO: animal type
+            // TODO: preferences
             Ok(d)
-
         }
 
         unsafe fn read_gender_orientation(&mut self, df: &DFInstance) {
@@ -115,10 +104,8 @@ pub mod dwarf {
             let orientation_byte = read_mem::<u8>(&df.proc.handle, orient_offset);
 
             let sex = Sex::from(read_field::<u8>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "sex").unwrap());
-
             let male_interest = Commitment::from((orientation_byte & (3<<1))>>1);
             let female_interest = Commitment::from((orientation_byte & (3<<3))>>3);
-
             let mut orientation: Orientation = Default::default();
 
             if sex == Sex::Male {
@@ -147,17 +134,15 @@ pub mod dwarf {
             self.sex = sex;
             self.orientation = orientation;
             self.orient_vec = vec![male_interest, female_interest];
-
-            println!("Sex: {:?}, ", self.sex);
-            println!("Sexual Orientation: {:?} [Male Interest: {:?} | Female Interest: {:?}]", self.orientation, self.orient_vec[0], self.orient_vec[1]);
         }
 
         unsafe fn read_soul(&mut self, df: &DFInstance) {
             self.souls = enum_mem_vec(&df.proc.handle, self.addr + df.memory_layout.field_offset(MemorySection::Dwarf, "souls"));
-
             if self.souls.len() > 1 {
                 println!("Dwarf has more than one soul");
             }
+            // get personality from the first soul
+            self.personality_addr = self.souls[0] + df.memory_layout.field_offset(MemorySection::Soul, "personality");
         }
 
         unsafe fn read_race_and_caste(&mut self, df: &DFInstance) -> Result<(), Error> {
@@ -211,13 +196,8 @@ pub mod dwarf {
             // TODO: custom profession
         }
 
-        pub unsafe fn read_personality(&mut self, df: &DFInstance) {
-            let personality_addr = self.souls[0] + df.memory_layout.field_offset(MemorySection::Soul, "personality");
-
-            //
-            // Beliefs
-            //
-            let beliefs_vec  = enum_mem_vec(&df.proc.handle, personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "beliefs"));
+        pub unsafe fn read_beliefs(&mut self, df: &DFInstance) {
+            let beliefs_vec  = enum_mem_vec(&df.proc.handle, self.personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "beliefs"));
             for addr in beliefs_vec {
                 let belief_id = read_mem::<i32>(&df.proc.handle, addr);
                 if belief_id >= 0 {
@@ -226,11 +206,10 @@ pub mod dwarf {
                     self.beliefs.push((b, val));
                 }
             }
+        }
 
-            //
-            // Traits (Facets)
-            //
-            let traits_addr = personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "traits");
+        pub unsafe fn read_traits(&mut self, df: &DFInstance) {
+            let traits_addr = self.personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "traits");
             for i in 0..df.game_data.facets.len() {
                 let mut tr = df.game_data.facets[i].clone();
                 let val = read_mem::<i16>(&df.proc.handle, traits_addr + i * 2);
@@ -253,7 +232,7 @@ pub mod dwarf {
             }
 
             // special traits
-            let mut combat_hardened = read_mem::<i16>(&df.proc.handle, personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "combat_hardened"));
+            let mut combat_hardened = read_mem::<i16>(&df.proc.handle, self.personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "combat_hardened"));
             combat_hardened = ((combat_hardened*(90-40)) / 100) + 40;
             let combat_hardened_trait = Facet{
                 id: 0,
@@ -261,12 +240,13 @@ pub mod dwarf {
                 ..Default::default()
             };
             self.traits.push((combat_hardened_trait, combat_hardened));
+
             // TODO: cave adapt/other special traits
 
-            //
-            // Goals
-            //
-            let goals_addr =  personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "goals");
+        }
+
+        pub unsafe fn read_goals(&mut self, df: &DFInstance) {
+            let goals_addr =  self.personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "goals");
             let goals = enum_mem_vec(&df.proc.handle, goals_addr);
             for addr in goals {
                 let goal_type = read_mem::<i32>(&df.proc.handle, addr + 0x4);
@@ -281,8 +261,7 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_emotions(&mut self, df: &DFInstance) {
-            let personality_addr = self.souls[0] + df.memory_layout.field_offset(MemorySection::Soul, "personality");
-            let emotions_addr = personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "emotions");
+            let emotions_addr = self.personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "emotions");
             for e in enum_mem_vec(&df.proc.handle, emotions_addr) {
                 let emotion_type = read_mem::<i32>(&df.proc.handle, e + df.memory_layout.field_offset(MemorySection::Emotion, "emotion_type"));
                 let thought_id = read_mem::<i32>(&df.proc.handle, e + df.memory_layout.field_offset(MemorySection::Emotion, "thought_id"));
@@ -308,12 +287,13 @@ pub mod dwarf {
                 // TODO: stress effects
 
                 // TODO: dated emotions
-                self.read_happiness_level(df, personality_addr);
+                self.read_happiness_level(df);
+                self.check_trauma(df); // lol I know that feel
             }
         }
 
-        pub unsafe fn read_happiness_level(&mut self, df: &DFInstance, personality_addr: usize) {
-            let stress_level_addr = personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "stress_level");
+        pub unsafe fn read_happiness_level(&mut self, df: &DFInstance) {
+            let stress_level_addr = self.personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "stress_level");
             self.stress_level = read_mem::<i32>(&df.proc.handle, stress_level_addr);
             let mut happiness_level = df.game_data.happiness_levels[0].clone();
             for h in &df.game_data.happiness_levels {
@@ -323,7 +303,20 @@ pub mod dwarf {
             }
             println!("Stress Level: {:?}", happiness_level);
             self.happiness_level = happiness_level;
-    }
+        }
+
+        pub unsafe fn check_trauma(&mut self, df: &DFInstance) {
+            if self.mood == Mood::Trauma {
+                let stress_msg = "has been overthrown by the stresses of day-to-day living";
+                self.emotions.insert(0, UnitEmotion{
+                    emotion: stress_msg.to_string(),
+                    color: 0,
+                    divider: 0,
+                });
+                println!("{} {}", self.first_name, stress_msg);
+            }
+        }
+
         pub unsafe fn read_mood(&mut self, df: &DFInstance) {
             let mood_id = read_field::<i16>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "mood").unwrap();
             let mut mood = Mood::from(mood_id);
@@ -347,24 +340,22 @@ pub mod dwarf {
             }
 
             // this feels bad
-            let mut locked_mood = false;
             if mood != Mood::None && (
                 mood == Mood::Beserk ||
                 mood == Mood::Insane ||
                 mood == Mood::Melancholy ||
                 mood == Mood::Trauma
             ) || (mood_id >= 0 && mood_id <= 4) {
-                locked_mood = true;
+                self.locked_mood = true;
             }
-
-            println!("Mood: {:?} | Locked Mood: {}", mood, locked_mood);
+            self.mood = mood;
         }
-
 
     }
 
-    #[derive(Debug, PartialEq, Clone)]
+    #[derive(Default, Debug, PartialEq, Clone)]
     pub enum Mood {
+        #[default]
         None = -1,
         Fey,
         Secret,
