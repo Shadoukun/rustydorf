@@ -5,6 +5,7 @@ pub mod dwarf {
 
     use crate::caste::caste::Caste;
     use crate::gamedata::*;
+    use crate::histfigure::HistoricalFigure;
     use crate::race::race::Race;
     use crate::win::memory::memory::enum_mem_vec;
     use crate::win::memory::memory::read_mem;
@@ -16,12 +17,15 @@ pub mod dwarf {
         pub id: i32,
         pub raw_prof_id: u8,
         pub histfig_id: i32,
+        pub histfig: HistoricalFigure,
         pub turn_count: i32,
         pub states: HashMap<i16, i32>,
 
         pub race: Race,
         pub caste: Caste,
         pub souls: Vec<usize>,
+        pub birth_date: (i32, i32),
+        pub real_birth_date: (i32, i32),
 
         // TODO: FIX NAMES
         pub first_name: String,
@@ -29,6 +33,7 @@ pub mod dwarf {
         pub last_name: String,
         pub translated_last_name: String,
         pub nice_name: String,
+        pub real_name: String,
         pub translated_name: String,
 
         pub sex: Sex,
@@ -42,7 +47,6 @@ pub mod dwarf {
         pub traits: Vec<(Facet, i16)>,
         pub goals: Vec<(Goal, i16)>,
         pub goals_realized: i32,
-
         pub personality_addr: usize,
         pub emotions: Vec<UnitEmotion>,
         pub thoughts: Vec<i32>,
@@ -76,6 +80,9 @@ pub mod dwarf {
             d.read_names(df);
             d.read_states(df);
             d.read_profession(df);
+            d.read_age(df);
+            d.read_historical_figure(df);
+            d.read_fake_identity(df);
             // TODO: age and migration
             // TODO: adult/non_citizen filters
             // TODO: fake identities
@@ -96,7 +103,32 @@ pub mod dwarf {
             d.read_gender_orientation(df);
             // TODO: animal type
             // TODO: preferences
+
             Ok(d)
+        }
+
+        unsafe fn read_age(&mut self, df: &DFInstance) {
+            self.birth_date.0 = read_mem::<i32>(&df.proc.handle, self.addr + df.memory_layout.field_offset(MemorySection::Dwarf, "birth_year"));
+            self.birth_date.1 = read_mem::<i32>(&df.proc.handle, self.addr + df.memory_layout.field_offset(MemorySection::Dwarf, "birth_time"));
+        }
+
+        unsafe fn read_historical_figure(&mut self, df: &DFInstance) {
+            if df.historical_figures.contains_key(&self.histfig_id) {
+                self.histfig = HistoricalFigure::new(df, self.histfig_id);
+            }
+        }
+
+        unsafe fn read_fake_identity(&mut self, df: &DFInstance) {
+            self.histfig.read_fake_identity(df);
+            if self.histfig.has_fake_identity {
+               self.real_name = self.nice_name.clone();
+               self.real_birth_date = self.birth_date;
+
+               self.first_name = self.histfig.fake_identity.fake_name.clone();
+               self.nickname = self.histfig.fake_identity.fake_nickname.clone();
+               // TODO: last name
+               // TODO: age and migration
+            }
         }
 
         unsafe fn read_gender_orientation(&mut self, df: &DFInstance) {

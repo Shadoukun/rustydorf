@@ -3,6 +3,7 @@ mod caste;
 mod types;
 mod language;
 mod win;
+mod histfigure;
 use std::collections::HashMap;
 
 mod gamedata;
@@ -31,6 +32,8 @@ struct DFInstance {
     pub dwarf_race_id: i32,
     pub dwarf_civ_id: i32,
     creature_vector: Vec<usize>,
+    pub historical_figures: HashMap<i32, usize>,
+    pub fake_identities_vector: Vec<i32>,
 
     pub languages: Languages,
     pub races: Vec<Race>,
@@ -55,23 +58,34 @@ impl DFInstance {
             ..Default::default()
         };
 
-        // Race ID
+        // Dwarf Race ID
         let dwarf_race_index_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "dwarf_race_index"));
         df.dwarf_race_id = read_mem::<i16>(&df.proc.handle, dwarf_race_index_addr) as i32;
         println!("Dwarf Race ID: {}", df.dwarf_race_id);
 
-        // Civ ID
+        // Dwarf Civ ID
         let dwarf_civ_index_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "dwarf_civ_index"));
         df.dwarf_civ_id = read_mem::<i32>(&df.proc.handle, dwarf_civ_index_addr);
         println!("Dwarf Civ ID: {}", df.dwarf_civ_id);
 
-        // enum creature vector
+        // Creature Vector
         let creature_vector_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "active_creature_vector"));
         df.creature_vector = enum_mem_vec(&df.proc.handle, creature_vector_addr);
         println!("Creature Vector: {:?}", df.creature_vector);
 
         df.load_languages();
         df.load_races();
+
+        // Historical Figures
+        let hist_figs_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "historical_figures_vector"));
+        let hist_figs_vector = enum_mem_vec(&df.proc.handle, hist_figs_addr);
+        for fig in hist_figs_vector {
+            let id = read_mem::<i32>(&df.proc.handle, fig + df.memory_layout.field_offset(MemorySection::HistFigure, "id"));
+            df.historical_figures.insert(id, fig);
+        }
+
+        df.load_fake_identities();
+        println!("Historical Figures: {:?}", df.historical_figures);
         df.load_dwarves();
         df
     }
@@ -120,6 +134,20 @@ impl DFInstance {
                 }
             }
             self.races = races
+    }
+
+    pub unsafe fn load_fake_identities(&mut self) {
+        let fake_identities_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "fake_identities_vector"));
+        let fake_identities_vector = enum_mem_vec(&self.proc.handle, fake_identities_addr);
+    }
+
+    pub unsafe fn get_fake_identity(&self, id: i32) -> Option<&i32> {
+        for f in &self.fake_identities_vector {
+            if *f == id {
+                return Some(f);
+            }
+        }
+        None
     }
 
     pub fn get_race(&self, id: i32) -> Option<&Race> {
@@ -179,7 +207,7 @@ impl DFInstance {
             println!("Sex: {:?}, ", d.sex);
             println!("Sexual Orientation: {:?} ", d.orientation);
             println!("[Male Interest: {:?} | Female Interest: {:?}]", d.orient_vec[0], d.orient_vec[1]);
-            println!();
+            println!("Birth Year: {}, Birth Time: {}", d.birth_date.0, d.birth_date.1);
         }
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
             // // if !last_name.is_empty() && last_name.len() > 2 {
