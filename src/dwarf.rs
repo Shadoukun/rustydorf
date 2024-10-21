@@ -3,6 +3,7 @@ pub mod dwarf {
     use std::collections::HashMap;
     use std::fmt::Error;
 
+    use crate::time::DfTime;
     use crate::caste::caste::Caste;
     use crate::gamedata::*;
     use crate::histfigure::HistoricalFigure;
@@ -24,8 +25,11 @@ pub mod dwarf {
         pub race: Race,
         pub caste: Caste,
         pub souls: Vec<usize>,
-        pub birth_date: (i32, i32),
-        pub real_birth_date: (i32, i32),
+        pub _birth_date: (u64, u64),
+        pub birth_date: DfTime,
+        pub real_birth_date: DfTime,
+        pub age: DfTime,
+        pub arrival_time: DfTime,
 
         // TODO: FIX NAMES
         pub first_name: String,
@@ -82,10 +86,8 @@ pub mod dwarf {
             d.read_profession(df);
             d.read_age(df);
             d.read_historical_figure(df);
-            d.read_fake_identity(df);
-            // TODO: age and migration
+            d.read_fake_identity();
             // TODO: adult/non_citizen filters
-            // TODO: fake identities
             // TODO: squad info
             // TODO: current job
             // TODO: labors
@@ -108,8 +110,12 @@ pub mod dwarf {
         }
 
         unsafe fn read_age(&mut self, df: &DFInstance) {
-            self.birth_date.0 = read_mem::<i32>(&df.proc.handle, self.addr + df.memory_layout.field_offset(MemorySection::Dwarf, "birth_year"));
-            self.birth_date.1 = read_mem::<i32>(&df.proc.handle, self.addr + df.memory_layout.field_offset(MemorySection::Dwarf, "birth_time"));
+            self._birth_date.0 = read_field::<i32>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "birth_year").unwrap() as u64;
+            self._birth_date.1 = read_field::<i32>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "birth_time").unwrap() as u64;
+
+            self.birth_date = DfTime::from_years(self._birth_date.0).add(self._birth_date.1);
+            self.age = df.current_time().sub(self.birth_date.to_seconds());
+            self.arrival_time = df.current_time().sub(self.turn_count as u64);
         }
 
         unsafe fn read_historical_figure(&mut self, df: &DFInstance) {
@@ -118,16 +124,16 @@ pub mod dwarf {
             }
         }
 
-        unsafe fn read_fake_identity(&mut self, df: &DFInstance) {
-            self.histfig.read_fake_identity(df);
+        unsafe fn read_fake_identity(&mut self) {
             if self.histfig.has_fake_identity {
-               self.real_name = self.nice_name.clone();
-               self.real_birth_date = self.birth_date;
+                self.real_name = self.nice_name.clone();
+                self.real_birth_date = self.birth_date;
 
-               self.first_name = self.histfig.fake_identity.fake_name.clone();
-               self.nickname = self.histfig.fake_identity.fake_nickname.clone();
-               // TODO: last name
-               // TODO: age and migration
+                self.first_name = self.histfig.fake_identity.fake_name.clone();
+                self.nickname = self.histfig.fake_identity.fake_nickname.clone();
+                let fake_birth_year = DfTime::from_years(self.histfig.fake_identity.fake_birth_year as u64);
+                self.birth_date = fake_birth_year.add(self.histfig.fake_identity.fake_birth_time as u64);
+                // TODO: last name
             }
         }
 

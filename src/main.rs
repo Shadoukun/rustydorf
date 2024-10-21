@@ -4,6 +4,7 @@ mod types;
 mod language;
 mod win;
 mod histfigure;
+mod time;
 use std::collections::HashMap;
 
 mod gamedata;
@@ -11,6 +12,7 @@ use gamedata::GameData;
 use language::language::{Languages, Translation, Word};
 mod race;
 mod util;
+use time::DfTime;
 use util::{capitalize_each, address_plus_offset};
 use crate::race::race::Race;
 use crate::dwarf::dwarf::Dwarf;
@@ -88,6 +90,14 @@ impl DFInstance {
         println!("Historical Figures: {:?}", df.historical_figures);
         df.load_dwarves();
         df
+    }
+
+    /// Returns the current time in the game
+    pub unsafe fn current_time(&self) -> DfTime {
+        let year = read_field::<usize>(&self.proc, 0, &self.memory_layout, MemorySection::Addresses, "current_year").unwrap();
+        let curr_year_tick = read_field::<u32>(&self.proc, 0, &self.memory_layout, MemorySection::Addresses, "cur_year_tick").unwrap();
+        let time = DfTime::from_seconds((year as u64 * 1200 * 28 * 12) + (curr_year_tick as u64));
+        time
     }
 
     pub unsafe fn load_languages(&mut self) {
@@ -207,7 +217,7 @@ impl DFInstance {
             println!("Sex: {:?}, ", d.sex);
             println!("Sexual Orientation: {:?} ", d.orientation);
             println!("[Male Interest: {:?} | Female Interest: {:?}]", d.orient_vec[0], d.orient_vec[1]);
-            println!("Birth Year: {}, Birth Time: {}", d.birth_date.0, d.birth_date.1);
+            println!("Birth Year: {}, Birth Time: {}", d._birth_date.0, d._birth_date.1);
         }
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
             // // if !last_name.is_empty() && last_name.len() > 2 {
