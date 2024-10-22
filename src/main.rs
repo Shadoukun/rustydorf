@@ -4,6 +4,7 @@ mod types;
 mod language;
 mod win;
 mod histfigure;
+mod squad;
 mod time;
 use std::collections::HashMap;
 
@@ -33,9 +34,10 @@ struct DFInstance {
     pub game_data: GameData,
     pub dwarf_race_id: i32,
     pub dwarf_civ_id: i32,
-    creature_vector: Vec<usize>,
+    pub creature_vector: Vec<usize>,
     pub historical_figures: HashMap<i32, usize>,
     pub fake_identities_vector: Vec<i32>,
+    pub squad_vector: Vec<usize>,
 
     pub languages: Languages,
     pub races: Vec<Race>,
@@ -146,6 +148,11 @@ impl DFInstance {
             self.races = races
     }
 
+    pub fn get_race(&self, id: i32) -> Option<&Race> {
+        let r = self.races.get(id as usize);
+        Some(r)?
+    }
+
     pub unsafe fn load_fake_identities(&mut self) {
         let fake_identities_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "fake_identities_vector"));
         let fake_identities_vector = enum_mem_vec(&self.proc.handle, fake_identities_addr);
@@ -160,9 +167,9 @@ impl DFInstance {
         None
     }
 
-    pub fn get_race(&self, id: i32) -> Option<&Race> {
-        let r = self.races.get(id as usize);
-        Some(r)?
+    pub unsafe fn load_squads(&mut self) {
+        let squad_vector_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "squad_vector"));
+        self.squad_vector = enum_mem_vec(&self.proc.handle, squad_vector_addr);
     }
 
     pub unsafe fn load_dwarves(&mut self) {

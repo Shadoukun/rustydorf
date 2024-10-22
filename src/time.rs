@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-const DF_SEASONS: [&str; 4] = ["Spring", "Summer", "Autumn", "Winter"];
-const DF_MONTHS: [&str; 12] = [
+pub const DF_SEASONS: [&str; 4] = ["Spring", "Summer", "Autumn", "Winter"];
+pub const DF_MONTHS: [&str; 12] = [
     "Granite", "Slate", "Felsite",
     "Hematite", "Malachite", "Galena",
     "Limestone", "Sandstone", "Timber",
@@ -13,6 +13,13 @@ const DF_MONTHS: [&str; 12] = [
 pub struct DfTime(Duration);
 
 impl DfTime {
+
+    pub fn current_month(&self) -> String {
+        let total_days = self.to_days();
+        let month_index = (total_days / 28 % 12) as usize;
+        DF_MONTHS[month_index].to_string()
+    }
+
     pub fn from_years(years: u64) -> Self {
         DfTime(Duration::from_secs(years * 1200 * 28 * 12))
     }
@@ -69,7 +76,7 @@ impl DfTime {
         self.0.as_secs()
     }
 
-    fn as_duration(&self) -> Duration {
+    pub fn as_duration(&self) -> Duration {
         self.0
     }
 
