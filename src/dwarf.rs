@@ -3,6 +3,8 @@ pub mod dwarf {
     use std::collections::HashMap;
     use std::fmt::Error;
 
+    use crate::squad::Squad;
+    use crate::syndromes::Syndrome;
     use crate::time::DfTime;
     use crate::caste::caste::Caste;
     use crate::gamedata::*;
@@ -58,9 +60,9 @@ pub mod dwarf {
         pub happiness_level: HappinessLevel,
         pub mood: Mood,
         pub locked_mood: bool,
+        pub syndromes: Vec<Syndrome>,
 
-        pub squad_id: i32,
-        pub squad_position: i32,
+        pub squad: Squad,
         pub pending_squad_id: i32,
         pub pending_squad_position: i32,
         pub pending_squad_name: String,
@@ -88,11 +90,13 @@ pub mod dwarf {
             d.read_historical_figure(df);
             d.read_fake_identity();
             // TODO: adult/non_citizen filters
+            d.read_squad(df);
             // TODO: squad info
             // TODO: current job
             // TODO: labors
             // TODO: uniform
             // TODO: syndromes
+            d.read_syndromes(df);
             // TODO: body size
             // TODO: curse
             // TODO: noble position
@@ -109,10 +113,53 @@ pub mod dwarf {
             Ok(d)
         }
 
+        unsafe fn read_syndromes(&mut self, df: &DFInstance) {
+            let syndromes_addr = self.addr + df.memory_layout.field_offset(MemorySection::Dwarf, "active_syndrome_vector");
+            let syndromes = enum_mem_vec(&df.proc.handle, syndromes_addr);
+
+            let mut is_cursed = false;
+            for s in syndromes {
+                let syn = Syndrome::new(df, s);
+                let display_name = syn.clone().display_name().to_lowercase();
+                if display_name.contains("vampcurse") {
+                    is_cursed = true;
+                }
+
+                if syn.has_transform == true {
+                    let race_id = syn.transform_race;
+                    if race_id >= 0 {
+                        let trans_race = df.races.iter().find(|&x| x.id == race_id).unwrap();
+                        // TODO: crazed night creature
+                    }
+
+
+
+                } else if display_name.contains("werecurse") {
+                    // TODO: werebeast
+                }
+
+                self.syndromes.push(syn);
+
+            }
+
+        }
+
+        unsafe fn read_squad(&mut self, df: &DFInstance) {
+            let squad_id = read_field::<i32>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "squad_id").unwrap();
+            let squad_position = read_field::<i32>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "squad_position").unwrap();
+            self.pending_squad_position = squad_position;
+
+            if squad_id >= 0 {// && animal, adult
+                let s = df.squads.iter().find(|&x| x.id == squad_id).unwrap();
+                if s.id != 0 {
+                    self.squad = s.clone();
+                }
+            }
+        }
+
         unsafe fn read_age(&mut self, df: &DFInstance) {
             self._birth_date.0 = read_field::<i32>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "birth_year").unwrap() as u64;
             self._birth_date.1 = read_field::<i32>(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "birth_time").unwrap() as u64;
-
             self.birth_date = DfTime::from_years(self._birth_date.0).add(self._birth_date.1);
             self.age = df.current_time().sub(self.birth_date.to_seconds());
             self.arrival_time = df.current_time().sub(self.turn_count as u64);

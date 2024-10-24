@@ -6,6 +6,7 @@ mod win;
 mod histfigure;
 mod squad;
 mod time;
+mod syndromes;
 use std::collections::HashMap;
 
 mod gamedata;
@@ -13,6 +14,7 @@ use gamedata::GameData;
 use language::language::{Languages, Translation, Word};
 mod race;
 mod util;
+use squad::Squad;
 use time::DfTime;
 use util::{capitalize_each, address_plus_offset};
 use crate::race::race::Race;
@@ -35,9 +37,11 @@ struct DFInstance {
     pub dwarf_race_id: i32,
     pub dwarf_civ_id: i32,
     pub creature_vector: Vec<usize>,
+    pub syndromes_vector: Vec<usize>,
     pub historical_figures: HashMap<i32, usize>,
     pub fake_identities_vector: Vec<i32>,
     pub squad_vector: Vec<usize>,
+    pub squads: Vec<Squad>,
 
     pub languages: Languages,
     pub races: Vec<Race>,
@@ -89,17 +93,25 @@ impl DFInstance {
         }
 
         df.load_fake_identities();
-        println!("Historical Figures: {:?}", df.historical_figures);
+        df.load_syndromes();
         df.load_dwarves();
         df
     }
 
     /// Returns the current time in the game
     pub unsafe fn current_time(&self) -> DfTime {
-        let year = read_field::<usize>(&self.proc, 0, &self.memory_layout, MemorySection::Addresses, "current_year").unwrap();
-        let curr_year_tick = read_field::<u32>(&self.proc, 0, &self.memory_layout, MemorySection::Addresses, "cur_year_tick").unwrap();
+        let year_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "current_year"));
+        let year = read_mem::<i32>(&self.proc.handle, year_addr);
+        let curr_year_tick_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "cur_year_tick"));
+        let curr_year_tick = read_mem::<i32>(&self.proc.handle, curr_year_tick_addr);
+
         let time = DfTime::from_seconds((year as u64 * 1200 * 28 * 12) + (curr_year_tick as u64));
         time
+    }
+
+    pub unsafe fn load_syndromes(&mut self) {
+        let addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "all_syndromes_vector"));
+        self.syndromes_vector = enum_mem_vec(&self.proc.handle, addr);
     }
 
     pub unsafe fn load_languages(&mut self) {
@@ -170,6 +182,11 @@ impl DFInstance {
     pub unsafe fn load_squads(&mut self) {
         let squad_vector_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "squad_vector"));
         self.squad_vector = enum_mem_vec(&self.proc.handle, squad_vector_addr);
+
+        for s in &self.squad_vector {
+            let squad = Squad::new(self, *s);
+            self.squads.push(squad);
+        }
     }
 
     pub unsafe fn load_dwarves(&mut self) {
@@ -254,7 +271,6 @@ impl DFInstance {
 fn main() {
     let df = unsafe { DFInstance::new(); };
     // unsafe {
-        // let year = read_field::<usize>(&proc, 0, &memory_layout, MemorySection::Addresses, "current_year").unwrap();
         // let gview = read_field::<usize>(&proc, 0, &memory_layout, MemorySection::Addresses, "gview")
         //     .expect("field not found");
         // let viewscreen_setupdwarfgame_vtable = read_field::<usize>(&proc, gview, &memory_layout, MemorySection::Addresses, "viewscreen_setupdwarfgame_vtable").unwrap();

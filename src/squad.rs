@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use crate::{types::memorylayout::MemorySection, util::memory::read_field, win::memory::memory::{enum_mem_vec, read_mem}, DFInstance};
 
-#[derive(Default, PartialEq)]
+#[derive(Default, PartialEq, Clone)]
 pub struct Squad {
     pub id: i32,
     pub addr: usize,
@@ -18,7 +18,7 @@ pub struct Squad {
 }
 
 impl Squad {
-    pub unsafe fn new(df: DFInstance, addr: usize) -> Squad {
+    pub unsafe fn new(df: &DFInstance, addr: usize) -> Squad {
         let mut s = Squad {
             addr,
             id: read_mem::<i32>(&df.proc.handle, addr + df.memory_layout.field_offset(MemorySection::Squad, "id")),
