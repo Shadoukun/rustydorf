@@ -5,7 +5,7 @@ pub mod language{
 
     use crate::{
         util::memory::{read_field, read_field_as_string},
-        types::memorylayout::{MemoryLayout, MemorySection}, util::capitalize_each,
+        data::memorylayout::{MemoryOffsets, OffsetSection}, util::capitalize_each,
         DFInstance
     };
 
@@ -26,10 +26,10 @@ impl Languages {
     pub unsafe fn language_word(&self, df: &DFInstance, addr: usize) -> String {
         // front_compound, rear_compound, first_adjective, second_adjective, hypen_compound
         // the_x, of_x
-        let language_id = read_field::<i32>(&df.proc, addr, &df.memory_layout, MemorySection::Word, "language_id").expect("Failed to read language_id");
+        let language_id = read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Word, "language_id").expect("Failed to read language_id");
         let mut words: Vec<String> = vec![];
         for i in 0..7 {
-            let word = read_field::<i32>(&df.proc, addr, &df.memory_layout, MemorySection::Word, "words").unwrap();
+            let word = read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Word, "words").unwrap();
             // not sure why i*4
             words.push(self.word_chunk(word + i*4, language_id));
         }
@@ -63,7 +63,7 @@ impl Languages {
 
         for i in 0..7 {
             let word_type = WordType::from_i32(
-                read_field::<i32>(&df.proc, addr, &df.memory_layout, MemorySection::Word, "word_type").unwrap() + 2*i
+                read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Word, "word_type").unwrap() + 2*i
             );
 
             let word = Word::new(addr, &df.proc, &df.memory_layout);
@@ -131,16 +131,16 @@ pub struct Word {
 }
 
     impl Word {
-        pub unsafe fn new(address: usize, process: &Process, memory_layout: &MemoryLayout) -> Self {
-            let base = read_field_as_string(&process, address, &memory_layout, MemorySection::Word, "base").unwrap();
-            let noun = read_field_as_string(&process, address, &memory_layout, MemorySection::Word, "noun_singular").unwrap_or_default();
-            let plural_noun = read_field_as_string(&process, address, &memory_layout, MemorySection::Word, "noun_plural").unwrap_or_default();
-            let adjective = read_field_as_string(&process, address, &memory_layout, MemorySection::Word, "adjective").unwrap_or_default();
-            let verb = read_field_as_string(&process, address, &memory_layout, MemorySection::Word, "verb").unwrap_or_default();
-            let present_simple_verb = read_field_as_string(&process, address, &memory_layout, MemorySection::Word, "present_simple_verb").unwrap_or_default();
-            let past_simple_verb = read_field_as_string(&process, address, &memory_layout, MemorySection::Word, "past_simple_verb").unwrap_or_default();
-            let past_participle_verb = read_field_as_string(&process, address, &memory_layout, MemorySection::Word, "past_participle_verb").unwrap_or_default();
-            let present_participle_verb = read_field_as_string(&process, address, &memory_layout, MemorySection::Word, "present_participle_verb").unwrap_or_default();
+        pub unsafe fn new(address: usize, process: &Process, memory_layout: &MemoryOffsets) -> Self {
+            let base = read_field_as_string(&process, address, &memory_layout, OffsetSection::Word, "base").unwrap();
+            let noun = read_field_as_string(&process, address, &memory_layout, OffsetSection::Word, "noun_singular").unwrap_or_default();
+            let plural_noun = read_field_as_string(&process, address, &memory_layout, OffsetSection::Word, "noun_plural").unwrap_or_default();
+            let adjective = read_field_as_string(&process, address, &memory_layout, OffsetSection::Word, "adjective").unwrap_or_default();
+            let verb = read_field_as_string(&process, address, &memory_layout, OffsetSection::Word, "verb").unwrap_or_default();
+            let present_simple_verb = read_field_as_string(&process, address, &memory_layout, OffsetSection::Word, "present_simple_verb").unwrap_or_default();
+            let past_simple_verb = read_field_as_string(&process, address, &memory_layout, OffsetSection::Word, "past_simple_verb").unwrap_or_default();
+            let past_participle_verb = read_field_as_string(&process, address, &memory_layout, OffsetSection::Word, "past_participle_verb").unwrap_or_default();
+            let present_participle_verb = read_field_as_string(&process, address, &memory_layout, OffsetSection::Word, "present_participle_verb").unwrap_or_default();
 
             Word {
                 address,

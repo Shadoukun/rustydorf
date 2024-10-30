@@ -27,7 +27,7 @@ pub mod memory {
     use std::fmt::Error;
 
     use crate::win::{memory::memory::{enum_mem_vec, read_mem, read_raw}, process::Process};
-    use crate::types::memorylayout::{MemoryLayout, MemorySection};
+    use crate::data::memorylayout::{MemoryOffsets, OffsetSection};
 
     const STRING_BUFFER_LENGTH: usize = 16;
     const POINTER_SIZE: usize = std::mem::size_of::<usize>();
@@ -45,36 +45,36 @@ pub mod memory {
     Field reading functions
     */
 
-    /// Read a given MemoryLayout field from the given address, and return it as Result<T, Error>
+    /// Read a given MemoryOffsets field from the given address, and return it as Result<T, Error>
     pub unsafe fn read_field<T: Default>(
         proc: &Process,
         offset: usize,
-        layout: &MemoryLayout,
-        section: MemorySection,
+        layout: &MemoryOffsets,
+        section: OffsetSection,
         field: &str,
     ) -> Result<T, Error> {
         let field_offset = layout.field_offset(section, field);
         Ok(read_mem::<T>(&proc.handle, offset + field_offset))
     }
 
-    /// Read a given MemoryLayout field from the given address, and return a Result<String, Error>
+    /// Read a given MemoryOffsets field from the given address, and return a Result<String, Error>
     pub unsafe fn read_field_as_string(
         proc: &Process,
         offset: usize,
-        layout: &MemoryLayout,
-        section: MemorySection,
+        layout: &MemoryOffsets,
+        section: OffsetSection,
         field: &str,
     ) -> Result<String, Error> {
         let field_offset = layout.field_offset(section, field);
         Ok(read_mem_as_string(proc, offset + field_offset))
     }
 
-    /// Read a given MemoryLayout field from the given address, and return a Result<Vec<usize>, Error>
+    /// Read a given MemoryOffsets field from the given address, and return a Result<Vec<usize>, Error>
     pub unsafe fn read_field_as_vec(
         proc: &Process,
         offset: usize,
-        layout: &MemoryLayout,
-        section: MemorySection,
+        layout: &MemoryOffsets,
+        section: OffsetSection,
         field: &str
     ) -> Result<Vec<usize>, Error> {
         let field_offset = layout.field_offset(section, field);

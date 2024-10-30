@@ -4,8 +4,9 @@ use std::num::ParseIntError;
 use std::{collections::HashMap, fs};
 use serde::Deserialize;
 use toml;
+use windows::Win32::System::Memory;
 
-pub enum MemorySection {
+pub enum OffsetSection {
     Info,
     Addresses,
     Language,
@@ -39,7 +40,7 @@ pub enum MemorySection {
 }
 
 #[derive(Default, Deserialize)]
-pub struct MemoryLayout {
+pub struct MemoryOffsets {
 pub addresses: HashMap<String, String>,
 pub language: HashMap<String, String>,
 pub word_offsets: HashMap<String, String>,
@@ -71,7 +72,7 @@ pub art_offsets: HashMap<String, String>,
 pub viewscreen_offsets: HashMap<String, String>,
 }
 
-impl MemoryLayout {
+impl MemoryOffsets {
 pub fn new(filepath: String) -> Self {
     let contents = match fs::read_to_string(&filepath) {
         Ok(c) => c,
@@ -90,50 +91,50 @@ pub fn new(filepath: String) -> Self {
     layout
 }
 
-pub fn get_section(&self, field: MemorySection) -> Result<&HashMap<String, String>, Error> {
+pub fn get_section(&self, field: OffsetSection) -> Result<&HashMap<String, String>, Error> {
     match field {
-        MemorySection::Addresses => Ok(&self.addresses),
-        MemorySection::Language => Ok(&self.language),
-        MemorySection::Word => Ok(&self.word_offsets),
-        MemorySection::GeneralRef => Ok(&self.general_ref_offsets),
-        MemorySection::Race => Ok(&self.race_offsets),
-        MemorySection::Caste => Ok(&self.caste_offsets),
-        MemorySection::HistEntity => Ok(&self.hist_entity_offsets),
-        MemorySection::HistFigure => Ok(&self.hist_figure_offsets),
-        MemorySection::HistEvent => Ok(&self.hist_event_offsets),
-        MemorySection::Item => Ok(&self.item_offsets),
-        MemorySection::ItemSubtype => Ok(&self.item_subtype_offsets),
-        MemorySection::ItemFilter => Ok(&self.item_filter_offsets),
-        MemorySection::WeaponSubtype => Ok(&self.weapon_subtype_offsets),
-        MemorySection::ArmorSubtype => Ok(&self.armor_subtype_offsets),
-        MemorySection::Material => Ok(&self.material_offsets),
-        MemorySection::Plant => Ok(&self.plant_offsets),
-        MemorySection::Descriptor => Ok(&self.descriptor_offsets),
-        MemorySection::Health => Ok(&self.health_offsets),
-        MemorySection::Dwarf => Ok(&self.dwarf_offsets),
-        MemorySection::Syndrome => Ok(&self.syndrome_offsets),
-        MemorySection::UnitWound => Ok(&self.unit_wound_offsets),
-        MemorySection::Soul => Ok(&self.soul_details),
-        MemorySection::Need => Ok(&self.need_offsets),
-        MemorySection::Emotion => Ok(&self.emotion_offsets),
-        MemorySection::Job => Ok(&self.job_details),
-        MemorySection::Squad => Ok(&self.squad_offsets),
-        MemorySection::Activity => Ok(&self.activity_offsets),
-        MemorySection::Art => Ok(&self.art_offsets),
-        MemorySection::Viewscreen => Ok(&self.viewscreen_offsets),
+        OffsetSection::Addresses => Ok(&self.addresses),
+        OffsetSection::Language => Ok(&self.language),
+        OffsetSection::Word => Ok(&self.word_offsets),
+        OffsetSection::GeneralRef => Ok(&self.general_ref_offsets),
+        OffsetSection::Race => Ok(&self.race_offsets),
+        OffsetSection::Caste => Ok(&self.caste_offsets),
+        OffsetSection::HistEntity => Ok(&self.hist_entity_offsets),
+        OffsetSection::HistFigure => Ok(&self.hist_figure_offsets),
+        OffsetSection::HistEvent => Ok(&self.hist_event_offsets),
+        OffsetSection::Item => Ok(&self.item_offsets),
+        OffsetSection::ItemSubtype => Ok(&self.item_subtype_offsets),
+        OffsetSection::ItemFilter => Ok(&self.item_filter_offsets),
+        OffsetSection::WeaponSubtype => Ok(&self.weapon_subtype_offsets),
+        OffsetSection::ArmorSubtype => Ok(&self.armor_subtype_offsets),
+        OffsetSection::Material => Ok(&self.material_offsets),
+        OffsetSection::Plant => Ok(&self.plant_offsets),
+        OffsetSection::Descriptor => Ok(&self.descriptor_offsets),
+        OffsetSection::Health => Ok(&self.health_offsets),
+        OffsetSection::Dwarf => Ok(&self.dwarf_offsets),
+        OffsetSection::Syndrome => Ok(&self.syndrome_offsets),
+        OffsetSection::UnitWound => Ok(&self.unit_wound_offsets),
+        OffsetSection::Soul => Ok(&self.soul_details),
+        OffsetSection::Need => Ok(&self.need_offsets),
+        OffsetSection::Emotion => Ok(&self.emotion_offsets),
+        OffsetSection::Job => Ok(&self.job_details),
+        OffsetSection::Squad => Ok(&self.squad_offsets),
+        OffsetSection::Activity => Ok(&self.activity_offsets),
+        OffsetSection::Art => Ok(&self.art_offsets),
+        OffsetSection::Viewscreen => Ok(&self.viewscreen_offsets),
         _ => {
             panic!("Unknown section name");
         }
     }
 }
 
-pub fn field_offset(&self, section: MemorySection, field: &str) -> usize {
+pub fn field_offset(&self, section: OffsetSection, field: &str) -> usize {
     let field = self.get_section(section).unwrap().get(field).expect("field not found");
     usize::from_str_radix(field.trim().trim_start_matches("0x"), 16).unwrap()
 }
 }
 
-pub fn load_memory_layout() -> MemoryLayout {
+pub fn load_memory_layout() -> MemoryOffsets {
 let current_dir = current_dir().unwrap();
 let conf = match current_dir.join("addresses.toml").into_os_string().into_string() {
     Ok(x) => x,
@@ -141,5 +142,5 @@ let conf = match current_dir.join("addresses.toml").into_os_string().into_string
         panic!("Could not read file");
     }
 };
-MemoryLayout::new(conf)
+MemoryOffsets::new(conf)
 }

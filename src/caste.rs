@@ -1,6 +1,7 @@
 pub mod caste {
+    use crate::data::memorylayout::OffsetSection;
     use crate::win::memory::memory::{enum_mem_vec, read_mem};
-    use crate::{types::{flagarray::FlagArray, memorylayout::MemorySection}, util::memory::read_mem_as_string, DFInstance};
+    use crate::{types::flagarray::FlagArray, util::memory::read_mem_as_string, DFInstance};
 
 
     #[derive(Default, Debug, Clone)]
@@ -27,26 +28,26 @@ pub mod caste {
             };
 
             c.tag = read_mem_as_string(&df.proc, address);
-            c.name = read_mem_as_string(&df.proc, address + df.memory_layout.field_offset(MemorySection::Caste, "caste_name"));
-            c.name_plural = read_mem_as_string(&df.proc, address + df.memory_layout.field_offset(MemorySection::Word, "noun_plural"));
-            c.flags = FlagArray::new(&df, address + df.memory_layout.field_offset(MemorySection::Caste, "flags"));
+            c.name = read_mem_as_string(&df.proc, address + df.memory_layout.field_offset(OffsetSection::Caste, "caste_name"));
+            c.name_plural = read_mem_as_string(&df.proc, address + df.memory_layout.field_offset(OffsetSection::Word, "noun_plural"));
+            c.flags = FlagArray::new(&df, address + df.memory_layout.field_offset(OffsetSection::Caste, "flags"));
 
             if c.flags.flags.get(97).unwrap_or_default() {
-                c.baby_age = match read_mem::<i32>(&df.proc.handle, address + df.memory_layout.field_offset(MemorySection::Caste, "baby_age")) {
+                c.baby_age = match read_mem::<i32>(&df.proc.handle, address + df.memory_layout.field_offset(OffsetSection::Caste, "baby_age")) {
                     -1 => 0,
                     x => x
                 };
             }
 
             if c.flags.flags.get(98).unwrap_or_default() {
-                c.child_age = match read_mem::<i32>(&df.proc.handle, address + df.memory_layout.field_offset(MemorySection::Caste, "child_age")) {
+                c.child_age = match read_mem::<i32>(&df.proc.handle, address + df.memory_layout.field_offset(OffsetSection::Caste, "child_age")) {
                     -1 => 0,
                     x => x
                 };
             }
-            c.adult_size = read_mem::<i32>(&df.proc.handle, address + df.memory_layout.field_offset(MemorySection::Caste, "adult_size"));
+            c.adult_size = read_mem::<i32>(&df.proc.handle, address + df.memory_layout.field_offset(OffsetSection::Caste, "adult_size"));
 
-            c.body_addr = address + df.memory_layout.field_offset(MemorySection::Caste, "body_info");
+            c.body_addr = address + df.memory_layout.field_offset(OffsetSection::Caste, "body_info");
             c.body_parts_addr = enum_mem_vec(&df.proc.handle, c.body_addr);
 
             // convenience flag setting
@@ -72,14 +73,14 @@ pub mod caste {
             }
 
             // extracts
-            let extracts_vec_addr = address + df.memory_layout.field_offset(MemorySection::Caste, "extracts");
+            let extracts_vec_addr = address + df.memory_layout.field_offset(OffsetSection::Caste, "extracts");
             let extracts = enum_mem_vec(&df.proc.handle, extracts_vec_addr);
             if extracts.len() > 0 {
                 let _ = c.flags.flags.set(200, true);
             }
 
             // shared tissues
-            let share_tissues_vec_addr = address + df.memory_layout.field_offset(MemorySection::Caste, "shearable_tissues_vector");
+            let share_tissues_vec_addr = address + df.memory_layout.field_offset(OffsetSection::Caste, "shearable_tissues_vector");
             let share_tissues = enum_mem_vec(&df.proc.handle, share_tissues_vec_addr);
             if share_tissues.len() > 0 {
                 let _ = c.flags.flags.set(201, true);

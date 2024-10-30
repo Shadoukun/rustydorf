@@ -1,4 +1,4 @@
-use crate::{win::memory::memory::{enum_mem_vec, read_mem}, DFInstance, util::memory::read_mem_as_string, types::memorylayout::MemorySection};
+use crate::{win::memory::memory::{enum_mem_vec, read_mem}, DFInstance, util::memory::read_mem_as_string, data::memorylayout::OffsetSection};
 
 #[derive(Default, Clone)]
 pub struct Syndrome {
@@ -20,23 +20,23 @@ impl Syndrome {
             addr,
             id,
             name: read_mem_as_string(&df.proc, addr),
-            is_sickness: read_mem::<u8>(&df.proc.handle, addr + df.memory_layout.field_offset(MemorySection::Dwarf, "syn_sick_flag")),
+            is_sickness: read_mem::<u8>(&df.proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "syn_sick_flag")),
             ..Default::default()
         };
 
-        let syn_classes = enum_mem_vec(&df.proc.handle, addr + df.memory_layout.field_offset(MemorySection::Syndrome, "syn_classes_vector"));
+        let syn_classes = enum_mem_vec(&df.proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "syn_classes_vector"));
         for c in syn_classes {
             let class_name = read_mem_as_string(&df.proc, c);
             // TODO: trim class names
             s.class_names.push(class_name);
         };
 
-        let effects = enum_mem_vec(&df.proc.handle, addr + df.memory_layout.field_offset(MemorySection::Syndrome, "cie_effects"));
+        let effects = enum_mem_vec(&df.proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "cie_effects"));
         for e in effects {
             let vtable_addr = read_mem::<usize>(&df.proc.handle, e);
             let vtable = read_mem::<usize>(&df.proc.handle, vtable_addr);
             let effect_type = read_mem::<i32>(&df.proc.handle, vtable + 0x1);
-            let end = read_mem::<i32>(&df.proc.handle, e + df.memory_layout.field_offset(MemorySection::Syndrome, "cie_end"));
+            let end = read_mem::<i32>(&df.proc.handle, e + df.memory_layout.field_offset(OffsetSection::Syndrome, "cie_end"));
 
             match effect_type {
                 25 =>  {

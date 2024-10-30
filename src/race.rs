@@ -8,7 +8,7 @@ pub mod race {
     use crate::util::address_plus_offset;
     use crate::{capitalize_each, DFInstance};
     use crate::util::memory::{read_field_as_string, read_field_as_vec, read_mem_as_string};
-    use crate::types::memorylayout::{MemoryLayout, MemorySection};
+    use crate::data::memorylayout::{MemoryOffsets, OffsetSection};
 
     #[derive(Default, Debug, Clone)]
     pub struct Race {
@@ -37,13 +37,13 @@ pub mod race {
             let mut r: Race = Default::default();
 
             r.id = id;
-            r.name = read_field_as_string(&df.proc, base_addr, &df.memory_layout, MemorySection::Race, "name_singular")?;
-            r.plural_name = read_field_as_string(&df.proc, base_addr, &df.memory_layout, MemorySection::Race, "name_plural")?;
-            r.adjective = read_field_as_string(&df.proc, base_addr, &df.memory_layout, MemorySection::Race, "adjective")?;
-            r.child_name = read_field_as_string(&df.proc, base_addr, &df.memory_layout, MemorySection::Race, "child_name_singular")?;
-            r.child_name_plural = read_field_as_string(&df.proc, base_addr, &df.memory_layout, MemorySection::Race, "child_name_plural")?;
-            r.baby_name = read_field_as_string(&df.proc, base_addr, &df.memory_layout, MemorySection::Race, "baby_name_singular")?;
-            r.baby_name_plural = read_field_as_string(&df.proc, base_addr, &df.memory_layout, MemorySection::Race, "baby_name_plural")?;
+            r.name = read_field_as_string(&df.proc, base_addr, &df.memory_layout, OffsetSection::Race, "name_singular")?;
+            r.plural_name = read_field_as_string(&df.proc, base_addr, &df.memory_layout, OffsetSection::Race, "name_plural")?;
+            r.adjective = read_field_as_string(&df.proc, base_addr, &df.memory_layout, OffsetSection::Race, "adjective")?;
+            r.child_name = read_field_as_string(&df.proc, base_addr, &df.memory_layout, OffsetSection::Race, "child_name_singular")?;
+            r.child_name_plural = read_field_as_string(&df.proc, base_addr, &df.memory_layout, OffsetSection::Race, "child_name_plural")?;
+            r.baby_name = read_field_as_string(&df.proc, base_addr, &df.memory_layout, OffsetSection::Race, "baby_name_singular")?;
+            r.baby_name_plural = read_field_as_string(&df.proc, base_addr, &df.memory_layout, OffsetSection::Race, "baby_name_plural")?;
 
             if r.baby_name.is_empty() && !r.child_name.is_empty() {
                 r.baby_name = r.child_name.clone();
@@ -69,17 +69,17 @@ pub mod race {
             r.baby_name = capitalize_each(&r.baby_name);
             r.baby_name_plural = capitalize_each(&r.baby_name_plural);
 
-                let pref_string_vector_offset = df.memory_layout.field_offset(MemorySection::Race, "pref_string_vector");
+                let pref_string_vector_offset = df.memory_layout.field_offset(OffsetSection::Race, "pref_string_vector");
                 let pref_strings = enum_mem_vec(&df.proc.handle, base_addr.add(pref_string_vector_offset));
                 for p in pref_strings {
                     let pref_string = read_mem_as_string(&df.proc, p);
                     r.pref_strings.push(pref_string);
                 }
 
-            r.castes_vector = df.memory_layout.field_offset(MemorySection::Race, "castes_vector");
-            r.pop_ratio_vector = df.memory_layout.field_offset(MemorySection::Race, "pop_ratio_vector");
-            r.materials_vector = df.memory_layout.field_offset(MemorySection::Race, "materials_vector");
-            r.tissues_vector = df.memory_layout.field_offset(MemorySection::Race, "tissues_vector");
+            r.castes_vector = df.memory_layout.field_offset(OffsetSection::Race, "castes_vector");
+            r.pop_ratio_vector = df.memory_layout.field_offset(OffsetSection::Race, "pop_ratio_vector");
+            r.materials_vector = df.memory_layout.field_offset(OffsetSection::Race, "materials_vector");
+            r.tissues_vector = df.memory_layout.field_offset(OffsetSection::Race, "tissues_vector");
 
             // load race castes
             let castes = enum_mem_vec(&df.proc.handle, base_addr.add(r.castes_vector));
@@ -94,7 +94,7 @@ pub mod race {
                 // todo: caste ratios
             }
 
-            r.flags = FlagArray::new(&df, base_addr + df.memory_layout.field_offset(MemorySection::Race, "flags"));
+            r.flags = FlagArray::new(&df, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "flags"));
             Ok(r)
         }
     }
