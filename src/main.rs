@@ -53,7 +53,7 @@ struct DFInstance {
 
 }
 
-#[derive(Default, Clone)]
+#[derive(Debug, Default, Clone)]
 struct FortressPosition {
     pub name: String,
     pub name_male: String,
@@ -231,8 +231,6 @@ impl DFInstance {
         }
 
         for &c in &self.creature_vector {
-            // filter creatures by civ id to get only dwarves
-            let creature_civ = read_mem::<i32>(&self.proc.handle, c + self.memory_layout.field_offset(OffsetSection::Dwarf, "civ"));
             let d = match Dwarf::new(self, c) {
                 Ok(d) => d,
                 Err(_) => continue,
@@ -269,6 +267,7 @@ impl DFInstance {
             println!("Sexual Orientation: {:?} ", d.orientation);
             println!("[Male Interest: {:?} | Female Interest: {:?}]", d.orient_vec[0], d.orient_vec[1]);
             println!("Birth Year: {}, Birth Time: {}", d._birth_date.0, d._birth_date.1);
+            println!("Noble Position: {:?}", d.noble_position);
         }
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
             // // if !last_name.is_empty() && last_name.len() > 2 {

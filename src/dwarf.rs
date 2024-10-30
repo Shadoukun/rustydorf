@@ -15,12 +15,14 @@ pub mod dwarf {
     use crate::race::race::Race;
     use crate::win::memory::memory::enum_mem_vec;
     use crate::win::memory::memory::read_mem;
+    use crate::FortressPosition;
     use crate::{util::memory::{read_field, read_mem_as_string}, DFInstance};
 
     #[derive(Default)]
     pub struct Dwarf {
         pub addr: usize,
         pub id: i32,
+        pub civ_id: i32,
         pub raw_prof_id: u8,
         pub histfig_id: i32,
         pub histfig: HistoricalFigure,
@@ -72,19 +74,29 @@ pub mod dwarf {
         pub pending_squad_id: i32,
         pub pending_squad_position: i32,
         pub pending_squad_name: String,
+
+        pub noble_position: FortressPosition,
     }
 
     impl Dwarf {
         pub unsafe fn new(df: &DFInstance, addr: usize) -> Result<Dwarf, Error> {
+            let id = read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Dwarf, "id")?;
+            let civ_id = read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Dwarf, "civ")?;
+
+            // check if the creature is from the same civ as the fort
+            if civ_id != df.dwarf_civ_id {
+                return Err(Error);
+            }
+
             let mut d = Dwarf{
                 addr,
-                id: read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Dwarf, "id")?,
+                id,
+                civ_id,
                 ..Default::default()
             };
 
             // read race/caste before anything else to filter out non-dwarves
             d.read_race_and_caste(df)?;
-
             d.raw_prof_id = read_field::<u8>(&df.proc, addr, &df.memory_layout, OffsetSection::Dwarf, "profession")?;
             d.histfig_id = read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Dwarf, "hist_id")?;
             d.turn_count = read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Dwarf, "turn_count")?;
@@ -95,9 +107,6 @@ pub mod dwarf {
             d.read_age(df);
             d.read_historical_figure(df);
             d.read_fake_identity();
-            // noble positions and citizenship require extra fortress info
-            // TODO: adult/non_citizen filters
-            // TODO: noble position
             d.read_squad(df);
             // TODO: current job
             // TODO: labors
@@ -111,7 +120,7 @@ pub mod dwarf {
             d.read_traits(df);
             d.read_goals(df);
             d.read_gender_orientation(df);
-            // TODO: animal type
+            d.read_noble_position(df);
             // TODO: preferences
 
 
@@ -204,6 +213,13 @@ pub mod dwarf {
                 self.birth_date = fake_birth_year.add(self.histfig.fake_identity.fake_birth_time as u64);
                 // TODO: last name
             }
+        }
+
+        pub unsafe fn read_noble_position(&mut self, df: &DFInstance) {
+            self.noble_position = match df.nobles.get(&self.histfig_id) {
+                Some(pos) => pos.clone(),
+                None => FortressPosition::default()
+            };
         }
 
         unsafe fn read_gender_orientation(&mut self, df: &DFInstance) {
