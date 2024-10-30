@@ -240,7 +240,7 @@ pub struct UnitEmotion {
 
 pub fn load_game_data() -> GameData {
     let current_dir = std::env::current_dir().unwrap();
-    let data_folder = current_dir.join("src/data");
+    let data_folder = current_dir.join("src/data/data");
 
     let mut merged = String::new();
 
