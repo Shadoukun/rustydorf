@@ -4,6 +4,8 @@ pub mod dwarf {
     use std::fmt::Error;
 
     use crate::squad::Squad;
+    use crate::syndromes::Curse;
+    use crate::syndromes::CurseType;
     use crate::syndromes::Syndrome;
     use crate::time::DfTime;
     use crate::caste::caste::Caste;
@@ -32,7 +34,8 @@ pub mod dwarf {
         pub real_birth_date: DfTime,
         pub age: DfTime,
         pub arrival_time: DfTime,
-
+        pub body_size: i32,
+        pub body_size_base: i32,
         // TODO: FIX NAMES
         pub first_name: String,
         pub nickname: String,
@@ -61,6 +64,8 @@ pub mod dwarf {
         pub mood: Mood,
         pub locked_mood: bool,
         pub syndromes: Vec<Syndrome>,
+        pub is_cursed: bool,
+        pub curse: Curse,
 
         pub squad: Squad,
         pub pending_squad_id: i32,
@@ -89,17 +94,15 @@ pub mod dwarf {
             d.read_age(df);
             d.read_historical_figure(df);
             d.read_fake_identity();
+            // noble positions and citizenship require extra fortress info
             // TODO: adult/non_citizen filters
+            // TODO: noble position
             d.read_squad(df);
-            // TODO: squad info
             // TODO: current job
             // TODO: labors
             // TODO: uniform
-            // TODO: syndromes
+            d.read_body_size(df);
             d.read_syndromes(df);
-            // TODO: body size
-            // TODO: curse
-            // TODO: noble position
             d.read_soul(df);
             d.read_mood(df);
             d.read_emotions(df);
@@ -110,19 +113,43 @@ pub mod dwarf {
             // TODO: animal type
             // TODO: preferences
 
+
             Ok(d)
+        }
+
+        unsafe fn read_body_size(&mut self, df: &DFInstance) {
+            self.body_size = read_field(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "size_info").unwrap();
+            self.body_size_base = read_field(&df.proc, self.addr, &df.memory_layout, MemorySection::Dwarf, "size_base").unwrap();
         }
 
         unsafe fn read_syndromes(&mut self, df: &DFInstance) {
             let syndromes_addr = self.addr + df.memory_layout.field_offset(MemorySection::Dwarf, "active_syndrome_vector");
             let syndromes = enum_mem_vec(&df.proc.handle, syndromes_addr);
 
-            let mut is_cursed = false;
             for s in syndromes {
                 let syn = Syndrome::new(df, s);
-                let display_name = syn.clone().display_name().to_lowercase();
-                if display_name.contains("vampcurse") {
-                    is_cursed = true;
+
+                let d = syn.clone().display_name().to_lowercase();
+                match d {
+                    d if d.contains("vampcurse") => {
+                        self.is_cursed = true;
+                        self.curse = Curse{
+                            name: "Vampirism".to_string(),
+                            curse_type: CurseType::Vampire,}
+                    },
+                    d if d.contains("werecurse") => {
+                        self.is_cursed = true;
+                        self.curse = Curse{
+                            name: "Werebeast".to_string(),
+                            curse_type: CurseType::Werebeast,}
+                    },
+                    d if d.contains("curse") => {
+                        self.is_cursed = true;
+                        self.curse = Curse{
+                            name: "Curse".to_string(),
+                            curse_type: CurseType::Other,}
+                    },
+                    _ => (),
                 }
 
                 if syn.has_transform == true {
@@ -131,17 +158,11 @@ pub mod dwarf {
                         let trans_race = df.races.iter().find(|&x| x.id == race_id).unwrap();
                         // TODO: crazed night creature
                     }
-
-
-
-                } else if display_name.contains("werecurse") {
-                    // TODO: werebeast
                 }
 
                 self.syndromes.push(syn);
-
+                // TODO: attribute changes
             }
-
         }
 
         unsafe fn read_squad(&mut self, df: &DFInstance) {
@@ -344,6 +365,19 @@ pub mod dwarf {
                 }
             }
         }
+        pub unsafe fn read_preferences(&mut self, df: &DFInstance) {
+            let prefs_addr = self.souls[0] + df.memory_layout.field_offset(MemorySection::Soul, "preferences");
+            let prefs = enum_mem_vec(&df.proc.handle,  prefs_addr);
+
+            for p in prefs {
+                let pref_type = read_mem::<PreferenceType>(&df.proc.handle, p);
+                let pref_id = read_mem::<i16>(&df.proc.handle, p + 0x4);
+                let item_subtype = read_mem::<i16>(&df.proc.handle, p + 0x8);
+                let mat_type = read_mem::<i16>(&df.proc.handle, p + 0xC);
+                let mat_index = read_mem::<i16>(&df.proc.handle, p + 0x10);
+                let mat_state = read_mem::<MaterialState>(&df.proc.handle, p + 0x14);
+            }
+        }
 
         pub unsafe fn read_emotions(&mut self, df: &DFInstance) {
             let emotions_addr = self.personality_addr + df.memory_layout.field_offset(MemorySection::Soul, "emotions");
@@ -527,5 +561,38 @@ pub mod dwarf {
         Bisexual,
         Homosexual,
         Asexual,
+    }
+
+    #[derive(Default, Debug, PartialEq)]
+    #[repr(i16)]
+    pub enum PreferenceType {
+        #[default]
+        LikeNone = -1,
+        LikeMaterial,
+        LikeCreature,
+        LikeFood,
+        HateCreature,
+        LikeItem,
+        LikePlant,
+        LikeTree,
+        LikeColor,
+        LikeShape,
+        LikePoetry,
+        LikeMusic,
+        LikeDance,
+        LikeOutdoors = 99
+    }
+
+    #[derive(Default, Debug, PartialEq)]
+    #[repr(i16)]
+    pub enum MaterialState {
+        #[default]
+        Any = -1,
+        Solid = 0,
+        Liquid,
+        Gas,
+        Powder,
+        Paste,
+        Pressed
     }
 }

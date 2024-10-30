@@ -67,3 +67,18 @@ impl Syndrome {
     }
 
 }
+
+#[derive(Default)]
+pub struct Curse {
+    pub name: String,
+    pub curse_type: CurseType,
+}
+
+#[derive(Default)]
+pub enum CurseType {
+    #[default]
+    None = -1,
+    Vampire = 0,
+    Werebeast = 1,
+    Other = 2
+}

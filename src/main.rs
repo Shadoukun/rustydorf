@@ -34,6 +34,7 @@ struct DFInstance {
     pub proc: Process,
     pub memory_layout: MemoryLayout,
     pub game_data: GameData,
+    pub fortress_addr: usize,
     pub dwarf_race_id: i32,
     pub dwarf_civ_id: i32,
     pub creature_vector: Vec<usize>,
@@ -42,11 +43,21 @@ struct DFInstance {
     pub fake_identities_vector: Vec<i32>,
     pub squad_vector: Vec<usize>,
     pub squads: Vec<Squad>,
+    pub positions: HashMap<i32, FortressPosition>,
+    pub nobles: HashMap<i32, FortressPosition>,
+    pub beliefs: HashMap<usize, i32>,
 
     pub languages: Languages,
     pub races: Vec<Race>,
     pub dwarves: Vec<Dwarf>,
 
+}
+
+#[derive(Default, Clone)]
+struct FortressPosition {
+    pub name: String,
+    pub name_male: String,
+    pub name_female: String,
 }
 
 #[allow(dead_code)]
@@ -66,47 +77,72 @@ impl DFInstance {
             ..Default::default()
         };
 
-        // Dwarf Race ID
-        let dwarf_race_index_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "dwarf_race_index"));
-        df.dwarf_race_id = read_mem::<i16>(&df.proc.handle, dwarf_race_index_addr) as i32;
-        println!("Dwarf Race ID: {}", df.dwarf_race_id);
-
-        // Dwarf Civ ID
-        let dwarf_civ_index_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "dwarf_civ_index"));
-        df.dwarf_civ_id = read_mem::<i32>(&df.proc.handle, dwarf_civ_index_addr);
-        println!("Dwarf Civ ID: {}", df.dwarf_civ_id);
-
-        // Creature Vector
-        let creature_vector_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "active_creature_vector"));
-        df.creature_vector = enum_mem_vec(&df.proc.handle, creature_vector_addr);
-        println!("Creature Vector: {:?}", df.creature_vector);
-
+        df.fortress_addr = read_mem::<usize>(&df.proc.handle, address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "fortress_entity")));
+        df.dwarf_race_id = read_mem::<i16>(&df.proc.handle, address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "dwarf_race_index"))) as i32;
+        df.dwarf_civ_id = read_mem::<i32>(&df.proc.handle, address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "dwarf_civ_index")));
+        df.creature_vector = enum_mem_vec(&df.proc.handle, address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "active_creature_vector")));
         df.load_languages();
         df.load_races();
-
-        // Historical Figures
-        let hist_figs_addr = address_plus_offset(&df.proc, df.memory_layout.field_offset(MemorySection::Addresses, "historical_figures_vector"));
-        let hist_figs_vector = enum_mem_vec(&df.proc.handle, hist_figs_addr);
-        for fig in hist_figs_vector {
-            let id = read_mem::<i32>(&df.proc.handle, fig + df.memory_layout.field_offset(MemorySection::HistFigure, "id"));
-            df.historical_figures.insert(id, fig);
-        }
-
+        df.load_historical_figures();
+        df.load_historical_entities();
         df.load_fake_identities();
+        df.load_beliefs();
         df.load_syndromes();
         df.load_dwarves();
         df
     }
 
-    /// Returns the current time in the game
-    pub unsafe fn current_time(&self) -> DfTime {
-        let year_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "current_year"));
-        let year = read_mem::<i32>(&self.proc.handle, year_addr);
-        let curr_year_tick_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "cur_year_tick"));
-        let curr_year_tick = read_mem::<i32>(&self.proc.handle, curr_year_tick_addr);
+    pub unsafe fn load_historical_figures(&mut self) {
+        let hist_figs_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "historical_figures_vector"));
+        let hist_figs_vector = enum_mem_vec(&self.proc.handle, hist_figs_addr);
+        for fig in hist_figs_vector {
+            let id = read_mem::<i32>(&self.proc.handle, fig + self.memory_layout.field_offset(MemorySection::HistFigure, "id"));
+            self.historical_figures.insert(id, fig);
+        }
+    }
 
-        let time = DfTime::from_seconds((year as u64 * 1200 * 28 * 12) + (curr_year_tick as u64));
-        time
+    pub unsafe fn load_historical_entities(&mut self) {
+        let entities_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "historical_entities_vector"));
+        let entities_vec = enum_mem_vec(&self.proc.handle, entities_addr);
+        for e in entities_vec {
+            let e_type = read_mem::<i16>(&self.proc.handle, e);
+            if e_type == 0 || e == entities_addr {
+                let pos_addr_vec = enum_mem_vec(&self.proc.handle, e + self.memory_layout.field_offset(MemorySection::HistEntity, "positions"));
+                let assign_addr_vec = enum_mem_vec(&self.proc.handle, e + self.memory_layout.field_offset(MemorySection::HistEntity, "assignments"));
+
+                // positions
+                for p in pos_addr_vec {
+                    let pos_id = read_mem::<i32>(&self.proc.handle, p + self.memory_layout.field_offset(MemorySection::HistEntity, "position_id"));
+                    let pos = FortressPosition {
+                        name: read_mem_as_string(&self.proc, p + self.memory_layout.field_offset(MemorySection::HistEntity, "position_name")),
+                        name_male: read_mem_as_string(&self.proc, p + self.memory_layout.field_offset(MemorySection::HistEntity, "position_male_name")),
+                        name_female: read_mem_as_string(&self.proc, p + self.memory_layout.field_offset(MemorySection::HistEntity, "position_female_name")),
+                    };
+                    self.positions.insert(pos_id, pos);
+                }
+
+                // assignments
+                for a in assign_addr_vec {
+                    let assign_pos_id = read_mem::<i32>(&self.proc.handle, a + self.memory_layout.field_offset(MemorySection::HistEntity, "assign_position_id"));
+                    let hist_id = read_mem::<i32>(&self.proc.handle, a + self.memory_layout.field_offset(MemorySection::HistEntity, "assign_hist_id"));
+                    if hist_id > 0 {
+                        let pos = self.positions.get(&assign_pos_id).unwrap().clone();
+                        self.nobles.insert(assign_pos_id, pos);
+                    }
+                }
+            }
+        }
+    }
+
+    pub unsafe fn load_beliefs(&mut self) {
+        let beliefs_addr = self.fortress_addr + self.memory_layout.field_offset(MemorySection::HistEntity, "beliefs");
+        for (i, _) in self.game_data.beliefs.iter().enumerate() {
+            let mut val = read_mem::<i32>(&self.proc.handle, beliefs_addr + i * 4);
+            if val > 100 {
+                val = 100;
+            }
+            self.beliefs.insert(i, val);
+        }
     }
 
     pub unsafe fn load_syndromes(&mut self) {
@@ -264,9 +300,18 @@ impl DFInstance {
             //     states.insert(k, v);
             // }
     }
+
+    /// Returns the current time in the game
+    pub unsafe fn current_time(&self) -> DfTime {
+        let year_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "current_year"));
+        let year = read_mem::<i32>(&self.proc.handle, year_addr);
+        let curr_year_tick_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(MemorySection::Addresses, "cur_year_tick"));
+        let curr_year_tick = read_mem::<i32>(&self.proc.handle, curr_year_tick_addr);
+
+        let time = DfTime::from_seconds((year as u64 * 1200 * 28 * 12) + (curr_year_tick as u64));
+        time
+    }
 }
-
-
 
 fn main() {
     let df = unsafe { DFInstance::new(); };

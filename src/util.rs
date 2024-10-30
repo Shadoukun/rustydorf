@@ -16,6 +16,8 @@ pub fn capitalize_each(input: &str) -> String {
          .join(" ")
 }
 
+/// returns the address of the given process module plus the given offset
+/// Used for global addresses
 pub unsafe fn address_plus_offset(proc: &Process, mut offset: usize) -> usize {
     offset = offset.wrapping_sub(DEFAULT_BASE_ADDR as usize);
     proc.modules[0].modBaseAddr.add(offset) as usize
