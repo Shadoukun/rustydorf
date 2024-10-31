@@ -12,22 +12,15 @@ pub struct Preference {
 
 impl Preference {
     pub unsafe fn new(df: &DFInstance, addr: usize) {
-        let pref_type = read_mem::<PreferenceType>(&df.proc.handle, addr);
         let id = read_mem::<i32>(&df.proc.handle, addr + 0x4);
-        let item_subtype = read_mem::<i32>(&df.proc.handle, addr + 0x8);
-        let mat_type = read_mem::<i32>(&df.proc.handle, addr + 0xC);
-        let mat_index = read_mem::<i32>(&df.proc.handle, addr + 0x10);
-        let mat_state = read_mem::<MaterialState>(&df.proc.handle, addr + 0x14);
-        let item_type = read_mem::<ItemType>(&df.proc.handle, id as usize);
-
         let p = Preference{
             id,
-            pref_type,
-            item_subtype,
-            mat_type,
-            mat_index,
-            mat_state,
-            item_type,
+            pref_type: read_mem::<PreferenceType>(&df.proc.handle, addr),
+            item_subtype: read_mem::<i32>(&df.proc.handle, addr + 0x8),
+            mat_type: read_mem::<i32>(&df.proc.handle, addr + 0xC),
+            mat_index: read_mem::<i32>(&df.proc.handle, addr + 0x10),
+            mat_state: read_mem::<MaterialState>(&df.proc.handle, addr + 0x14),
+            item_type: ItemType::from_i32(id),
         };
 
         match p.pref_type {
@@ -59,7 +52,6 @@ impl Preference {
             }
             _ => {}
         };
-
     }
 }
 

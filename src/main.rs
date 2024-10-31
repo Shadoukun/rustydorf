@@ -130,18 +130,51 @@ impl DFInstance {
 
         let base_materials_addr = read_mem::<usize>(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "base_materials")));
         for i in 0..255 {
-            let mat = Material::new(i, base_materials_addr, true);
+            let mat = Material::new(self, i, base_materials_addr, true);
             self.base_materials.push(mat);
         }
 
         let inorganics_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "inorganics_vector")));
         let mut i = 0;
         for mat in inorganics_vector {
-            let mat = Material::new(i, mat, false);
+            let mat = Material::new(self, i, mat, false);
             self.inorganic_materials.push(mat);
             i += 1;
         }
     }
+
+    pub fn get_material(&self, mat_idx: usize, mat_type: i16) {
+        let mut mat: &Material;
+
+        if mat_idx < 0 {
+            mat = self.base_materials.get(mat_idx).unwrap();
+        }
+
+        if mat_idx == 0 {
+            mat = self.inorganic_materials.get(mat_idx).unwrap();
+            // TODO inorganic material
+        }
+
+        if mat_idx < 19 {
+            mat = self.base_materials.get(mat_idx).unwrap();
+        }
+
+        if mat_idx < 219 {
+            // TODO: creature material
+        }
+
+        if mat_idx < 419 {
+            // TODO: historical material
+        }
+
+        if mat_idx < 619 {
+            // TODO plant
+        }
+
+        // NONE
+
+    }
+
 
     pub unsafe fn load_arts(&mut self) {
         self.color_vector  = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "colors_vector")));

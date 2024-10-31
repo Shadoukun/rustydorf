@@ -122,7 +122,7 @@ pub mod dwarf {
             d.read_goals(df);
             d.read_gender_orientation(df);
             d.read_noble_position(df);
-            // d.read_preferences(df);
+            d.read_preferences(df);
 
 
             Ok(d)
@@ -386,7 +386,6 @@ pub mod dwarf {
         pub unsafe fn read_preferences(&mut self, df: &DFInstance) {
             let prefs_addr = self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "preferences");
             let prefs = enum_mem_vec(&df.proc.handle,  prefs_addr);
-
             for p in prefs {
                 let pref = Preference::new(df, p);
                 // TODO: add to preferences
