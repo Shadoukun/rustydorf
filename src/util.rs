@@ -36,7 +36,7 @@ pub mod memory {
     pub unsafe fn read_mem_as_string(proc: &Process, offset: usize) -> String {
         let len = read_mem::<i32>(&proc.handle, offset + STRING_BUFFER_LENGTH);
         let _cap = read_mem::<i32>(&proc.handle, offset + STRING_BUFFER_LENGTH + POINTER_SIZE);
-        let mut buf = vec![0; len as usize];
+        let mut buf = vec![0; 1024];
         read_raw(&proc.handle, offset, len as usize, buf.as_mut_ptr());
         String::from_utf8_lossy(&buf).to_string()
     }
