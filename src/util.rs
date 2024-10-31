@@ -33,11 +33,17 @@ pub mod memory {
     const POINTER_SIZE: usize = std::mem::size_of::<usize>();
 
     /// Read memory from a process plus the given offset, and return it as a string
-    pub unsafe fn read_mem_as_string(proc: &Process, offset: usize) -> String {
-        let len = read_mem::<i32>(&proc.handle, offset + STRING_BUFFER_LENGTH);
-        let _cap = read_mem::<i32>(&proc.handle, offset + STRING_BUFFER_LENGTH + POINTER_SIZE);
-        let mut buf = vec![0; 1024];
-        read_raw(&proc.handle, offset, len as usize, buf.as_mut_ptr());
+    pub unsafe fn read_mem_as_string(proc: &Process, mut offset: usize) -> String {
+        let len = read_mem::<i32>(&proc.handle, offset + STRING_BUFFER_LENGTH) as usize;
+        let cap = read_mem::<i32>(&proc.handle, offset + STRING_BUFFER_LENGTH + POINTER_SIZE) as usize;
+        if cap > STRING_BUFFER_LENGTH {
+            offset = read_mem::<usize>(&proc.handle, offset);
+        }
+        if len > 1024 {
+            return String::new();
+        }
+        let mut buf = vec![0; len as usize];
+        read_raw(&proc.handle, offset, len, buf.as_mut_ptr());
         String::from_utf8_lossy(&buf).to_string()
     }
 
