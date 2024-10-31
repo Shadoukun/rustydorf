@@ -8,8 +8,13 @@ mod squad;
 mod time;
 mod syndromes;
 use std::collections::HashMap;
-
+use std::default;
+mod items;
+use items::material;
+mod preference;
 mod data;
+use items::material::Material;
+use items::ItemType;
 use language::language::{Languages, Translation, Word};
 mod race;
 mod util;
@@ -37,6 +42,19 @@ struct DFInstance {
     pub fortress_id: i32,
     pub dwarf_race_id: i32,
     pub dwarf_civ_id: i32,
+    pub material_templates: Vec<usize>,
+    pub item_defs: HashMap<ItemType, Vec<usize>>,
+    pub item_vectors: HashMap<ItemType, Vec<usize>>,
+    pub color_vector: Vec<usize>,
+    pub shape_vector: Vec<usize>,
+    pub poetry_vector: Vec<usize>,
+    pub music_vector: Vec<usize>,
+    pub dance_vector: Vec<usize>,
+    pub mapped_items: HashMap<usize, ItemType>,
+
+    pub base_materials: Vec<Material>,
+    pub inorganic_materials: Vec<Material>,
+
     pub creature_vector: Vec<usize>,
     pub syndromes_vector: Vec<usize>,
     pub historical_figures: HashMap<i32, usize>,
@@ -77,20 +95,62 @@ impl DFInstance {
             ..Default::default()
         };
 
-        df.fortress_addr   = read_mem::<usize>(&df.proc.handle, address_plus_offset(&df.proc, df.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
-        df.fortress_id     = read_mem::<i32>(&df.proc.handle, df.fortress_addr + size_of::<usize>());
-        df.dwarf_race_id   = read_mem::<i16>(&df.proc.handle, address_plus_offset(&df.proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
-        df.dwarf_civ_id    = read_mem::<i32>(&df.proc.handle, address_plus_offset(&df.proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
-        df.creature_vector = enum_mem_vec(&df.proc.handle, address_plus_offset(&df.proc, df.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
+        df.load_world_info();
+        df.load_fortress_info();
+
+        df.load_item_definitions();
+        df.load_arts();
         df.load_languages();
         df.load_races();
         df.load_historical_figures();
         df.load_historical_entities();
         df.load_fake_identities();
         df.load_beliefs();
-        df.load_syndromes();
         df.load_dwarves();
+
         df
+    }
+
+    pub unsafe fn load_world_info(&mut self) {
+        self.material_templates = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "material_templates_vector")));
+        self.creature_vector    = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
+        self.syndromes_vector   = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
+    }
+
+    pub unsafe fn load_fortress_info(&mut self) {
+        self.fortress_addr      = read_mem::<usize>(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
+        self.fortress_id        = read_mem::<i32>(&self.proc.handle, self.fortress_addr + size_of::<usize>());
+        self.dwarf_race_id      = read_mem::<i16>(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
+        self.dwarf_civ_id       = read_mem::<i32>(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
+    }
+
+    pub unsafe fn load_base_materialS(&mut self) {
+        let base_materials_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "base_materials"));
+        // TODO: Implement base materials
+    }
+
+    pub unsafe fn load_arts(&mut self) {
+        self.color_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "colors_vector")));
+        self.shape_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "shapes_vector")));
+        self.poetry_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "poetic_forms_vector")));
+        self.music_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "musical_forms_vector")));
+        self.dance_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dance_forms_vector")));
+    }
+    pub unsafe fn load_item_definitions(&mut self) {
+        self.item_defs.insert(ItemType::Weapon, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_weapons_vector"))));
+        self.item_defs.insert(ItemType::TrapComp, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_trap_vector"))));
+        self.item_defs.insert(ItemType::Toy, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_toy_vector"))));
+        self.item_defs.insert(ItemType::Tool, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_tool_vector"))));
+        self.item_defs.insert(ItemType::Instrument, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_instrument_vector"))));
+        self.item_defs.insert(ItemType::Armor, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_armor_vector"))));
+        self.item_defs.insert(ItemType::Ammo, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_ammo_vector"))));
+        self.item_defs.insert(ItemType::SiegeAmmo, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_siegeammo_vector"))));
+        self.item_defs.insert(ItemType::Gloves, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_glove_vector"))));
+        self.item_defs.insert(ItemType::Shoes, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_shoe_vector"))));
+        self.item_defs.insert(ItemType::Shield, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_shield_vector"))));
+        self.item_defs.insert(ItemType::Helm, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_helm_vector"))));
+        self.item_defs.insert(ItemType::Pants, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_pant_vector"))));
+        self.item_defs.insert(ItemType::Food, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_food_vector"))));
     }
 
     pub unsafe fn load_historical_figures(&mut self) {
@@ -144,11 +204,6 @@ impl DFInstance {
             }
             self.beliefs.insert(i, val);
         }
-    }
-
-    pub unsafe fn load_syndromes(&mut self) {
-        let addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector"));
-        self.syndromes_vector = enum_mem_vec(&self.proc.handle, addr);
     }
 
     pub unsafe fn load_languages(&mut self) {

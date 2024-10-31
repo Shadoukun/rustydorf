@@ -3,6 +3,7 @@ pub mod dwarf {
     use std::collections::HashMap;
     use std::fmt::Error;
 
+    use crate::preference::Preference;
     use crate::squad::Squad;
     use crate::syndromes::Curse;
     use crate::syndromes::CurseType;
@@ -121,7 +122,7 @@ pub mod dwarf {
             d.read_goals(df);
             d.read_gender_orientation(df);
             d.read_noble_position(df);
-            // TODO: preferences
+            d.read_preferences(df);
 
 
             Ok(d)
@@ -387,13 +388,10 @@ pub mod dwarf {
             let prefs = enum_mem_vec(&df.proc.handle,  prefs_addr);
 
             for p in prefs {
-                let pref_type = read_mem::<PreferenceType>(&df.proc.handle, p);
-                let pref_id = read_mem::<i16>(&df.proc.handle, p + 0x4);
-                let item_subtype = read_mem::<i16>(&df.proc.handle, p + 0x8);
-                let mat_type = read_mem::<i16>(&df.proc.handle, p + 0xC);
-                let mat_index = read_mem::<i16>(&df.proc.handle, p + 0x10);
-                let mat_state = read_mem::<MaterialState>(&df.proc.handle, p + 0x14);
+                let pref = Preference::new(df, p);
+                // TODO: add to preferences
             }
+
         }
 
         pub unsafe fn read_emotions(&mut self, df: &DFInstance) {
