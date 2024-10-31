@@ -130,27 +130,38 @@ impl DFInstance {
     }
 
     pub unsafe fn load_arts(&mut self) {
-        self.color_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "colors_vector")));
-        self.shape_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "shapes_vector")));
+        self.color_vector  = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "colors_vector")));
+        self.shape_vector  = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "shapes_vector")));
         self.poetry_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "poetic_forms_vector")));
-        self.music_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "musical_forms_vector")));
-        self.dance_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dance_forms_vector")));
+        self.music_vector  = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "musical_forms_vector")));
+        self.dance_vector  = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dance_forms_vector")));
     }
+
     pub unsafe fn load_item_definitions(&mut self) {
-        self.item_defs.insert(ItemType::Weapon, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_weapons_vector"))));
-        self.item_defs.insert(ItemType::TrapComp, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_trap_vector"))));
-        self.item_defs.insert(ItemType::Toy, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_toy_vector"))));
-        self.item_defs.insert(ItemType::Tool, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_tool_vector"))));
-        self.item_defs.insert(ItemType::Instrument, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_instrument_vector"))));
-        self.item_defs.insert(ItemType::Armor, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_armor_vector"))));
-        self.item_defs.insert(ItemType::Ammo, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_ammo_vector"))));
-        self.item_defs.insert(ItemType::SiegeAmmo, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_siegeammo_vector"))));
-        self.item_defs.insert(ItemType::Gloves, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_glove_vector"))));
-        self.item_defs.insert(ItemType::Shoes, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_shoe_vector"))));
-        self.item_defs.insert(ItemType::Shield, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_shield_vector"))));
-        self.item_defs.insert(ItemType::Helm, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_helm_vector"))));
-        self.item_defs.insert(ItemType::Pants, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_pant_vector"))));
-        self.item_defs.insert(ItemType::Food, enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "itemdef_food_vector"))));
+
+        // ItemType, field offset name
+        let item_types = [
+            (ItemType::Weapon, "itemdef_weapons_vector"),
+            (ItemType::TrapComp, "itemdef_trap_vector"),
+            (ItemType::Toy, "itemdef_toy_vector"),
+            (ItemType::Tool, "itemdef_tool_vector"),
+            (ItemType::Instrument, "itemdef_instrument_vector"),
+            (ItemType::Armor, "itemdef_armor_vector"),
+            (ItemType::Ammo, "itemdef_ammo_vector"),
+            (ItemType::SiegeAmmo, "itemdef_siegeammo_vector"),
+            (ItemType::Gloves, "itemdef_glove_vector"),
+            (ItemType::Shoes, "itemdef_shoe_vector"),
+            (ItemType::Shield, "itemdef_shield_vector"),
+            (ItemType::Helm, "itemdef_helm_vector"),
+            (ItemType::Pants, "itemdef_pant_vector"),
+            (ItemType::Food, "itemdef_food_vector"),
+        ];
+
+        // Iterate over the item types and load them into item_defs
+        for (item_type, offset_name) in item_types {
+            let offset = address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, offset_name));
+            self.item_defs.insert(item_type, enum_mem_vec(&self.proc.handle, offset));
+        }
     }
 
     pub unsafe fn load_historical_figures(&mut self) {
@@ -294,36 +305,9 @@ impl DFInstance {
         }
 
         for d in &dwarves {
-            println!("----------------------------");
-            println!("-Dwarf-");
-            println!("Name: {}", d.first_name);
-            println!("Profession: {}", d.profession.name);
-            println!("----------------------------");
-            println!("Traits");
-            println!("----------------------------");
-            for t in d.traits.iter() {
-                println!("{} | Value: {}", t.0.name, t.1);
-            }
-            println!("\n----------------------------");
-            println!("Beliefs");
-            println!("----------------------------");
-            for b in d.beliefs.iter() {
-                println!("{:?} | Value: {}", b.0.name, b.1);
-            }
-            println!("\n----------------------------");
-            println!("Goals");
-            println!("----------------------------");
-            for g in d.goals.iter() {
-                println!("{:?} | Value: {}", g.0.name, g.1);
-            }
-            println!("\n");
-            println!("Mood: {:?}", d.mood);
-            println!("Sex: {:?}, ", d.sex);
-            println!("Sexual Orientation: {:?} ", d.orientation);
-            println!("[Male Interest: {:?} | Female Interest: {:?}]", d.orient_vec[0], d.orient_vec[1]);
-            println!("Birth Year: {}, Birth Time: {}", d._birth_date.0, d._birth_date.1);
-            println!("Noble Position: {:?}", d.noble_position);
+            print_dwarf(d);
         }
+
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
             // // if !last_name.is_empty() && last_name.len() > 2 {
             // //     let first_name = read_mem_as_string(&self.proc, c + name_offset + first_name_offset);
@@ -357,6 +341,38 @@ impl DFInstance {
         time
     }
 }
+
+fn print_dwarf(d: &Dwarf) {
+    println!("----------------------------");
+            println!("-Dwarf-");
+            println!("Name: {}", d.first_name);
+            println!("Profession: {}", d.profession.name);
+            println!("----------------------------");
+            println!("Traits");
+            println!("----------------------------");
+            for t in d.traits.iter() {
+                println!("{} | Value: {}", t.0.name, t.1);
+            }
+            println!("\n----------------------------");
+            println!("Beliefs");
+            println!("----------------------------");
+            for b in d.beliefs.iter() {
+                println!("{:?} | Value: {}", b.0.name, b.1);
+            }
+            println!("\n----------------------------");
+            println!("Goals");
+            println!("----------------------------");
+            for g in d.goals.iter() {
+                println!("{:?} | Value: {}", g.0.name, g.1);
+            }
+            println!("\n");
+            println!("Mood: {:?}", d.mood);
+            println!("Sex: {:?}, ", d.sex);
+            println!("Sexual Orientation: {:?} ", d.orientation);
+            println!("[Male Interest: {:?} | Female Interest: {:?}]", d.orient_vec[0], d.orient_vec[1]);
+            println!("Birth Year: {}, Birth Time: {}", d._birth_date.0, d._birth_date.1);
+            println!("Noble Position: {:?}", d.noble_position);
+        }
 
 fn main() {
     let df = unsafe { DFInstance::new(); };
