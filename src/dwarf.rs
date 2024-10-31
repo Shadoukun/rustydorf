@@ -122,7 +122,7 @@ pub mod dwarf {
             d.read_goals(df);
             d.read_gender_orientation(df);
             d.read_noble_position(df);
-            d.read_preferences(df);
+            // d.read_preferences(df);
 
 
             Ok(d)

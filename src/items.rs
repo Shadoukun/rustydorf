@@ -87,10 +87,22 @@ pub mod material {
 
     #[derive(Default, Debug)]
     pub struct Material {
-        pub id: i32,
-        pub addr: usize,
+        pub index: i32,
         pub flags: FlagArray,
-        pub inorganic: bool,
+        pub organic: bool,
+    }
+
+    impl Material {
+        pub fn new(index: i32, addr: usize, organic: bool) -> Material {
+            Material {
+                index,
+                flags: FlagArray::default(),
+                organic,
+            }
+
+            // TODO: Mat Flags and stuff
+
+        }
     }
 }
 use std::hash::Hash;

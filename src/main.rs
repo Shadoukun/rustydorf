@@ -20,6 +20,7 @@ mod race;
 mod util;
 use squad::Squad;
 use time::DfTime;
+use types::flagarray::FlagArray;
 use util::{capitalize_each, address_plus_offset};
 use crate::race::race::Race;
 use crate::dwarf::dwarf::Dwarf;
@@ -98,6 +99,7 @@ impl DFInstance {
         df.load_world_info();
         df.load_fortress_info();
 
+        df.load_materials();
         df.load_item_definitions();
         df.load_arts();
         df.load_languages();
@@ -112,7 +114,6 @@ impl DFInstance {
     }
 
     pub unsafe fn load_world_info(&mut self) {
-        self.material_templates = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "material_templates_vector")));
         self.creature_vector    = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
         self.syndromes_vector   = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
     }
@@ -124,9 +125,22 @@ impl DFInstance {
         self.dwarf_civ_id       = read_mem::<i32>(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
     }
 
-    pub unsafe fn load_base_materialS(&mut self) {
-        let base_materials_addr = address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "base_materials"));
-        // TODO: Implement base materials
+    pub unsafe fn load_materials(&mut self) {
+        self.material_templates = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "material_templates_vector")));
+
+        let base_materials_addr = read_mem::<usize>(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "base_materials")));
+        for i in 0..255 {
+            let mat = Material::new(i, base_materials_addr, true);
+            self.base_materials.push(mat);
+        }
+
+        let inorganics_vector = enum_mem_vec(&self.proc.handle, address_plus_offset(&self.proc, self.memory_layout.field_offset(OffsetSection::Addresses, "inorganics_vector")));
+        let mut i = 0;
+        for mat in inorganics_vector {
+            let mat = Material::new(i, mat, false);
+            self.inorganic_materials.push(mat);
+            i += 1;
+        }
     }
 
     pub unsafe fn load_arts(&mut self) {
@@ -305,7 +319,7 @@ impl DFInstance {
         }
 
         for d in &dwarves {
-            print_dwarf(d);
+            // print_dwarf(d);
         }
 
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
