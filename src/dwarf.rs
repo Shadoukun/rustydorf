@@ -16,6 +16,7 @@ pub mod dwarf {
     use crate::race::race::Race;
     use crate::win::memory::memory::enum_mem_vec;
     use crate::win::memory::memory::read_mem;
+    use crate::win::memory::memory::read_raw;
     use crate::FortressPosition;
     use crate::{util::memory::{read_field, read_mem_as_string}, DFInstance};
 
@@ -77,6 +78,7 @@ pub mod dwarf {
         pub pending_squad_name: String,
 
         pub noble_position: FortressPosition,
+        pub labors: HashMap<i32, bool>,
     }
 
     impl Dwarf {
@@ -110,7 +112,7 @@ pub mod dwarf {
             d.read_fake_identity();
             d.read_squad(df);
             // TODO: current job
-            // TODO: labors
+            d.read_labors(df);
             // TODO: uniform
             d.read_body_size(df);
             d.read_syndromes(df);
@@ -131,6 +133,17 @@ pub mod dwarf {
         unsafe fn read_body_size(&mut self, df: &DFInstance) {
             self.body_size = read_field(&df.proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "size_info").unwrap();
             self.body_size_base = read_field(&df.proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "size_base").unwrap();
+        }
+
+        pub unsafe fn read_labors(&mut self, df: &DFInstance) {
+            let addr = self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "labors");
+            let mut buf = vec![0u8; 94];
+            read_raw(&df.proc.handle, addr, buf.len(), buf.as_mut_ptr());
+
+            for labor in &df.game_data.labors {
+                let enabled = buf[labor.id as usize] > 0;
+                self.labors.insert(labor.id, enabled);
+            }
         }
 
         unsafe fn read_syndromes(&mut self, df: &DFInstance) {

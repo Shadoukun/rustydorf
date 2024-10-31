@@ -114,11 +114,11 @@ pub struct KnowledgeTopic {
 #[derive(Default, Deserialize, Debug)]
 #[serde(default)]
 pub struct Labor {
-    name: String,
-    id: i32,
-    skill: i32,
-    requires_equipment: bool,
-    excludes: HashMap<String, i32>
+    pub name: String,
+    pub id: i32,
+    pub skill: i32,
+    pub requires_equipment: bool,
+    pub excludes: HashMap<String, i32>
 }
 
 #[derive(Default, Deserialize, Debug)]

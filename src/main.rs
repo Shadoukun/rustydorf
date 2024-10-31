@@ -352,7 +352,7 @@ impl DFInstance {
         }
 
         for d in &dwarves {
-            // print_dwarf(d);
+            print_dwarf(d);
         }
 
             // // let last_name = read_mem_as_string(&self.proc, c + name_offset);
