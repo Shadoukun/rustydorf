@@ -1,7 +1,9 @@
 use std::collections::HashMap;
+use serde::{Deserialize, Serialize};
+
 use crate::{data::memorylayout::OffsetSection, util::memory::read_field, win::memory::memory::{enum_mem_vec, read_mem}, DFInstance};
 
-#[derive(Default, PartialEq, Clone)]
+#[derive(Default, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Squad {
     pub id: i32,
     pub addr: usize,
@@ -139,7 +141,7 @@ impl Squad {
 
 }
 
-#[derive(Default, PartialEq, Copy, Clone)]
+#[derive(Default, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum SquadOrderType {
     #[default]
     None = -1,

@@ -1,6 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 use crate::{win::memory::memory::{enum_mem_vec, read_mem}, DFInstance, util::memory::read_mem_as_string, data::memorylayout::OffsetSection};
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Serialize, Deserialize)]
 pub struct Syndrome {
     pub addr: usize,
     pub id: i32,
@@ -68,13 +70,13 @@ impl Syndrome {
 
 }
 
-#[derive(Default)]
+#[derive(Default, Serialize, Deserialize)]
 pub struct Curse {
     pub name: String,
     pub curse_type: CurseType,
 }
 
-#[derive(Default)]
+#[derive(Default, Serialize, Deserialize)]
 pub enum CurseType {
     #[default]
     None = -1,

@@ -8,9 +8,7 @@ mod squad;
 mod time;
 mod syndromes;
 use std::collections::HashMap;
-use std::default;
 mod items;
-use items::material;
 mod preference;
 mod data;
 use items::material::Material;
@@ -20,12 +18,11 @@ mod race;
 mod util;
 use squad::Squad;
 use time::DfTime;
-use types::flagarray::FlagArray;
 use util::{capitalize_each, address_plus_offset};
 use crate::race::race::Race;
-use crate::dwarf::dwarf::Dwarf;
+use crate::dwarf::dwarf::{Dwarf, FortressPosition};
 
-use util::memory::{read_field, read_field_as_string, read_field_as_vec, read_mem_as_string};
+use util::memory::read_mem_as_string;
 use data::{gamedata::{self, GameData}, memorylayout::{load_memory_layout, MemoryOffsets, OffsetSection}};
 use win::{memory::memory::{enum_mem_vec, read_mem}, process::Process};
 
@@ -70,13 +67,6 @@ struct DFInstance {
     pub races: Vec<Race>,
     pub dwarves: Vec<Dwarf>,
 
-}
-
-#[derive(Debug, Default, Clone)]
-struct FortressPosition {
-    pub name: String,
-    pub name_male: String,
-    pub name_female: String,
 }
 
 #[allow(dead_code)]

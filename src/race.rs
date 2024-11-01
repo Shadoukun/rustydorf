@@ -1,6 +1,8 @@
 pub mod race {
     use std::{fmt::Error, ops::Add};
 
+    use serde::{Deserialize, Serialize};
+
     use crate::caste::caste::Caste;
     use crate::types::flagarray::FlagArray;
     use crate::win::{memory::memory::enum_mem_vec, process::Process};
@@ -10,7 +12,7 @@ pub mod race {
     use crate::util::memory::{read_field_as_string, read_field_as_vec, read_mem_as_string};
     use crate::data::memorylayout::{MemoryOffsets, OffsetSection};
 
-    #[derive(Default, Debug, Clone)]
+    #[derive(Default, Debug, Clone, Serialize, Deserialize)]
     pub struct Race {
         pub id: i32,
         pub name: String,

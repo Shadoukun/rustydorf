@@ -1,8 +1,11 @@
 use std::fmt::{Debug, Error, Formatter};
 
+use serde::{Deserialize, Serialize};
+
 use crate::win::memory::memory::read_mem;
 use crate::DFInstance;
 
+#[derive(Serialize, Deserialize)]
 pub struct FlagArray {
     pub address: usize,
     pub flags: BitArray,
@@ -66,6 +69,7 @@ impl Default for FlagArray {
     }
 }
 
+#[derive(Serialize, Deserialize)]
 pub struct BitArray {
     data: Vec<u8>, // Each byte holds 8 bits
     size: usize,   // Track the number of bits

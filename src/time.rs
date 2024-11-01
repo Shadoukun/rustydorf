@@ -1,5 +1,7 @@
 use std::time::Duration;
 
+use serde::{Deserialize, Serialize};
+
 pub const DF_SEASONS: [&str; 4] = ["Spring", "Summer", "Autumn", "Winter"];
 pub const DF_MONTHS: [&str; 12] = [
     "Granite", "Slate", "Felsite",
@@ -9,7 +11,7 @@ pub const DF_MONTHS: [&str; 12] = [
 ];
 
 /// a wrapper for `std::time::Duration`
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, Serialize, Deserialize)]
 pub struct DfTime(Duration);
 
 impl DfTime {

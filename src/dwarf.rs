@@ -3,6 +3,9 @@ pub mod dwarf {
     use std::collections::HashMap;
     use std::fmt::Error;
 
+    use serde::Deserialize;
+    use serde::Serialize;
+
     use crate::preference::Preference;
     use crate::squad::Squad;
     use crate::syndromes::Curse;
@@ -17,10 +20,9 @@ pub mod dwarf {
     use crate::win::memory::memory::enum_mem_vec;
     use crate::win::memory::memory::read_mem;
     use crate::win::memory::memory::read_raw;
-    use crate::FortressPosition;
     use crate::{util::memory::{read_field, read_mem_as_string}, DFInstance};
 
-    #[derive(Default)]
+    #[derive(Default, Serialize, Deserialize)]
     pub struct Dwarf {
         pub addr: usize,
         pub id: i32,
@@ -434,7 +436,7 @@ pub mod dwarf {
 
                 // TODO: dated emotions
                 self.read_happiness_level(df);
-                self.check_trauma(df); // lol I know that feel
+                self.check_trauma(); // lol I know that feel
             }
         }
 
@@ -451,7 +453,7 @@ pub mod dwarf {
             self.happiness_level = happiness_level;
         }
 
-        pub unsafe fn check_trauma(&mut self, df: &DFInstance) {
+        pub unsafe fn check_trauma(&mut self) {
             if self.mood == Mood::Trauma {
                 let stress_msg = "has been overthrown by the stresses of day-to-day living";
                 self.emotions.insert(0, UnitEmotion{
@@ -499,7 +501,7 @@ pub mod dwarf {
 
     }
 
-    #[derive(Default, Debug, PartialEq, Clone)]
+    #[derive(Default, Debug, PartialEq, Clone, Serialize, Deserialize)]
     pub enum Mood {
         #[default]
         None = -1,
@@ -545,7 +547,7 @@ pub mod dwarf {
 
 
 
-    #[derive(Default, Debug, PartialEq)]
+    #[derive(Default, Debug, PartialEq, Serialize, Deserialize)]
     pub enum Sex {
         #[default]
         Female = 0,
@@ -564,7 +566,7 @@ pub mod dwarf {
     }
 
 
-    #[derive(Debug, PartialEq)]
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
     pub enum Commitment {
         Uninterested = 0,
         Lover = 1,
@@ -581,7 +583,7 @@ pub mod dwarf {
         }
     }
 
-    #[derive(Default, Debug, PartialEq)]
+    #[derive(Default, Debug, PartialEq, Serialize, Deserialize)]
     pub enum Orientation {
         #[default]
         Heterosexual,
@@ -622,4 +624,11 @@ pub mod dwarf {
         Paste,
         Pressed
     }
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct FortressPosition {
+    pub name: String,
+    pub name_male: String,
+    pub name_female: String,
+}
 }

@@ -1,10 +1,12 @@
 pub mod caste {
+    use serde::{Deserialize, Serialize};
+
     use crate::data::memorylayout::OffsetSection;
     use crate::win::memory::memory::{enum_mem_vec, read_mem};
     use crate::{types::flagarray::FlagArray, util::memory::read_mem_as_string, DFInstance};
 
 
-    #[derive(Default, Debug, Clone)]
+    #[derive(Default, Debug, Clone, Serialize, Deserialize)]
     pub struct Caste {
         pub address: usize,
         pub name: String,

@@ -1,11 +1,11 @@
 
 #![allow(dead_code)]
 use std::{collections::HashMap, hash::Hash};
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 use toml;
 use std::fs;
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub struct GameData {
     pub attributes:         Vec<Attribute>,
     pub beliefs:            Vec<Beliefs>,
@@ -29,14 +29,14 @@ pub struct GameData {
     pub unit_subthoughts:   Vec<SubThoughts>,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 pub struct Attribute {
     id: i32,
     name: String,
     levels: HashMap<String, String>
 }
 
-#[derive(Default, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct Beliefs {
     pub name: String,
@@ -44,7 +44,7 @@ pub struct Beliefs {
     pub levels: HashMap<String, String>
 }
 
-#[derive(Default, Deserialize, Debug, Clone)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct Facet {
     pub name: String,
@@ -55,7 +55,7 @@ pub struct Facet {
     pub special: FacetsSpecial
 }
 
-#[derive(Default, Deserialize, Debug, Clone)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct FacetsSpecial {
     limit: i32,
@@ -63,7 +63,7 @@ pub struct FacetsSpecial {
 
 }
 
-#[derive(Default, Deserialize, Debug, Clone)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct Goal {
     pub id: i32,
@@ -71,7 +71,7 @@ pub struct Goal {
     pub description: String,
 }
 
-#[derive(Default, Deserialize, Debug, Clone)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct HappinessLevel {
     pub name: String,
@@ -79,7 +79,7 @@ pub struct HappinessLevel {
     pub desc: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct HealthInfo {
     id: i32,
@@ -90,28 +90,28 @@ pub struct HealthInfo {
 
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct HealthDescription {
     desc: String,
     symbol: String
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct Knowledge {
     name: String,
     topics: Vec<KnowledgeTopic>,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct KnowledgeTopic {
     area: String,
     subject: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct Labor {
     pub name: String,
@@ -121,7 +121,7 @@ pub struct Labor {
     pub excludes: HashMap<String, i32>
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct Need {
     name: String,
@@ -129,7 +129,7 @@ pub struct Need {
     negative: String,
 }
 
-#[derive(Default, Deserialize, Debug, Clone)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct Profession {
     pub id: i32,
@@ -141,7 +141,7 @@ pub struct Profession {
 
 
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct Skill {
     name: String,
@@ -150,13 +150,13 @@ pub struct Skill {
     mood: i32
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct SphereName {
     name: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct UnitJobs {
     id: i32,
@@ -165,7 +165,7 @@ pub struct UnitJobs {
     sub: Vec<SubJob>
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct SubJob {
     id: i32,
@@ -173,7 +173,7 @@ pub struct SubJob {
     img: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct UnitActivities {
     id: i32,
@@ -183,7 +183,7 @@ pub struct UnitActivities {
     is_military: bool
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct SubActivity {
     id: i32,
@@ -191,7 +191,7 @@ pub struct SubActivity {
     img: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct UnitOrders {
     id: i32,
@@ -199,7 +199,7 @@ pub struct UnitOrders {
     img: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct UnitMoods {
     name: String,
@@ -207,7 +207,7 @@ pub struct UnitMoods {
     color: String,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct UnitThoughts {
     pub title: String,
@@ -215,7 +215,7 @@ pub struct UnitThoughts {
     pub subthoughts_type: i32,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct SubThoughts {
     id: i32,
@@ -223,14 +223,14 @@ pub struct SubThoughts {
     subthoughts: Vec<Subthought>,
 }
 
-#[derive(Default, Deserialize, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug)]
 #[serde(default)]
 pub struct Subthought {
     id: i32,
     thought: String,
 }
 
-#[derive(Default, Deserialize, Debug, Clone)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 #[serde(default)]
 pub struct UnitEmotion {
     pub emotion: String,
