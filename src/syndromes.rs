@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{data::memorylayout::OffsetSection, util::memory::read_mem_as_string, win::{memory::memory::{enum_mem_vec, read_mem}, process::Process}, DFInstance};
+use crate::DFInstance;
+use crate::data::memorylayout::OffsetSection;
+use crate::util::memory::read_mem_as_string;
+use crate::win::{memory::memory::{enum_mem_vec, read_mem}, process::Process};
 
 #[derive(Default, Clone, Serialize, Deserialize)]
 pub struct Syndrome {

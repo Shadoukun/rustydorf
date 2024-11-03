@@ -1,10 +1,8 @@
 use std::env::current_dir;
 use std::fmt::Error;
-use std::num::ParseIntError;
 use std::{collections::HashMap, fs};
 use serde::Deserialize;
 use toml;
-use windows::Win32::System::Memory;
 
 pub enum OffsetSection {
     Info,

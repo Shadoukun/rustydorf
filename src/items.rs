@@ -3,7 +3,10 @@ pub mod material {
     use std::collections::HashMap;
 
     use crate::DFInstance;
-    use crate::{data::memorylayout::OffsetSection, types::flagarray::FlagArray, util::memory::read_mem_as_string, win::{memory::memory::enum_mem_vec, process::Process}};
+    use crate::data::memorylayout::OffsetSection;
+    use crate::types::flagarray::FlagArray;
+    use crate::util::memory::read_mem_as_string;
+    use crate::win::process::Process;
 
     #[derive(Debug, Eq, Hash, PartialEq, Copy, Clone)]
     pub enum MaterialState {

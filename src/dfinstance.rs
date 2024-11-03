@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::items::material::Material;
 use crate::items::ItemType;
-use crate::language::language::{Languages, Translation, Word};
+use crate::language::{Languages, Translation, Word};
 use crate::squad::Squad;
 use crate::time::DfTime;
 use crate::util::address_plus_offset;

@@ -1,17 +1,13 @@
 pub mod race {
     use std::{fmt::Error, ops::Add};
-
     use serde::{Deserialize, Serialize};
 
-    use crate::caste::caste::Caste;
-    use crate::types::flagarray::FlagArray;
-    use crate::win::{memory::memory::enum_mem_vec, process::Process};
-
-    use crate::util::address_plus_offset;
     use crate::DFInstance;
-    use crate::util::capitalize_each;
-    use crate::util::memory::{read_field_as_string, read_field_as_vec, read_mem_as_string};
-    use crate::data::memorylayout::{MemoryOffsets, OffsetSection};
+    use crate::caste::caste::Caste;
+    use crate::data::memorylayout::OffsetSection;
+    use crate::types::flagarray::FlagArray;
+    use crate::util::{capitalize_each, memory::{read_field_as_string, read_mem_as_string}};
+    use crate::win::{memory::memory::enum_mem_vec, process::Process};
 
     #[derive(Default, Debug, Clone, Serialize, Deserialize)]
     pub struct Race {

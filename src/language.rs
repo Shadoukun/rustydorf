@@ -1,14 +1,9 @@
-pub mod language{
-    use std::collections::HashMap;
+use std::collections::HashMap;
 
-    use crate::win::process::Process;
-
-    use crate::DFInstance;
-    use crate::{
-        util::memory::{read_field, read_field_as_string},
-        data::memorylayout::{MemoryOffsets, OffsetSection},
-        util::capitalize_each
-    };
+use crate::DFInstance;
+use crate::data::memorylayout::{MemoryOffsets, OffsetSection};
+use crate::util::{capitalize_each, memory::{read_field, read_field_as_string}};
+use crate::win::process::Process;
 
 #[derive(Default, Debug)]
 pub struct Languages {
@@ -196,5 +191,3 @@ pub struct Word {
             }
         }
     }
-
-}

@@ -1,6 +1,6 @@
 
 #![allow(dead_code)]
-use std::{collections::HashMap, hash::Hash};
+use std::collections::HashMap;
 use serde::{Serialize, Deserialize};
 use toml;
 use std::fs;
