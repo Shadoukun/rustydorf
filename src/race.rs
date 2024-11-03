@@ -8,7 +8,8 @@ pub mod race {
     use crate::win::{memory::memory::enum_mem_vec, process::Process};
 
     use crate::util::address_plus_offset;
-    use crate::{capitalize_each, DFInstance};
+    use crate::DFInstance;
+    use crate::util::capitalize_each;
     use crate::util::memory::{read_field_as_string, read_field_as_vec, read_mem_as_string};
     use crate::data::memorylayout::{MemoryOffsets, OffsetSection};
 

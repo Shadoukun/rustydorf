@@ -3,10 +3,11 @@ pub mod language{
 
     use crate::win::process::Process;
 
+    use crate::DFInstance;
     use crate::{
         util::memory::{read_field, read_field_as_string},
-        data::memorylayout::{MemoryOffsets, OffsetSection}, util::capitalize_each,
-        DFInstance
+        data::memorylayout::{MemoryOffsets, OffsetSection},
+        util::capitalize_each
     };
 
 #[derive(Default, Debug)]

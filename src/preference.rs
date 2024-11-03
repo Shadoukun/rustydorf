@@ -1,4 +1,5 @@
-use crate::{dwarf::dwarf::MaterialState, items::ItemType, win::{memory::memory::read_mem, process::Process}, DFInstance};
+use crate::DFInstance;
+use crate::{dwarf::dwarf::MaterialState, items::ItemType, win::{memory::memory::read_mem, process::Process}};
 
 pub struct Preference {
     pub pref_type: PreferenceType,

@@ -1,6 +1,5 @@
 
-use crate::win::process::Process;
-use crate::DEFAULT_BASE_ADDR;
+use crate::win::{memory::memory::DEFAULT_BASE_ADDR, process::Process};
 
 /// Capitalize the first letter of each word in a string
 pub fn capitalize_each(input: &str) -> String {
