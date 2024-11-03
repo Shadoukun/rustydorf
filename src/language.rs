@@ -23,13 +23,13 @@ pub struct Translation {
 
 impl Languages {
 
-    pub unsafe fn language_word(&self, df: &DFInstance, addr: usize) -> String {
+    pub unsafe fn language_word(&self, df: &DFInstance, proc: &Process, addr: usize) -> String {
         // front_compound, rear_compound, first_adjective, second_adjective, hypen_compound
         // the_x, of_x
-        let language_id = read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Word, "language_id").expect("Failed to read language_id");
+        let language_id = read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Word, "language_id").expect("Failed to read language_id");
         let mut words: Vec<String> = vec![];
         for i in 0..7 {
-            let word = read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Word, "words").unwrap();
+            let word = read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Word, "words").unwrap();
             // not sure why i*4
             words.push(self.word_chunk(word + i*4, language_id));
         }
@@ -58,15 +58,15 @@ impl Languages {
     }
 
 
-    pub unsafe fn english_word(&self, df: &DFInstance, addr: usize) -> String {
+    pub unsafe fn english_word(&self, df: &DFInstance, proc: &Process, addr: usize) -> String {
         let mut words: Vec<String> = vec![];
 
         for i in 0..7 {
             let word_type = WordType::from_i32(
-                read_field::<i32>(&df.proc, addr, &df.memory_layout, OffsetSection::Word, "word_type").unwrap() + 2*i
+                read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Word, "word_type").unwrap() + 2*i
             );
 
-            let word = Word::new(addr, &df.proc, &df.memory_layout);
+            let word = Word::new(addr, &proc, &df.memory_layout);
             words.push(word.get_word_position(word_type));
         }
 

@@ -3,6 +3,7 @@ use std::fmt::{Debug, Error, Formatter};
 use serde::{Deserialize, Serialize};
 
 use crate::win::memory::memory::read_mem;
+use crate::win::process::Process;
 use crate::DFInstance;
 
 #[derive(Serialize, Deserialize)]
@@ -12,9 +13,9 @@ pub struct FlagArray {
 }
 
 impl FlagArray {
-        pub unsafe fn new(df: &DFInstance, address: usize) -> Self {
-            let mut flags_addr = read_mem::<usize>(&df.proc.handle, address);
-            let size_in_bytes = read_mem::<u32>(&df.proc.handle, address + std::mem::size_of::<usize>()) as usize;
+        pub unsafe fn new(df: &DFInstance, proc: &Process, address: usize) -> Self {
+            let mut flags_addr = read_mem::<usize>(&proc.handle, address);
+            let size_in_bytes = read_mem::<u32>(&proc.handle, address + std::mem::size_of::<usize>()) as usize;
 
             if size_in_bytes > 1000 {
                 println!("FlagArray size is too large: {}", size_in_bytes);
@@ -26,7 +27,7 @@ impl FlagArray {
 
             let mut flags = BitArray::new(size_in_bytes * 8);
             for i in 0..size_in_bytes {
-                let byte = read_mem::<u8>(&df.proc.handle, flags_addr);
+                let byte = read_mem::<u8>(&proc.handle, flags_addr);
                 if byte > 0 {
                     for p in (0..=7).rev() {
                         let mut iter = 128;

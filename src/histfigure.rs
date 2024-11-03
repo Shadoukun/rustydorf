@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{data::memorylayout::OffsetSection, util::memory::read_mem_as_string, win::memory::memory::read_mem, DFInstance};
+use crate::{data::memorylayout::OffsetSection, util::memory::read_mem_as_string, win::{memory::memory::read_mem, process::Process}, DFInstance};
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct FakeIdentity {
@@ -26,23 +26,23 @@ pub struct HistoricalFigure {
 }
 
 impl HistoricalFigure {
-    pub unsafe fn new(df: &DFInstance, id: i32,) -> HistoricalFigure {
+    pub unsafe fn new(df: &DFInstance, proc: &Process, id: i32) -> HistoricalFigure {
         let hf_addr = df.historical_figures.get(&id).unwrap();
         let fig_info_addr = hf_addr + df.memory_layout.field_offset(OffsetSection::HistFigure, "hist_fig_info");
 
         let mut hf: HistoricalFigure = HistoricalFigure{
             id,
             fig_info_addr,
-            reputation: read_mem::<usize>(&df.proc.handle, fig_info_addr + df.memory_layout.field_offset(OffsetSection::HistFigure, "reputation")),
+            reputation: read_mem::<usize>(&proc.handle, fig_info_addr + df.memory_layout.field_offset(OffsetSection::HistFigure, "reputation")),
             ..Default::default()
         };
-        hf.read_fake_identity(df);
+        hf.read_fake_identity(df, proc);
         hf
     }
 
-    pub unsafe fn read_fake_identity(&mut self, df: &DFInstance) {
+    pub unsafe fn read_fake_identity(&mut self, df: &DFInstance, proc: &Process) {
         self.has_fake_identity = false;
-        let id = read_mem::<i32>(&df.proc.handle, self.fig_info_addr + df.memory_layout.field_offset(OffsetSection::HistFigure, "current_ident"));
+        let id = read_mem::<i32>(&proc.handle, self.fig_info_addr + df.memory_layout.field_offset(OffsetSection::HistFigure, "current_ident"));
         let addr = match df.get_fake_identity(id) {
             Some(a) => a,
             None => return,
@@ -55,12 +55,12 @@ impl HistoricalFigure {
         };
 
         self.fake_identity.fake_name_addr = self.fake_identity.addr + df.memory_layout.field_offset(OffsetSection::HistFigure, "fake_name");
-        self.fake_identity.fake_name = read_mem_as_string(&df.proc, self.fake_identity.fake_name_addr + df.memory_layout.field_offset(OffsetSection::Word, "first_name"));
-        self.fake_identity.fake_nickname = read_mem_as_string(&df.proc, self.fake_identity.fake_name_addr + df.memory_layout.field_offset(OffsetSection::Word, "nickname"));
+        self.fake_identity.fake_name = read_mem_as_string(&proc, self.fake_identity.fake_name_addr + df.memory_layout.field_offset(OffsetSection::Word, "first_name"));
+        self.fake_identity.fake_nickname = read_mem_as_string(&proc, self.fake_identity.fake_name_addr + df.memory_layout.field_offset(OffsetSection::Word, "nickname"));
 
-        self.fake_identity.fake_birth_year = read_mem::<i32>(&df.proc.handle, self.fake_identity.fake_name_addr +
+        self.fake_identity.fake_birth_year = read_mem::<i32>(&proc.handle, self.fake_identity.fake_name_addr +
             df.memory_layout.field_offset(OffsetSection::Word, "birth_year"));
-        self.fake_identity.fake_birth_time = read_mem::<i32>(&df.proc.handle, self.fake_identity.fake_name_addr +
+        self.fake_identity.fake_birth_time = read_mem::<i32>(&proc.handle, self.fake_identity.fake_name_addr +
             df.memory_layout.field_offset(OffsetSection::Word, "birth_time"));
     }
 

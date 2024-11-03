@@ -2,7 +2,7 @@
 pub mod material {
     use std::collections::HashMap;
 
-    use crate::{data::memorylayout::OffsetSection, types::flagarray::FlagArray, util::memory::read_mem_as_string, win::memory::memory::enum_mem_vec, DFInstance};
+    use crate::{data::memorylayout::OffsetSection, types::flagarray::FlagArray, util::memory::read_mem_as_string, win::{memory::memory::enum_mem_vec, process::Process}, DFInstance};
 
     #[derive(Debug, Eq, Hash, PartialEq, Copy, Clone)]
     pub enum MaterialState {
@@ -99,7 +99,7 @@ pub mod material {
     }
 
     impl Material {
-        pub unsafe fn new(df: &DFInstance, index: i32, addr: usize, organic: bool) -> Material {
+        pub unsafe fn new(df: &DFInstance, proc: &Process, index: i32, addr: usize, organic: bool) -> Material {
 
 
             let mut mat = Material {
@@ -111,29 +111,29 @@ pub mod material {
                 is_generated: false,
             };
 
-            mat.prefix = read_mem_as_string(&df.proc, addr + df.memory_layout.field_offset(OffsetSection::Material, "prefix"));
+            mat.prefix = read_mem_as_string(&proc, addr + df.memory_layout.field_offset(OffsetSection::Material, "prefix"));
             if !organic {
-                mat.flags = FlagArray::new(&df, addr + df.memory_layout.field_offset(OffsetSection::Material, "inorganic_flags"));
+                mat.flags = FlagArray::new(&df, proc, addr + df.memory_layout.field_offset(OffsetSection::Material, "inorganic_flags"));
                 // is_generated?
                 mat.is_generated = true;
             } else {
-                mat.flags = FlagArray::new(&df, addr + df.memory_layout.field_offset(OffsetSection::Material, "flags"));
+                mat.flags = FlagArray::new(&df, proc, addr + df.memory_layout.field_offset(OffsetSection::Material, "flags"));
             }
 
-            mat.load_state_names(df, addr);
+            mat.load_state_names(df, proc, addr);
 
             // Bad wuju
             //
-            // let react_class = enum_mem_vec(&df.proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Material, "reaction_class"));
+            // let react_class = enum_mem_vec(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Material, "reaction_class"));
             // for rc in react_class {
-            //     let reaction = read_mem_as_string(&df.proc, rc);
+            //     let reaction = read_mem_as_string(&proc, rc);
             //     // ???
             // }
 
             mat
         }
 
-        pub unsafe fn load_state_names(&mut self, df: &DFInstance, addr: usize) {
+        pub unsafe fn load_state_names(&mut self, df: &DFInstance, proc: &Process, addr: usize) {
             let state_names = [
                 (MaterialState::Solid, "solid_name"),
                 (MaterialState::Liquid, "liquid_name"),
@@ -144,7 +144,7 @@ pub mod material {
             ];
 
             for (state, name) in state_names.iter() {
-                self.state_names.insert(*state, read_mem_as_string(&df.proc, addr + df.memory_layout.field_offset(OffsetSection::Material, name)));
+                self.state_names.insert(*state, read_mem_as_string(&proc, addr + df.memory_layout.field_offset(OffsetSection::Material, name)));
             }
     }
 }
@@ -161,13 +161,13 @@ pub mod material {
     }
 
     impl Plant {
-        pub unsafe fn new(df: &DFInstance, addr: usize) -> Plant {
+        pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize) -> Plant {
 
-            let plant_name = read_mem_as_string(&df.proc, df.memory_layout.field_offset(OffsetSection::Plant, "name"));
-            let plant_name_plural = read_mem_as_string(&df.proc, df.memory_layout.field_offset(OffsetSection::Plant, "name_plural"));
-            let leaf_plural = read_mem_as_string(&df.proc, df.memory_layout.field_offset(OffsetSection::Plant, "name_leaf_plural"));
-            let seed_plural = read_mem_as_string(&df.proc, df.memory_layout.field_offset(OffsetSection::Plant, "name_seed_plural"));
-            let flags = FlagArray::new(&df, addr + df.memory_layout.field_offset(OffsetSection::Plant, "flags"));
+            let plant_name = read_mem_as_string(&proc, df.memory_layout.field_offset(OffsetSection::Plant, "name"));
+            let plant_name_plural = read_mem_as_string(&proc, df.memory_layout.field_offset(OffsetSection::Plant, "name_plural"));
+            let leaf_plural = read_mem_as_string(&proc, df.memory_layout.field_offset(OffsetSection::Plant, "name_leaf_plural"));
+            let seed_plural = read_mem_as_string(&proc, df.memory_layout.field_offset(OffsetSection::Plant, "name_seed_plural"));
+            let flags = FlagArray::new(&df, proc, addr + df.memory_layout.field_offset(OffsetSection::Plant, "flags"));
 
             let p = Plant{
                 name: plant_name,
@@ -176,14 +176,14 @@ pub mod material {
                 leaf_plural: leaf_plural,
                 seed_name: String::new(),
                 seed_plural: seed_plural,
-                flags: Plant::get_flags(df, addr),
+                flags: Plant::get_flags(df, proc, addr),
                 materials: Vec::new(),
             };
             p
         }
 
-        pub unsafe fn get_flags(df: &DFInstance, addr: usize) -> FlagArray {
-            let mut flags = FlagArray::new(&df, addr + df.memory_layout.field_offset(OffsetSection::Plant, "flags"));
+        pub unsafe fn get_flags(df: &DFInstance, proc: &Process, addr: usize) -> FlagArray {
+            let mut flags = FlagArray::new(&df, proc, addr + df.memory_layout.field_offset(OffsetSection::Plant, "flags"));
 
             // TODO: use enum for flags
             if flags.flags.get(0).unwrap()||

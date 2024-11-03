@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{win::memory::memory::{enum_mem_vec, read_mem}, DFInstance, util::memory::read_mem_as_string, data::memorylayout::OffsetSection};
+use crate::{data::memorylayout::OffsetSection, util::memory::read_mem_as_string, win::{memory::memory::{enum_mem_vec, read_mem}, process::Process}, DFInstance};
 
 #[derive(Default, Clone, Serialize, Deserialize)]
 pub struct Syndrome {
@@ -14,31 +14,31 @@ pub struct Syndrome {
 }
 
 impl Syndrome {
-    pub unsafe fn new(df: &DFInstance, id_addr: usize) -> Syndrome {
-        let id = read_mem::<i32>(&df.proc.handle, id_addr);
+    pub unsafe fn new(df: &DFInstance, proc: &Process, id_addr: usize) -> Syndrome {
+        let id = read_mem::<i32>(&proc.handle, id_addr);
         let addr = *df.syndromes_vector.get(id as usize).unwrap();
 
         let mut s = Syndrome {
             addr,
             id,
-            name: read_mem_as_string(&df.proc, addr),
-            is_sickness: read_mem::<u8>(&df.proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "syn_sick_flag")),
+            name: read_mem_as_string(&proc, addr),
+            is_sickness: read_mem::<u8>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "syn_sick_flag")),
             ..Default::default()
         };
 
-        let syn_classes = enum_mem_vec(&df.proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "syn_classes_vector"));
+        let syn_classes = enum_mem_vec(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "syn_classes_vector"));
         for c in syn_classes {
-            let class_name = read_mem_as_string(&df.proc, c);
+            let class_name = read_mem_as_string(&proc, c);
             // TODO: trim class names
             s.class_names.push(class_name);
         };
 
-        let effects = enum_mem_vec(&df.proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "cie_effects"));
+        let effects = enum_mem_vec(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "cie_effects"));
         for e in effects {
-            let vtable_addr = read_mem::<usize>(&df.proc.handle, e);
-            let vtable = read_mem::<usize>(&df.proc.handle, vtable_addr);
-            let effect_type = read_mem::<i32>(&df.proc.handle, vtable + 0x1);
-            let end = read_mem::<i32>(&df.proc.handle, e + df.memory_layout.field_offset(OffsetSection::Syndrome, "cie_end"));
+            let vtable_addr = read_mem::<usize>(&proc.handle, e);
+            let vtable = read_mem::<usize>(&proc.handle, vtable_addr);
+            let effect_type = read_mem::<i32>(&proc.handle, vtable + 0x1);
+            let end = read_mem::<i32>(&proc.handle, e + df.memory_layout.field_offset(OffsetSection::Syndrome, "cie_end"));
 
             match effect_type {
                 25 =>  {

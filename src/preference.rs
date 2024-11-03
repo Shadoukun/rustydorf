@@ -1,4 +1,4 @@
-use crate::{dwarf::dwarf::MaterialState, items::ItemType, win::memory::memory::read_mem, DFInstance};
+use crate::{dwarf::dwarf::MaterialState, items::ItemType, win::{memory::memory::read_mem, process::Process}, DFInstance};
 
 pub struct Preference {
     pub pref_type: PreferenceType,
@@ -11,15 +11,15 @@ pub struct Preference {
 }
 
 impl Preference {
-    pub unsafe fn new(df: &DFInstance, addr: usize) {
-        let id = read_mem::<i32>(&df.proc.handle, addr + 0x4);
+    pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize) {
+        let id = read_mem::<i32>(&proc.handle, addr + 0x4);
         let p = Preference{
             id,
-            pref_type: read_mem::<PreferenceType>(&df.proc.handle, addr),
-            item_subtype: read_mem::<i32>(&df.proc.handle, addr + 0x8),
-            mat_type: read_mem::<i32>(&df.proc.handle, addr + 0xC),
-            mat_index: read_mem::<i32>(&df.proc.handle, addr + 0x10),
-            mat_state: read_mem::<MaterialState>(&df.proc.handle, addr + 0x14),
+            pref_type: read_mem::<PreferenceType>(&proc.handle, addr),
+            item_subtype: read_mem::<i32>(&proc.handle, addr + 0x8),
+            mat_type: read_mem::<i32>(&proc.handle, addr + 0xC),
+            mat_index: read_mem::<i32>(&proc.handle, addr + 0x10),
+            mat_state: read_mem::<MaterialState>(&proc.handle, addr + 0x14),
             item_type: ItemType::from_i32(id),
         };
 
