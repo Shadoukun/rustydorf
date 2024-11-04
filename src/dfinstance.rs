@@ -192,8 +192,8 @@ impl DFInstance {
         for e in entities_vec {
             let e_type = read_mem::<i16>(&proc.handle, e);
             if e_type == 0 || e == entities_addr {
-                let pos_addr_vec = enum_mem_vec(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "positions"));
-                let assign_addr_vec = enum_mem_vec(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "assignments"));
+                let pos_addr_vec = enum_mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "positions"));
+                let assign_addr_vec = enum_mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "assignments"));
 
                 // positions
                 for p in pos_addr_vec {
@@ -282,7 +282,7 @@ impl DFInstance {
 
     pub unsafe fn load_fake_identities(&mut self, proc: &Process) {
         let fake_identities_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fake_identities_vector"));
-        let fake_identities_vector = enum_mem_vec(&proc.handle, fake_identities_addr);
+        let fake_identities_vector = enum_mem_vec::<usize>(&proc.handle, fake_identities_addr);
     }
 
     pub unsafe fn get_fake_identity(&self, id: i32) -> Option<&i32> {
@@ -320,27 +320,6 @@ impl DFInstance {
         for d in &dwarves {
             print_dwarf(d);
         }
-
-            // // let last_name = read_mem_as_string(proc, c + name_offset);
-            // // if !last_name.is_empty() && last_name.len() > 2 {
-            // //     let first_name = read_mem_as_string(proc, c + name_offset + first_name_offset);
-            // //     println!("Last Name: {}, First Name: {}", last_name, first_name);
-            // // //     println!("Name: {}", last_name);
-            // // //     let race_addr = c + self.memory_layout.field_offset(OffsetSection::Dwarf, "race").unwrap();
-            // // //     let race_id = read_mem::<i32>(proc.handle, race_addr);
-            // // //     println!("Race ID: {}", race_id);
-            // // }
-
-            // let nickname_offset = name_offset + self.memory_layout.field_offset(OffsetSection::Word, "nickname");
-            // let nickname = read_mem_as_string(proc, c + nickname_offset);
-
-            // let states_vec = enum_mem_vec(proc.handle, c + self.memory_layout.field_offset(OffsetSection::Dwarf, "states"));
-            // let mut states: HashMap<i16, i32> = HashMap::new();
-            // for s in states_vec {
-            //     let k = read_mem::<i16>(proc.handle, s);
-            //     let v = read_mem::<i32>(proc.handle, s + 0x4);
-            //     states.insert(k, v);
-            // }
     }
 
     /// Returns the current time in the game

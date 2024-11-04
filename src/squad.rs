@@ -66,7 +66,7 @@ impl Squad {
 
         // add ammo qty of each member to ammo count
         let mut ammo_count = 0;
-        for a in enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "ammunition")) {
+        for a in enum_mem_vec::<usize>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "ammunition")) {
              ammo_count += read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "ammunition_qty"));
         }
 

@@ -77,14 +77,14 @@ pub mod caste {
 
             // extracts
             let extracts_vec_addr = address + df.memory_layout.field_offset(OffsetSection::Caste, "extracts");
-            let extracts = enum_mem_vec(&proc.handle, extracts_vec_addr);
+            let extracts = enum_mem_vec::<usize>(&proc.handle, extracts_vec_addr);
             if extracts.len() > 0 {
                 let _ = c.flags.flags.set(200, true);
             }
 
             // shared tissues
             let share_tissues_vec_addr = address + df.memory_layout.field_offset(OffsetSection::Caste, "shearable_tissues_vector");
-            let share_tissues = enum_mem_vec(&proc.handle, share_tissues_vec_addr);
+            let share_tissues = enum_mem_vec::<usize>(&proc.handle, share_tissues_vec_addr);
             if share_tissues.len() > 0 {
                 let _ = c.flags.flags.set(201, true);
             }

@@ -387,7 +387,7 @@ pub mod dwarf {
 
         pub unsafe fn read_goals(&mut self, df: &DFInstance, proc: &Process) {
             let goals_addr =  self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "goals");
-            let goals = enum_mem_vec(&proc.handle, goals_addr);
+            let goals = enum_mem_vec::<usize>(&proc.handle, goals_addr);
             for addr in goals {
                 let goal_type = read_mem::<i32>(&proc.handle, addr + 0x4);
                 if goal_type >= 0 {
@@ -411,7 +411,7 @@ pub mod dwarf {
 
         pub unsafe fn read_emotions(&mut self, df: &DFInstance, proc: &Process) {
             let emotions_addr = self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions");
-            for e in enum_mem_vec(&proc.handle, emotions_addr) {
+            for e in enum_mem_vec::<usize>(&proc.handle, emotions_addr) {
                 let emotion_type = read_mem::<i32>(&proc.handle, e + df.memory_layout.field_offset(OffsetSection::Emotion, "emotion_type"));
                 let thought_id = read_mem::<i32>(&proc.handle, e + df.memory_layout.field_offset(OffsetSection::Emotion, "thought_id"));
                 println!("Emotion Type: {}", emotion_type);

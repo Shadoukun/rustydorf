@@ -334,7 +334,6 @@ pub enum ItemType {
 impl ItemType {
     pub fn from_i32(value: i32) -> ItemType {
         match value {
-            _ => ItemType::None,
             -1 => ItemType::None,
             0 => ItemType::Bar,
             1 => ItemType::SmallGem,
@@ -434,6 +433,7 @@ impl ItemType {
             1002 => ItemType::RangedEquipment,
             1006 => ItemType::Vial,
             1007 => ItemType::Waterskin,
+            _ => ItemType::None,
         }
     }
 }

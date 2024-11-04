@@ -17,15 +17,13 @@ mod util;
 use dfinstance::DFInstance;
 use win::process::Process;
 
+unsafe fn get_df_instance() -> DFInstance {
+    let proc = Process::new_by_name("Dwarf Fortress.exe");
+    let df = DFInstance::new(&proc);
+    df
+}
+
+// #[tokio::main]
 fn main() {
-
-    unsafe {
-        let proc = Process::new_by_name("Dwarf Fortress.exe");
-        // doesnt error correctly
-        if proc.pid == 0 {
-                panic!("Dwarf Fortress not found.");
-        }
-
-        let df = DFInstance::new(&proc);
-    };
+    let df = unsafe { get_df_instance() };
 }
