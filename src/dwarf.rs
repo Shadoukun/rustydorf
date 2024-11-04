@@ -86,27 +86,20 @@ pub mod dwarf {
 
     impl Dwarf {
         pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize) -> Result<Dwarf, Error> {
-            let id = read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Dwarf, "id")?;
-            let civ_id = read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Dwarf, "civ")?;
-
-            // check if the creature is from the same civ as the fort
-            if civ_id != df.dwarf_civ_id {
-                return Err(Error);
-            }
-
             let mut d = Dwarf{
                 addr,
-                id,
-                civ_id,
+                id: read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Dwarf, "id").unwrap(),
+                civ_id: read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Dwarf, "civ").unwrap(),
                 ..Default::default()
             };
 
+            // check if the creature is from the same civ as the fort
+            if d.civ_id != df.dwarf_civ_id {
+                return Err(Error);
+            }
+
             // read race/caste before anything else to filter out non-dwarves
             d.read_race_and_caste(df, proc)?;
-            d.raw_prof_id = read_field::<u8>(&proc, addr, &df.memory_layout, OffsetSection::Dwarf, "profession")?;
-            d.histfig_id = read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Dwarf, "hist_id")?;
-            d.turn_count = read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Dwarf, "turn_count")?;
-
             d.read_names(df, proc);
             d.read_states(df, proc);;
             d.read_profession(df, proc);
@@ -128,8 +121,6 @@ pub mod dwarf {
             d.read_gender_orientation(df, proc);
             d.read_noble_position(df, proc);
             d.read_preferences(df, proc);
-
-
             Ok(d)
         }
 
@@ -206,6 +197,7 @@ pub mod dwarf {
         }
 
         unsafe fn read_age(&mut self, df: &DFInstance, proc: &Process) {
+            self.turn_count = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "turn_count").unwrap();
             self._birth_date.0 = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "birth_year").unwrap() as u64;
             self._birth_date.1 = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "birth_time").unwrap() as u64;
             self.birth_date = DfTime::from_years(self._birth_date.0).add(self._birth_date.1);
@@ -214,6 +206,7 @@ pub mod dwarf {
         }
 
         unsafe fn read_historical_figure(&mut self, df: &DFInstance, proc: &Process) {
+            self.histfig_id = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "hist_id").unwrap();
             if df.historical_figures.contains_key(&self.histfig_id) {
                 self.histfig = HistoricalFigure::new(df, proc, self.histfig_id);
             }
@@ -331,6 +324,7 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_profession(&mut self, df: &DFInstance, proc: &Process) {
+            self.raw_prof_id = read_field::<u8>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "profession").unwrap();
             let prof = df.game_data.professions.iter().find(|&x| x.id == self.raw_prof_id as i32).unwrap();
             self.profession = prof.clone();
             // TODO: custom profession
