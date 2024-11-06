@@ -1,10 +1,11 @@
 pub mod memory {
-    use std::ffi::c_void;
+    use winapi::ctypes::c_void;
     use std::ptr::null_mut;
 
-    use windows::Win32::Foundation::{GetLastError, WIN32_ERROR};
-    use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
-    use windows::Win32::Foundation::HANDLE;
+    use winapi::um::errhandlingapi::GetLastError;
+    use winapi::um::memoryapi::{ReadProcessMemory, WriteProcessMemory};
+    use winapi::um::winnt::HANDLE;
+
 
     #[cfg(target_arch = "x86")]
     pub const DEFAULT_BASE_ADDR:  u32 = 0x400000;
@@ -24,7 +25,7 @@ pub mod memory {
             base_address as *mut _,
             buffer as *mut _,
             size,
-            Some(&mut bytes_read),
+            &mut bytes_read,
         );
         bytes_read
     }
@@ -41,7 +42,7 @@ pub mod memory {
             base_address as *mut _,
             buffer as *mut _,
             size,
-            Some(&mut bytes_written),
+            &mut bytes_written,
         );
         bytes_written
     }
@@ -53,19 +54,16 @@ pub mod memory {
     ) -> T {
             let mut res: T = Default::default();
 
-            let _ = match ReadProcessMemory(
-                *process_handle,
-                base_address as *mut c_void,
-                &mut res as *mut T as *mut c_void,
-                std::mem::size_of::<T>(),
-                Some(null_mut::<usize>()),
-            ) {
-                Ok(x) => x,
-                Err(_) => {
-                    let error_code: WIN32_ERROR = GetLastError();
-                    println!("Read Failed: {:?}", error_code);
-                }
-        };
+        if ReadProcessMemory(
+            *process_handle,
+            base_address as *mut c_void,
+            &mut res as *mut T as *mut c_void,
+            std::mem::size_of::<T>(),
+            null_mut::<usize>(),
+        ) == 0 {
+            let error_code: u32 = GetLastError();
+            println!("Read Failed: {:?}", error_code);
+        }
         res
     }
 
@@ -75,19 +73,16 @@ pub mod memory {
         base_address: usize,
         value: T,
     ) {
-        let _ = match WriteProcessMemory(
+        if WriteProcessMemory(
             *process_handle,
             base_address as *mut c_void,
             &value as *const T as *const c_void,
             std::mem::size_of::<T>(),
-            Some(null_mut::<usize>()),
-        ) {
-            Ok(x) => x,
-            Err(_) => {
-                let error_code: WIN32_ERROR = GetLastError();
-                println!("Write Failed. Code: {:?}", error_code);
-            }
-        };
+            null_mut::<usize>(),
+        ) == 0 {
+            let error_code: u32 = GetLastError();
+            println!("Write Failed: {:?}", error_code);
+        }
     }
 
     pub unsafe fn enum_mem_vec<T: Default + Clone>(proc: &HANDLE, addr: usize) -> Vec<T> {
