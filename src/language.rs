@@ -1,17 +1,19 @@
 use std::collections::HashMap;
 
+use serde::{Deserialize, Serialize};
+
 use crate::DFInstance;
 use crate::data::memorylayout::{MemoryOffsets, OffsetSection};
 use crate::util::{capitalize_each, memory::{read_field, read_field_as_string}};
 use crate::win::process::Process;
 
-#[derive(Default, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 pub struct Languages {
     pub words: Vec<Word>,
     pub translation_map: HashMap<i32, Translation>
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 pub struct Translation {
     pub name: String,
     pub words: Vec<String>
@@ -112,7 +114,7 @@ impl Languages {
 }
 
 
-#[derive(Default, Debug)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone)]
 pub struct Word {
     address: usize,
     base: String,

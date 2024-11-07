@@ -2,13 +2,15 @@
 pub mod material {
     use std::collections::HashMap;
 
+    use serde::{Deserialize, Serialize};
+
     use crate::DFInstance;
     use crate::data::memorylayout::OffsetSection;
     use crate::types::flagarray::FlagArray;
     use crate::util::memory::read_mem_as_string;
     use crate::win::process::Process;
 
-    #[derive(Debug, Eq, Hash, PartialEq, Copy, Clone)]
+    #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Copy, Clone)]
     pub enum MaterialState {
         Any = -1,
         Solid,
@@ -92,7 +94,7 @@ pub mod material {
         NumOfMaterialFlags = 69
     }
 
-    #[derive(Default, Debug)]
+    #[derive(Default, Serialize, Deserialize, Debug, Clone)]
     pub struct Material {
         pub index: i32,
         pub flags: FlagArray,
@@ -227,7 +229,9 @@ pub mod material {
 }
 use std::hash::Hash;
 
-#[derive(Default, Debug, Eq, PartialEq, Hash)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Default, Serialize, Deserialize, Debug, Eq, PartialEq, Hash, Clone)]
 pub enum ItemType {
     #[default]
     None = -1,

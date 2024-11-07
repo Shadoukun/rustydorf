@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{data::memorylayout::OffsetSection, util::memory::read_mem_as_string, win::{memory::memory::read_mem, process::Process}, DFInstance};
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct FakeIdentity {
     pub id: i32,
     pub addr: usize,
@@ -13,7 +13,7 @@ pub struct FakeIdentity {
     pub fake_birth_time: i32,
 }
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct HistoricalFigure {
     pub id : i32,
     pub fig_info_addr: usize,

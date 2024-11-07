@@ -97,17 +97,4 @@ pub mod memory {
         out
     }
 
-    // /// A function to enumerate a vector of memory addresses from a given address
-    // pub unsafe fn enum_mem_vec(proc: &HANDLE, addr: usize) -> Vec<usize> {
-    //     let pointer_size = std::mem::size_of::<usize>();
-    //     let start = read_mem::<usize>(proc, addr);
-    //     let end = read_mem::<usize>(proc, addr + pointer_size);
-    //     let count = (end - start) / pointer_size;
-
-    //     let mut out = vec![0; count];
-    //     read_raw(proc, start, (end - start) as usize, out.as_mut_ptr() as *mut u8);
-
-    //     out
-    // }
-
 }

@@ -5,7 +5,7 @@ use crate::data::memorylayout::OffsetSection;
 use crate::util::memory::read_mem_as_string;
 use crate::win::{memory::memory::{enum_mem_vec, read_mem}, process::Process};
 
-#[derive(Default, Clone, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct Syndrome {
     pub addr: usize,
     pub id: i32,
@@ -73,13 +73,13 @@ impl Syndrome {
 
 }
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct Curse {
     pub name: String,
     pub curse_type: CurseType,
 }
 
-#[derive(Default, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub enum CurseType {
     #[default]
     None = -1,

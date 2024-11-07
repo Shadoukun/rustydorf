@@ -14,6 +14,9 @@ mod data;
 mod race;
 mod util;
 
+use std::sync::Arc;
+use tokio::sync::Mutex;
+
 use dfinstance::DFInstance;
 use win::process::Process;
 
@@ -23,7 +26,10 @@ unsafe fn get_df_instance() -> DFInstance {
     df
 }
 
-// #[tokio::main]
-fn main() {
-    let df = unsafe { get_df_instance() };
+#[tokio::main]
+async fn main() {
+    unsafe {
+        let df = Arc::new(Mutex::new(get_df_instance()));
+    }
+
 }

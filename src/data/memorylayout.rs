@@ -1,7 +1,7 @@
 use std::env::current_dir;
 use std::fmt::Error;
 use std::{collections::HashMap, fs};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use toml;
 
 pub enum OffsetSection {
@@ -36,8 +36,7 @@ pub enum OffsetSection {
     Art,
     Viewscreen,
 }
-
-#[derive(Default, Deserialize)]
+#[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct MemoryOffsets {
 pub addresses: HashMap<String, String>,
 pub language: HashMap<String, String>,

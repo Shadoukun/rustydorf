@@ -23,7 +23,7 @@ pub mod dwarf {
     use crate::win::process::Process;
     use crate::{util::memory::{read_field, read_mem_as_string}, DFInstance};
 
-    #[derive(Default, Serialize, Deserialize)]
+    #[derive(Default, Serialize, Deserialize, Clone, Debug)]
     pub struct Dwarf {
         pub addr: usize,
         pub id: i32,
@@ -542,7 +542,7 @@ pub mod dwarf {
 
 
 
-    #[derive(Default, Debug, PartialEq, Serialize, Deserialize)]
+    #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone)]
     pub enum Sex {
         #[default]
         Female = 0,
@@ -561,7 +561,7 @@ pub mod dwarf {
     }
 
 
-    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
     pub enum Commitment {
         Uninterested = 0,
         Lover = 1,
@@ -578,7 +578,7 @@ pub mod dwarf {
         }
     }
 
-    #[derive(Default, Debug, PartialEq, Serialize, Deserialize)]
+    #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone)]
     pub enum Orientation {
         #[default]
         Heterosexual,
@@ -587,7 +587,7 @@ pub mod dwarf {
         Asexual,
     }
 
-    #[derive(Default, Debug, PartialEq)]
+    #[derive(Default, Debug, PartialEq, Clone)]
     #[repr(i16)]
     pub enum PreferenceType {
         #[default]
@@ -607,7 +607,7 @@ pub mod dwarf {
         LikeOutdoors = 99
     }
 
-    #[derive(Default, Debug, PartialEq)]
+    #[derive(Default, Debug, PartialEq, Clone)]
     #[repr(i16)]
     pub enum MaterialState {
         #[default]

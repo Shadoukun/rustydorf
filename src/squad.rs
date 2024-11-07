@@ -7,7 +7,7 @@ use crate::util::memory::read_field;
 use crate::win::memory::memory::{enum_mem_vec, read_mem};
 use crate::win::process::Process;
 
-#[derive(Default, PartialEq, Clone, Serialize, Deserialize)]
+#[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Squad {
     pub id: i32,
     pub addr: usize,
@@ -145,7 +145,7 @@ impl Squad {
 
 }
 
-#[derive(Default, PartialEq, Copy, Clone, Serialize, Deserialize)]
+#[derive(Debug, Default, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum SquadOrderType {
     #[default]
     None = -1,

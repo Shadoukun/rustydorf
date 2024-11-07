@@ -8,6 +8,7 @@ use winapi::um::winnt::PROCESS_ALL_ACCESS;
 use winapi::shared::minwindef::{FALSE, TRUE};
 use winapi::shared::ntdef::HANDLE;
 
+#[derive(Clone)]
 pub struct Process {
     pub pid: u32,
     pub handle: HANDLE,

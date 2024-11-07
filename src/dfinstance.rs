@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use serde::Serialize;
 
 use crate::items::material::Material;
 use crate::items::ItemType;
@@ -15,7 +16,7 @@ use crate::win::{memory::memory::{enum_mem_vec, read_mem}, process::Process};
 
 /// Represents the Dwarf Fortress instance \
 /// Contains all the data loaded from the game
-#[derive(Default)]
+#[derive(Default, Serialize, Clone)]
 pub struct DFInstance {
     pub memory_layout: MemoryOffsets,
     pub game_data: GameData,
