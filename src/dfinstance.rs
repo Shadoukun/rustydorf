@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use serde::Serialize;
 
+use crate::histfigure::FortressPosition;
 use crate::items::material::Material;
 use crate::items::ItemType;
 use crate::language::{Languages, Translation, Word};
@@ -8,7 +9,7 @@ use crate::squad::Squad;
 use crate::time::DfTime;
 use crate::util::address_plus_offset;
 use crate::race::race::Race;
-use crate::dwarf::dwarf::{Dwarf, FortressPosition};
+use crate::dwarf::dwarf::Dwarf;
 
 use crate::util::memory::read_mem_as_string;
 use crate::data::{gamedata::{self, GameData}, memorylayout::{load_memory_layout, MemoryOffsets, OffsetSection}};

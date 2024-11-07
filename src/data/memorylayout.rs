@@ -36,37 +36,38 @@ pub enum OffsetSection {
     Art,
     Viewscreen,
 }
+
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct MemoryOffsets {
-pub addresses: HashMap<String, String>,
-pub language: HashMap<String, String>,
-pub word_offsets: HashMap<String, String>,
-pub general_ref_offsets: HashMap<String, String>,
-pub race_offsets: HashMap<String, String>,
-pub caste_offsets: HashMap<String, String>,
-pub hist_entity_offsets: HashMap<String, String>,
-pub hist_figure_offsets: HashMap<String, String>,
-pub hist_event_offsets: HashMap<String, String>,
-pub item_offsets: HashMap<String, String>,
-pub item_subtype_offsets: HashMap<String, String>,
-pub item_filter_offsets: HashMap<String, String>,
-pub weapon_subtype_offsets: HashMap<String, String>,
-pub armor_subtype_offsets: HashMap<String, String>,
-pub material_offsets: HashMap<String, String>,
-pub plant_offsets: HashMap<String, String>,
-pub descriptor_offsets: HashMap<String, String>,
-pub health_offsets: HashMap<String, String>,
-pub dwarf_offsets: HashMap<String, String>,
-pub syndrome_offsets: HashMap<String, String>,
-pub unit_wound_offsets: HashMap<String, String>,
-pub soul_details: HashMap<String, String>,
-pub need_offsets: HashMap<String, String>,
-pub emotion_offsets: HashMap<String, String>,
-pub job_details: HashMap<String, String>,
-pub squad_offsets: HashMap<String, String>,
-pub activity_offsets: HashMap<String, String>,
-pub art_offsets: HashMap<String, String>,
-pub viewscreen_offsets: HashMap<String, String>,
+    pub addresses: HashMap<String, String>,
+    pub language: HashMap<String, String>,
+    pub word_offsets: HashMap<String, String>,
+    pub general_ref_offsets: HashMap<String, String>,
+    pub race_offsets: HashMap<String, String>,
+    pub caste_offsets: HashMap<String, String>,
+    pub hist_entity_offsets: HashMap<String, String>,
+    pub hist_figure_offsets: HashMap<String, String>,
+    pub hist_event_offsets: HashMap<String, String>,
+    pub item_offsets: HashMap<String, String>,
+    pub item_subtype_offsets: HashMap<String, String>,
+    pub item_filter_offsets: HashMap<String, String>,
+    pub weapon_subtype_offsets: HashMap<String, String>,
+    pub armor_subtype_offsets: HashMap<String, String>,
+    pub material_offsets: HashMap<String, String>,
+    pub plant_offsets: HashMap<String, String>,
+    pub descriptor_offsets: HashMap<String, String>,
+    pub health_offsets: HashMap<String, String>,
+    pub dwarf_offsets: HashMap<String, String>,
+    pub syndrome_offsets: HashMap<String, String>,
+    pub unit_wound_offsets: HashMap<String, String>,
+    pub soul_details: HashMap<String, String>,
+    pub need_offsets: HashMap<String, String>,
+    pub emotion_offsets: HashMap<String, String>,
+    pub job_details: HashMap<String, String>,
+    pub squad_offsets: HashMap<String, String>,
+    pub activity_offsets: HashMap<String, String>,
+    pub art_offsets: HashMap<String, String>,
+    pub viewscreen_offsets: HashMap<String, String>,
 }
 
 impl MemoryOffsets {
@@ -132,12 +133,12 @@ pub fn field_offset(&self, section: OffsetSection, field: &str) -> usize {
 }
 
 pub fn load_memory_layout() -> MemoryOffsets {
-let current_dir = current_dir().unwrap();
-let conf = match current_dir.join("addresses.toml").into_os_string().into_string() {
-    Ok(x) => x,
-    Err(_) => {
-        panic!("Could not read file");
-    }
-};
-MemoryOffsets::new(conf)
+    let current_dir = current_dir().unwrap();
+    let conf = match current_dir.join("addresses.toml").into_os_string().into_string() {
+        Ok(x) => x,
+        Err(_) => {
+            panic!("Could not read file");
+        }
+    };
+    MemoryOffsets::new(conf)
 }

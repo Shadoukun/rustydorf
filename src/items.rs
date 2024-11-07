@@ -6,20 +6,24 @@ pub mod material {
 
     use crate::DFInstance;
     use crate::data::memorylayout::OffsetSection;
-    use crate::types::flagarray::FlagArray;
+    use crate::flagarray::FlagArray;
     use crate::util::memory::read_mem_as_string;
     use crate::win::process::Process;
 
-    #[derive(Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Copy, Clone)]
+
+    #[derive(Default, Serialize, Deserialize, Debug, Eq, Hash, PartialEq, Copy, Clone)]
+    #[repr(i16)]
     pub enum MaterialState {
+        #[default]
         Any = -1,
-        Solid,
+        Solid = 0,
         Liquid,
         Gas,
         Powder,
         Paste,
         Pressed
     }
+
     pub enum MaterialFlag {
         None = -1,
         Bone = 0,

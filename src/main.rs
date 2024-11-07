@@ -1,7 +1,7 @@
 mod dfinstance;
 mod dwarf;
 mod caste;
-mod types;
+mod flagarray;
 mod language;
 mod win;
 mod histfigure;

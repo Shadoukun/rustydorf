@@ -6,6 +6,9 @@ pub mod dwarf {
     use serde::Deserialize;
     use serde::Serialize;
 
+    use crate::histfigure::FortressPosition;
+    use crate::preference::Commitment;
+    use crate::preference::Orientation;
     use crate::preference::Preference;
     use crate::squad::Squad;
     use crate::syndromes::Curse;
@@ -76,6 +79,7 @@ pub mod dwarf {
         pub curse: Curse,
 
         pub squad: Squad,
+        pub squad_position: i32,
         pub pending_squad_id: i32,
         pub pending_squad_position: i32,
         pub pending_squad_name: String,
@@ -101,7 +105,7 @@ pub mod dwarf {
             // read race/caste before anything else to filter out non-dwarves
             d.read_race_and_caste(df, proc)?;
             d.read_names(df, proc);
-            d.read_states(df, proc);;
+            d.read_states(df, proc);
             d.read_profession(df, proc);
             d.read_age(df, proc);
             d.read_historical_figure(df, proc);
@@ -116,7 +120,7 @@ pub mod dwarf {
             d.read_mood(df, proc);
             d.read_emotions(df, proc);
             d.read_beliefs(df, proc);
-            d.read_traits(df, proc);;
+            d.read_traits(df, proc);
             d.read_goals(df, proc);
             d.read_gender_orientation(df, proc);
             d.read_noble_position(df, proc);
@@ -185,8 +189,8 @@ pub mod dwarf {
 
         unsafe fn read_squad(&mut self, df: &DFInstance, proc: &Process) {
             let squad_id = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "squad_id"));
-            let squad_position = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "squad_position"));
-            self.pending_squad_position = squad_position;
+            self.squad_position = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "squad_position"));
+            self.pending_squad_position = self.squad_position;
 
             if squad_id >= 0 {// && animal, adult
                 let s = df.squads.iter().find(|&x| x.id == squad_id).unwrap();
@@ -233,40 +237,23 @@ pub mod dwarf {
         }
 
         unsafe fn read_gender_orientation(&mut self, df: &DFInstance, proc: &Process) {
-            let orient_offset = self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "orientation");
-            let orientation_byte = read_mem::<u8>(&proc.handle, orient_offset);
-
-            let sex = Sex::from(read_mem::<u8>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "sex")));
+            let orientation_byte = read_mem::<u8>(&proc.handle, self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "orientation"));
             let male_interest = Commitment::from((orientation_byte & (3<<1))>>1);
             let female_interest = Commitment::from((orientation_byte & (3<<3))>>3);
-            let mut orientation: Orientation = Default::default();
 
-            if sex == Sex::Male {
-                if male_interest != Commitment::Uninterested && female_interest != Commitment::Uninterested {
-                    orientation = Orientation::Bisexual;
-                } else if female_interest != Commitment::Uninterested {
-                    orientation = Orientation::Heterosexual;
-                } else if male_interest != Commitment::Uninterested {
-                    orientation = Orientation::Homosexual;
-                } else {
-                    orientation = Orientation::Asexual;
-                }
-
-            } else if sex == Sex::Female {
-                if female_interest != Commitment::Uninterested && male_interest != Commitment::Uninterested {
-                    orientation = Orientation::Bisexual;
-                } else if male_interest != Commitment::Uninterested {
-                    orientation = Orientation::Heterosexual;
-                } else if female_interest != Commitment::Uninterested {
-                    orientation = Orientation::Homosexual;
-                } else {
-                    orientation = Orientation::Asexual;
-                }
-            }
-
-            self.sex = sex;
-            self.orientation = orientation;
+            self.sex = Sex::from(read_mem::<u8>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "sex")));
             self.orient_vec = vec![male_interest, female_interest];
+            self.orientation = match (self.sex, male_interest, female_interest) {
+                (Sex::Male, Commitment::Uninterested, Commitment::Uninterested) => Orientation::Asexual,
+                (Sex::Male, _, Commitment::Uninterested) => Orientation::Homosexual,
+                (Sex::Male, Commitment::Uninterested, _) => Orientation::Heterosexual,
+                (Sex::Male, _, _) => Orientation::Bisexual,
+                (Sex::Female, Commitment::Uninterested, Commitment::Uninterested) => Orientation::Asexual,
+                (Sex::Female, _, Commitment::Uninterested) => Orientation::Heterosexual,
+                (Sex::Female, Commitment::Uninterested, _) => Orientation::Homosexual,
+                (Sex::Female, _, _) => Orientation::Bisexual,
+                _ => Orientation::Asexual,
+            };
         }
 
         unsafe fn read_soul(&mut self, df: &DFInstance, proc: &Process) {
@@ -301,14 +288,14 @@ pub mod dwarf {
         }
 
         unsafe fn read_states(&mut self, df: &DFInstance, proc: &Process) {
-            let states_vec = enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "states"));
-            let mut states: HashMap<i16, i32> = HashMap::new();
-            for s in states_vec {
-                let k = read_mem::<i16>(&proc.handle, s);
-                let v = read_mem::<i32>(&proc.handle, s + 0x4); // 0x4 or sizeof usize?
-                states.insert(k, v);
-            }
-            self.states = states;
+            self.states = enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "states"))
+                .iter()
+                .map(|&s| {
+                    let k = read_mem::<i16>(&proc.handle, s);
+                    let v = read_mem::<i32>(&proc.handle, s + 0x4); // 0x4 or sizeof usize?
+                    (k, v)
+                })
+                .collect();
         }
 
         pub unsafe fn read_names(&mut self, df: &DFInstance, proc: &Process) {
@@ -331,15 +318,19 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_beliefs(&mut self, df: &DFInstance, proc: &Process) {
-            let beliefs_vec  = enum_mem_vec(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "beliefs"));
-            for addr in beliefs_vec {
-                let belief_id = read_mem::<i32>(&proc.handle, addr);
-                if belief_id >= 0 {
-                    let b = df.game_data.beliefs[belief_id as usize].clone();
-                    let val = read_mem::<i16>(&proc.handle, addr + 0x4);
-                    self.beliefs.push((b, val));
-                }
-            }
+            self.beliefs = enum_mem_vec(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "beliefs"))
+                .iter()
+                .filter_map(|&addr| {
+                    let belief_id = read_mem::<i32>(&proc.handle, addr);
+                    if belief_id >= 0 {
+                        let b = df.game_data.beliefs[belief_id as usize].clone();
+                        let val = read_mem::<i16>(&proc.handle, addr + 0x4);
+                        Some((b, val))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
         }
 
         pub unsafe fn read_traits(&mut self, df: &DFInstance, proc: &Process) {
@@ -380,22 +371,24 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_goals(&mut self, df: &DFInstance, proc: &Process) {
-            let goals_addr =  self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "goals");
-            let goals = enum_mem_vec::<usize>(&proc.handle, goals_addr);
-            for addr in goals {
-                let goal_type = read_mem::<i32>(&proc.handle, addr + 0x4);
-                if goal_type >= 0 {
-                    let goal = df.game_data.goals.iter().find(|&x| x.id == goal_type).unwrap().clone();
-                    let val = read_mem::<i16>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Soul, "goal_realized"));
-                    // TODO: vampire goals
-                    if val > 0 { self.goals_realized += 1; };
-                    self.goals.push((goal, val));
-                }
-            }
+            self.goals = enum_mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "goals"))
+                .iter()
+                .filter_map(|&addr| {
+                    let goal_type = read_mem::<i32>(&proc.handle, addr + 0x4);
+                    if goal_type >= 0 {
+                        let goal = df.game_data.goals.iter().find(|&x| x.id == goal_type).unwrap().clone();
+                        let val = read_mem::<i16>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Soul, "goal_realized"));
+                        if val > 0 { self.goals_realized += 1; }
+                        Some((goal, val))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
         }
+
         pub unsafe fn read_preferences(&mut self, df: &DFInstance, proc: &Process) {
-            let prefs_addr = self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "preferences");
-            let prefs = enum_mem_vec(&proc.handle,  prefs_addr);
+            let prefs = enum_mem_vec(&proc.handle,  self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "preferences"));
             for p in prefs {
                 let pref = Preference::new(df, proc, p);
                 // TODO: add to preferences
@@ -540,9 +533,7 @@ pub mod dwarf {
         }
     }
 
-
-
-    #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone)]
+    #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone, Copy)]
     pub enum Sex {
         #[default]
         Female = 0,
@@ -560,70 +551,4 @@ pub mod dwarf {
         }
     }
 
-
-    #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
-    pub enum Commitment {
-        Uninterested = 0,
-        Lover = 1,
-        Marriage = 2,
-    }
-
-    impl From<u8> for Commitment {
-        fn from(value: u8) -> Self {
-            match value {
-                1 => Commitment::Lover,
-                2 => Commitment::Marriage,
-                _ => Commitment::Uninterested,
-            }
-        }
-    }
-
-    #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone)]
-    pub enum Orientation {
-        #[default]
-        Heterosexual,
-        Bisexual,
-        Homosexual,
-        Asexual,
-    }
-
-    #[derive(Default, Debug, PartialEq, Clone)]
-    #[repr(i16)]
-    pub enum PreferenceType {
-        #[default]
-        LikeNone = -1,
-        LikeMaterial,
-        LikeCreature,
-        LikeFood,
-        HateCreature,
-        LikeItem,
-        LikePlant,
-        LikeTree,
-        LikeColor,
-        LikeShape,
-        LikePoetry,
-        LikeMusic,
-        LikeDance,
-        LikeOutdoors = 99
-    }
-
-    #[derive(Default, Debug, PartialEq, Clone)]
-    #[repr(i16)]
-    pub enum MaterialState {
-        #[default]
-        Any = -1,
-        Solid = 0,
-        Liquid,
-        Gas,
-        Powder,
-        Paste,
-        Pressed
-    }
-
-#[derive(Debug, Default, Clone, Serialize, Deserialize)]
-pub struct FortressPosition {
-    pub name: String,
-    pub name_male: String,
-    pub name_female: String,
-}
 }

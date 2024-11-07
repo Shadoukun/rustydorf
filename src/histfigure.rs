@@ -69,3 +69,10 @@ impl HistoricalFigure {
     //
 
 }
+
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+pub struct FortressPosition {
+    pub name: String,
+    pub name_male: String,
+    pub name_female: String,
+}

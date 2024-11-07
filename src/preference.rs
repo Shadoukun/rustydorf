@@ -1,5 +1,7 @@
+use serde::{Deserialize, Serialize};
+
 use crate::DFInstance;
-use crate::dwarf::dwarf::MaterialState;
+use crate::items::material::MaterialState;
 use crate::items::ItemType;
 use crate::win::{memory::memory::read_mem, process::Process};
 
@@ -18,14 +20,15 @@ impl Preference {
         let id = read_mem::<i32>(&proc.handle, addr + 0x4);
         let p = Preference{
             id,
-            pref_type: read_mem::<PreferenceType>(&proc.handle, addr),
+            pref_type:    read_mem::<PreferenceType>(&proc.handle, addr),
             item_subtype: read_mem::<i32>(&proc.handle, addr + 0x8),
-            mat_type: read_mem::<i32>(&proc.handle, addr + 0xC),
-            mat_index: read_mem::<i32>(&proc.handle, addr + 0x10),
-            mat_state: read_mem::<MaterialState>(&proc.handle, addr + 0x14),
-            item_type: ItemType::from_i32(id),
+            mat_type:     read_mem::<i32>(&proc.handle, addr + 0xC),
+            mat_index:    read_mem::<i32>(&proc.handle, addr + 0x10),
+            mat_state:    read_mem::<MaterialState>(&proc.handle, addr + 0x14),
+            item_type:    ItemType::from_i32(id),
         };
 
+        // TODO: preference stuff
         match p.pref_type {
             PreferenceType::LikeMaterial => {
             }
@@ -75,4 +78,30 @@ enum PreferenceType {
     LikeMusic = 10,
     LikeDance = 11,
     LikeOutdoors = 99,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone, Copy)]
+pub enum Commitment {
+    Uninterested = 0,
+    Lover = 1,
+    Marriage = 2,
+}
+
+impl From<u8> for Commitment {
+    fn from(value: u8) -> Self {
+        match value {
+            1 => Commitment::Lover,
+            2 => Commitment::Marriage,
+            _ => Commitment::Uninterested,
+        }
+    }
+}
+
+#[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone)]
+pub enum Orientation {
+    #[default]
+    Heterosexual,
+    Bisexual,
+    Homosexual,
+    Asexual,
 }

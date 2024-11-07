@@ -5,7 +5,7 @@ pub mod race {
     use crate::DFInstance;
     use crate::caste::caste::Caste;
     use crate::data::memorylayout::OffsetSection;
-    use crate::types::flagarray::FlagArray;
+    use crate::flagarray::FlagArray;
     use crate::util::{capitalize_each, memory::read_mem_as_string};
     use crate::win::{memory::memory::enum_mem_vec, process::Process};
 
@@ -20,81 +20,75 @@ pub mod race {
         pub child_name: String,
         pub child_name_plural: String,
 
-        pub pref_strings: Vec<String>,
-        pub pop_ratio_vector: usize,
-        pub castes_vector: usize,
         pub castes: Vec<Caste>,
-        pub materials_vector: usize,
-        pub tissues_vector: usize,
-
+        pub pref_strings: Vec<String>,
         pub flags: FlagArray,
 
+        pub pop_ratio_vector: usize,
+        pub materials_vector: usize,
+        pub tissues_vector: usize,
     }
 
     impl Race {
         pub unsafe fn new(df: &DFInstance, proc: &Process, id: i32, base_addr: usize) -> Result<Self, Error> {
-            let mut r: Race = Default::default();
+            let mut r = Race {
+                id,
+                name:               read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "name_singular")),
+                plural_name:        read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "name_plural")),
+                adjective:          read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "adjective")),
+                child_name:         read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "child_name_singular")),
+                child_name_plural:  read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "child_name_plural")),
+                baby_name:          read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "baby_name_singular")),
+                baby_name_plural:   read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "baby_name_plural")),
+                ..Default::default()
+            };
 
-            r.id = id;
-            r.name = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "name_singular"));
-            r.plural_name = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "name_plural"));
-            r.adjective = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "adjective"));
-            r.child_name = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "child_name_singular"));
-            r.child_name_plural = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "child_name_plural"));
-            r.baby_name = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "baby_name_singular"));
-            r.baby_name_plural = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "baby_name_plural"));
-
-            if r.baby_name.is_empty() && !r.child_name.is_empty() {
-                r.baby_name = r.child_name.clone();
-                r.baby_name_plural = r.child_name_plural.clone();
-            }
-            if r.child_name.is_empty() && !r.baby_name.is_empty() {
-                r.child_name = r.baby_name.clone();
-                r.child_name_plural = r.baby_name_plural.clone();
-            }
-
-            if r.baby_name.is_empty() {
-                r.baby_name = r.name.clone() + " Baby";
-                r.baby_name_plural = r.plural_name.clone() + " Babies";
-            }
-
-            if r.child_name.is_empty() {
-                r.child_name = r.name.clone() + " Offspring";
-                r.child_name_plural = r.plural_name.clone() + " Offspring";
-            }
-
-            r.child_name = capitalize_each(&r.child_name);
-            r.child_name_plural = capitalize_each(&r.child_name_plural);
-            r.baby_name = capitalize_each(&r.baby_name);
-            r.baby_name_plural = capitalize_each(&r.baby_name_plural);
-
-                let pref_string_vector_offset = df.memory_layout.field_offset(OffsetSection::Race, "pref_string_vector");
-                let pref_strings = enum_mem_vec(&proc.handle, base_addr.add(pref_string_vector_offset));
-                for p in pref_strings {
-                    let pref_string = read_mem_as_string(&proc, p);
-                    r.pref_strings.push(pref_string);
-                }
-
-            r.castes_vector = df.memory_layout.field_offset(OffsetSection::Race, "castes_vector");
+            // TODO: implement these?
             r.pop_ratio_vector = df.memory_layout.field_offset(OffsetSection::Race, "pop_ratio_vector");
             r.materials_vector = df.memory_layout.field_offset(OffsetSection::Race, "materials_vector");
-            r.tissues_vector = df.memory_layout.field_offset(OffsetSection::Race, "tissues_vector");
+            r.tissues_vector   = df.memory_layout.field_offset(OffsetSection::Race, "tissues_vector");
 
-            // load race castes
-            let castes = enum_mem_vec(&proc.handle, base_addr.add(r.castes_vector));
-            if !castes.is_empty() {
-                for c in castes {
-                    let caste = Caste::new(df, proc, c);
-                    r.castes.push(caste);
-                }
-            }
+            r.pref_strings = enum_mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "pref_string_vector"))
+                .iter()
+                .map(|&p| read_mem_as_string(&proc, p))
+                .collect();
+
+            r.castes = enum_mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "castes_vector"))
+                .iter()
+                .map(|&c| Caste::new(df, proc, c))
+                .collect();
 
             if r.id == df.dwarf_race_id{
-                // todo: caste ratios
+                // TODO: caste ratios
             }
 
             r.flags = FlagArray::new(&df, proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "flags"));
+            r.fix_child_names();
             Ok(r)
+        }
+
+        unsafe fn fix_child_names(&mut self) {
+            // if the baby name is empty, use the child name
+            if self.baby_name.is_empty() && !self.child_name.is_empty() {
+                self.baby_name = self.child_name.clone();
+                self.baby_name_plural = self.child_name_plural.clone();
+            // if the child name is empty, use the baby name
+            } else if self.child_name.is_empty() && !self.baby_name.is_empty() {
+                self.child_name = self.baby_name.clone();
+                self.child_name_plural = self.baby_name_plural.clone();
+            // if both are
+            } else {
+                self.baby_name = self.name.clone() + " Baby";
+                self.baby_name_plural = self.plural_name.clone() + " Babies";
+                self.child_name = self.name.clone() + " Offspring";
+                self.child_name_plural = self.plural_name.clone() + " Offspring";
+            }
+
+            // capitalize
+            self.child_name = capitalize_each(&self.child_name);
+            self.child_name_plural = capitalize_each(&self.child_name_plural);
+            self.baby_name = capitalize_each(&self.baby_name);
+            self.baby_name_plural = capitalize_each(&self.baby_name_plural);
         }
     }
 }
