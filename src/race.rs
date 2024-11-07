@@ -6,7 +6,7 @@ pub mod race {
     use crate::caste::caste::Caste;
     use crate::data::memorylayout::OffsetSection;
     use crate::types::flagarray::FlagArray;
-    use crate::util::{capitalize_each, memory::{read_field_as_string, read_mem_as_string}};
+    use crate::util::{capitalize_each, memory::read_mem_as_string};
     use crate::win::{memory::memory::enum_mem_vec, process::Process};
 
     #[derive(Default, Debug, Clone, Serialize, Deserialize)]
@@ -36,13 +36,13 @@ pub mod race {
             let mut r: Race = Default::default();
 
             r.id = id;
-            r.name = read_field_as_string(&proc, base_addr, &df.memory_layout, OffsetSection::Race, "name_singular")?;
-            r.plural_name = read_field_as_string(&proc, base_addr, &df.memory_layout, OffsetSection::Race, "name_plural")?;
-            r.adjective = read_field_as_string(&proc, base_addr, &df.memory_layout, OffsetSection::Race, "adjective")?;
-            r.child_name = read_field_as_string(&proc, base_addr, &df.memory_layout, OffsetSection::Race, "child_name_singular")?;
-            r.child_name_plural = read_field_as_string(&proc, base_addr, &df.memory_layout, OffsetSection::Race, "child_name_plural")?;
-            r.baby_name = read_field_as_string(&proc, base_addr, &df.memory_layout, OffsetSection::Race, "baby_name_singular")?;
-            r.baby_name_plural = read_field_as_string(&proc, base_addr, &df.memory_layout, OffsetSection::Race, "baby_name_plural")?;
+            r.name = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "name_singular"));
+            r.plural_name = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "name_plural"));
+            r.adjective = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "adjective"));
+            r.child_name = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "child_name_singular"));
+            r.child_name_plural = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "child_name_plural"));
+            r.baby_name = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "baby_name_singular"));
+            r.baby_name_plural = read_mem_as_string(&proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "baby_name_plural"));
 
             if r.baby_name.is_empty() && !r.child_name.is_empty() {
                 r.baby_name = r.child_name.clone();

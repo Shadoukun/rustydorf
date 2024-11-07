@@ -21,7 +21,7 @@ pub mod dwarf {
     use crate::win::memory::memory::read_mem;
     use crate::win::memory::memory::read_raw;
     use crate::win::process::Process;
-    use crate::{util::memory::{read_field, read_mem_as_string}, DFInstance};
+    use crate::{util::memory::read_mem_as_string, DFInstance};
 
     #[derive(Default, Serialize, Deserialize, Clone, Debug)]
     pub struct Dwarf {
@@ -88,8 +88,8 @@ pub mod dwarf {
         pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize) -> Result<Dwarf, Error> {
             let mut d = Dwarf{
                 addr,
-                id: read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Dwarf, "id").unwrap(),
-                civ_id: read_field::<i32>(&proc, addr, &df.memory_layout, OffsetSection::Dwarf, "civ").unwrap(),
+                id: read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "id")),
+                civ_id: read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "civ")),
                 ..Default::default()
             };
 
@@ -125,8 +125,8 @@ pub mod dwarf {
         }
 
         unsafe fn read_body_size(&mut self, df: &DFInstance, proc: &Process) {
-            self.body_size = read_field(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "size_info").unwrap();
-            self.body_size_base = read_field(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "size_base").unwrap();
+            self.body_size = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "size_info"));
+            self.body_size_base = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "size_base"));
         }
 
         pub unsafe fn read_labors(&mut self, df: &DFInstance, proc: &Process) {
@@ -184,8 +184,8 @@ pub mod dwarf {
         }
 
         unsafe fn read_squad(&mut self, df: &DFInstance, proc: &Process) {
-            let squad_id = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "squad_id").unwrap();
-            let squad_position = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "squad_position").unwrap();
+            let squad_id = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "squad_id"));
+            let squad_position = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "squad_position"));
             self.pending_squad_position = squad_position;
 
             if squad_id >= 0 {// && animal, adult
@@ -197,16 +197,16 @@ pub mod dwarf {
         }
 
         unsafe fn read_age(&mut self, df: &DFInstance, proc: &Process) {
-            self.turn_count = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "turn_count").unwrap();
-            self._birth_date.0 = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "birth_year").unwrap() as u64;
-            self._birth_date.1 = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "birth_time").unwrap() as u64;
+            self.turn_count = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "turn_count"));
+            self._birth_date.0 = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_year")) as u64;
+            self._birth_date.1 = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_time")) as u64;
             self.birth_date = DfTime::from_years(self._birth_date.0).add(self._birth_date.1);
             self.age = df.current_time(proc).sub(self.birth_date.to_seconds());
             self.arrival_time = df.current_time(proc).sub(self.turn_count as u64);
         }
 
         unsafe fn read_historical_figure(&mut self, df: &DFInstance, proc: &Process) {
-            self.histfig_id = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "hist_id").unwrap();
+            self.histfig_id = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "hist_id"));
             if df.historical_figures.contains_key(&self.histfig_id) {
                 self.histfig = HistoricalFigure::new(df, proc, self.histfig_id);
             }
@@ -236,7 +236,7 @@ pub mod dwarf {
             let orient_offset = self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "orientation");
             let orientation_byte = read_mem::<u8>(&proc.handle, orient_offset);
 
-            let sex = Sex::from(read_field::<u8>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "sex").unwrap());
+            let sex = Sex::from(read_mem::<u8>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "sex")));
             let male_interest = Commitment::from((orientation_byte & (3<<1))>>1);
             let female_interest = Commitment::from((orientation_byte & (3<<3))>>3);
             let mut orientation: Orientation = Default::default();
@@ -279,14 +279,14 @@ pub mod dwarf {
         }
 
         unsafe fn read_race_and_caste(&mut self, df: &DFInstance, proc: &Process) -> Result<(), Error> {
-            let race_id = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "race")?;
+            let race_id = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "race"));
             let race = df.get_race(race_id).unwrap();
             if race.name != "dwarf" {
                 return Err(Error);
             }
 
             // I'm pretty sure this doesn't work as intended but dwarves only have 2 castes so it doesn't matter for now
-            let caste_id = read_field::<i32>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "caste")?;
+            let caste_id = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "caste"));
             let caste: &Caste;
             if caste_id == 0 {
                 caste = &race.castes[0];
@@ -324,7 +324,7 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_profession(&mut self, df: &DFInstance, proc: &Process) {
-            self.raw_prof_id = read_field::<u8>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "profession").unwrap();
+            self.raw_prof_id = read_mem::<u8>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "profession"));
             let prof = df.game_data.professions.iter().find(|&x| x.id == self.raw_prof_id as i32).unwrap();
             self.profession = prof.clone();
             // TODO: custom profession
@@ -461,7 +461,7 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_mood(&mut self, df: &DFInstance, proc: &Process) {
-            let mood_id = read_field::<i16>(&proc, self.addr, &df.memory_layout, OffsetSection::Dwarf, "mood").unwrap();
+            let mood_id = read_mem::<i16>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "mood"));
             let mut mood = Mood::from(mood_id);
             let temp_mood_offset = df.memory_layout.field_offset(OffsetSection::Dwarf, "temp_mood");
 

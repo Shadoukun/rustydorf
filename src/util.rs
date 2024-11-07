@@ -46,45 +46,4 @@ pub mod memory {
         String::from_utf8_lossy(&buf).to_string()
     }
 
-    /*
-    Field reading functions
-    */
-
-    /// Read a given MemoryOffsets field from the given address, and return it as Result<T, Error>
-    pub unsafe fn read_field<T: Default>(
-        proc: &Process,
-        offset: usize,
-        layout: &MemoryOffsets,
-        section: OffsetSection,
-        field: &str,
-    ) -> Result<T, Error> {
-        let field_offset = layout.field_offset(section, field);
-        Ok(read_mem::<T>(&proc.handle, offset + field_offset))
-    }
-
-    /// Read a given MemoryOffsets field from the given address, and return a Result<String, Error>
-    pub unsafe fn read_field_as_string(
-        proc: &Process,
-        offset: usize,
-        layout: &MemoryOffsets,
-        section: OffsetSection,
-        field: &str,
-    ) -> Result<String, Error> {
-        let field_offset = layout.field_offset(section, field);
-        Ok(read_mem_as_string(proc, offset + field_offset))
-    }
-
-    /// Read a given MemoryOffsets field from the given address, and return a Result<Vec<usize>, Error>
-    pub unsafe fn read_field_as_vec(
-        proc: &Process,
-        offset: usize,
-        layout: &MemoryOffsets,
-        section: OffsetSection,
-        field: &str
-    ) -> Result<Vec<usize>, Error> {
-        let field_offset = layout.field_offset(section, field);
-        let result = enum_mem_vec(&proc.handle, offset + field_offset);
-        Ok(result)
-    }
-
 }

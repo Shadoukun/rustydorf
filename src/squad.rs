@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::DFInstance;
 use crate::data::memorylayout::OffsetSection;
-use crate::util::memory::read_field;
 use crate::win::memory::memory::{enum_mem_vec, read_mem};
 use crate::win::process::Process;
 
@@ -39,8 +38,8 @@ impl Squad {
     }
 
     pub unsafe fn read_name(&mut self, df: &DFInstance, proc: &Process) {
-        let name = read_field::<String>(&proc, self.addr, &df.memory_layout, OffsetSection::Squad, "name").unwrap();
-        let alias = read_field::<String>(&proc, self.addr, &df.memory_layout, OffsetSection::Squad, "alias").unwrap();
+        let name = read_mem::<String>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "name"));
+        let alias = read_mem::<String>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "alias"));
         if alias.is_empty() {
             self.name = name;
         } else {
@@ -61,8 +60,8 @@ impl Squad {
             }
         }
 
-        let carry_food = read_field::<i16>(&proc, self.addr, &df.memory_layout, OffsetSection::Squad, "carry_food").unwrap();
-        let carry_water = read_field::<i16>(&proc, self.addr, &df.memory_layout, OffsetSection::Squad, "carry_water").unwrap();
+        let carry_food = read_mem::<i16>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "carry_food"));
+        let carry_water = read_mem::<i16>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "carry_water"));
 
         // add ammo qty of each member to ammo count
         let mut ammo_count = 0;
