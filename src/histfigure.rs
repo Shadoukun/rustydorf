@@ -43,7 +43,7 @@ impl HistoricalFigure {
     pub unsafe fn read_fake_identity(&mut self, df: &DFInstance, proc: &Process) {
         self.has_fake_identity = false;
         let id = read_mem::<i32>(&proc.handle, self.fig_info_addr + df.memory_layout.field_offset(OffsetSection::HistFigure, "current_ident"));
-        let addr = match df.get_fake_identity(id) {
+        let addr = match df.get_fake_identity(id.try_into().unwrap()) {
             Some(a) => a,
             None => return,
         };

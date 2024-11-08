@@ -92,7 +92,7 @@ pub mod dwarf {
         pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize) -> Result<Dwarf, Error> {
             let mut d = Dwarf{
                 addr,
-                id: read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "id")),
+                id:     read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "id")),
                 civ_id: read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "civ")),
                 ..Default::default()
             };
@@ -123,13 +123,13 @@ pub mod dwarf {
             d.read_traits(df, proc);
             d.read_goals(df, proc);
             d.read_gender_orientation(df, proc);
-            d.read_noble_position(df, proc);
+            d.read_noble_position(df);
             d.read_preferences(df, proc);
             Ok(d)
         }
 
         unsafe fn read_body_size(&mut self, df: &DFInstance, proc: &Process) {
-            self.body_size = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "size_info"));
+            self.body_size      = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "size_info"));
             self.body_size_base = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "size_base"));
         }
 
@@ -138,10 +138,7 @@ pub mod dwarf {
             let mut buf = vec![0u8; 94];
             read_raw(&proc.handle, addr, buf.len(), buf.as_mut_ptr());
 
-            for labor in &df.game_data.labors {
-                let enabled = buf[labor.id as usize] > 0;
-                self.labors.insert(labor.id, enabled);
-            }
+            self.labors = df.game_data.labors.iter().map(|labor| (labor.id, buf[labor.id as usize] > 0)).collect();
         }
 
         unsafe fn read_syndromes(&mut self, df: &DFInstance, proc: &Process) {
@@ -201,12 +198,12 @@ pub mod dwarf {
         }
 
         unsafe fn read_age(&mut self, df: &DFInstance, proc: &Process) {
-            self.turn_count = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "turn_count"));
+            self.turn_count    = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "turn_count"));
             self._birth_date.0 = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_year")) as u64;
             self._birth_date.1 = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_time")) as u64;
-            self.birth_date = DfTime::from_years(self._birth_date.0).add(self._birth_date.1);
-            self.age = df.current_time(proc).sub(self.birth_date.to_seconds());
-            self.arrival_time = df.current_time(proc).sub(self.turn_count as u64);
+            self.birth_date    = DfTime::from_years(self._birth_date.0).add(self._birth_date.1);
+            self.age           = df.current_time(proc).sub(self.birth_date.to_seconds());
+            self.arrival_time  = df.current_time(proc).sub(self.turn_count as u64);
         }
 
         unsafe fn read_historical_figure(&mut self, df: &DFInstance, proc: &Process) {
@@ -229,7 +226,7 @@ pub mod dwarf {
             }
         }
 
-        pub unsafe fn read_noble_position(&mut self, df: &DFInstance, proc: &Process) {
+        pub unsafe fn read_noble_position(&mut self, df: &DFInstance) {
             self.noble_position = match df.nobles.get(&self.histfig_id) {
                 Some(pos) => pos.clone(),
                 None => FortressPosition::default()
@@ -335,7 +332,7 @@ pub mod dwarf {
 
         pub unsafe fn read_traits(&mut self, df: &DFInstance, proc: &Process) {
             let traits_addr = self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "traits");
-            for i in 0..df.game_data.facets.len() {
+            for (i, _) in df.game_data.facets.iter().enumerate() {
                 let mut tr = df.game_data.facets[i].clone();
                 let val = read_mem::<i16>(&proc.handle, traits_addr + i * 2);
 
@@ -357,14 +354,14 @@ pub mod dwarf {
             }
 
             // special traits
-            let mut combat_hardened = read_mem::<i16>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "combat_hardened"));
-            combat_hardened = ((combat_hardened*(90-40)) / 100) + 40;
-            let combat_hardened_trait = Facet{
+            let combat_hardened_base = read_mem::<i16>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "combat_hardened"));
+            let combat_hardened = ((combat_hardened_base*(90-40)) / 100) + 40;
+            let f = Facet{
                 id: 0,
                 name: "Combat Hardened".to_string(),
                 ..Default::default()
             };
-            self.traits.push((combat_hardened_trait, combat_hardened));
+            self.traits.push((f, combat_hardened));
 
             // TODO: cave adapt/other special traits
 
@@ -401,7 +398,7 @@ pub mod dwarf {
             for e in enum_mem_vec::<usize>(&proc.handle, emotions_addr) {
                 let emotion_type = read_mem::<i32>(&proc.handle, e + df.memory_layout.field_offset(OffsetSection::Emotion, "emotion_type"));
                 let thought_id = read_mem::<i32>(&proc.handle, e + df.memory_layout.field_offset(OffsetSection::Emotion, "thought_id"));
-                println!("Emotion Type: {}", emotion_type);
+                // println!("Emotion Type: {}", emotion_type);
 
                 if !self.thoughts.contains(&thought_id) {
                     self.emotions.push(df.game_data.unit_emotions[emotion_type as usize].clone());
@@ -413,9 +410,9 @@ pub mod dwarf {
                 }
 
                 for e in self.emotions.iter() {
-                    println!("Emotion: {:?}", e.emotion);
+                    // println!("Emotion: {:?}", e.emotion);
                 }
-                println!("\nThoughts: ");
+                // println!("\nThoughts: ");
                 for t in self.thoughts.iter() {
                     println!("{:?}", df.game_data.unit_thoughts[*t as usize - 1]);
                 }
@@ -437,7 +434,6 @@ pub mod dwarf {
                     happiness_level = h.clone();
                 }
             }
-            println!("Stress Level: {:?}", happiness_level);
             self.happiness_level = happiness_level;
         }
 
@@ -449,7 +445,6 @@ pub mod dwarf {
                     color: 0,
                     divider: 0,
                 });
-                println!("{} {}", self.first_name, stress_msg);
             }
         }
 
@@ -486,6 +481,48 @@ pub mod dwarf {
             }
             self.mood = mood;
         }
+
+    }
+
+    pub fn print_dwarf(d: &Dwarf) {
+        println!("Name: {}", d.first_name);
+        println!("Profession: {}", d.profession.name);
+        println!("Noble Position: {:?}", d.noble_position);
+        println!("Birth Year: {}, Birth Time: {}", d._birth_date.0, d._birth_date.1);
+        println!("Sex: {:?}, ", d.sex);
+        println!("Sexual Orientation: {:?}, [Male Interest: {:?} | Female Interest: {:?}]", d.orientation, d.orient_vec[0], d.orient_vec[1]);
+        println!("Mood: {:?}", d.mood);
+        println!("Stress Level: {}", d.stress_level);
+        println!("Happiness Level: {:?}", d.happiness_level);
+        println!("----------------------------");
+        println!("Emotions");
+        for e in d.emotions.iter() {
+            println!("{:?}", e.emotion);
+        }
+        println!("----------------------------");
+
+        println!("Traits");
+        println!("----------------------------");
+        for t in d.traits.iter() {
+            println!("{} | Value: {}", t.0.name, t.1);
+        }
+        println!("\n----------------------------");
+
+        println!("Beliefs");
+        println!("----------------------------");
+        for b in d.beliefs.iter() {
+            println!("{:?} | Value: {}", b.0.name, b.1);
+        }
+        println!("\n----------------------------");
+
+        println!("Goals");
+        println!("----------------------------");
+        for g in d.goals.iter() {
+            println!("{:?} | Value: {}", g.0.name, g.1);
+        }
+
+        println!("----------------------------");
+        println!("\n");
 
     }
 

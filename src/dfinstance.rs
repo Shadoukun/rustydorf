@@ -9,7 +9,7 @@ use crate::squad::Squad;
 use crate::time::DfTime;
 use crate::util::address_plus_offset;
 use crate::race::race::Race;
-use crate::dwarf::dwarf::Dwarf;
+use crate::dwarf::dwarf::{Dwarf, print_dwarf};
 
 use crate::util::memory::read_mem_as_string;
 use crate::data::{gamedata::{self, GameData}, memorylayout::{load_memory_layout, MemoryOffsets, OffsetSection}};
@@ -60,12 +60,16 @@ impl DFInstance {
     pub unsafe fn new(proc: &Process) -> Self {
         let mut df = DFInstance {
             memory_layout: load_memory_layout(),
-            game_data: gamedata::load_game_data(),
+            game_data:     gamedata::load_game_data(),
             ..Default::default()
         };
 
-        df.load_world_info(&proc);
-        df.load_fortress_info(&proc);
+        df.fortress_addr      = read_mem::<usize>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
+        df.fortress_id        = read_mem::<i32>(&proc.handle, df.fortress_addr + size_of::<usize>());
+        df.dwarf_race_id      = read_mem::<i16>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
+        df.dwarf_civ_id       = read_mem::<i32>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
+        df.creature_vector    = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
+        df.syndromes_vector   = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
 
         df.load_materials(&proc);
         df.load_item_definitions(&proc);
@@ -74,23 +78,10 @@ impl DFInstance {
         df.load_races(&proc);
         df.load_historical_figures(&proc);
         df.load_historical_entities(&proc);
-        df.load_fake_identities(&proc);
         df.load_beliefs(&proc);
         df.load_dwarves(&proc);
 
         df
-    }
-
-    pub unsafe fn load_world_info(&mut self, proc: &Process) {
-        self.creature_vector    = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
-        self.syndromes_vector   = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
-    }
-
-    pub unsafe fn load_fortress_info(&mut self, proc: &Process) {
-        self.fortress_addr      = read_mem::<usize>(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
-        self.fortress_id        = read_mem::<i32>(&proc.handle, self.fortress_addr + size_of::<usize>());
-        self.dwarf_race_id      = read_mem::<i16>(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
-        self.dwarf_civ_id       = read_mem::<i32>(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
     }
 
     pub unsafe fn load_materials(&mut self, proc: &Process) {
@@ -153,7 +144,6 @@ impl DFInstance {
     }
 
     pub unsafe fn load_item_definitions(&mut self, proc: &Process) {
-
         // ItemType, field offset name
         let item_types = [
             (ItemType::Weapon, "itemdef_weapons_vector"),
@@ -186,6 +176,17 @@ impl DFInstance {
             let id = read_mem::<i32>(&proc.handle, fig + self.memory_layout.field_offset(OffsetSection::HistFigure, "id"));
             self.historical_figures.insert(id, fig);
         }
+
+        self.fake_identities_vector = enum_mem_vec::<i32>(&proc.handle, self.memory_layout.field_offset(OffsetSection::Addresses, "fake_identities_vector"));
+    }
+
+    pub unsafe fn get_fake_identity(&self, id: i32) -> Option<&i32> {
+        for f in &self.fake_identities_vector {
+            if *f == id {
+                return Some(f);
+            }
+        }
+        None
     }
 
     pub unsafe fn load_historical_entities(&mut self, proc: &Process) {
@@ -282,27 +283,9 @@ impl DFInstance {
         Some(r)?
     }
 
-    pub unsafe fn load_fake_identities(&mut self, proc: &Process) {
-        let fake_identities_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fake_identities_vector"));
-        let fake_identities_vector = enum_mem_vec::<usize>(&proc.handle, fake_identities_addr);
-    }
-
-    pub unsafe fn get_fake_identity(&self, id: i32) -> Option<&i32> {
-        for f in &self.fake_identities_vector {
-            if *f == id {
-                return Some(f);
-            }
-        }
-        None
-    }
-
     pub unsafe fn load_squads(&mut self, proc: &Process) {
-        let squad_vector_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "squad_vector"));
-        self.squad_vector = enum_mem_vec(&proc.handle, squad_vector_addr);
-        for s in &self.squad_vector {
-            let squad = Squad::new(self, proc, *s);
-            self.squads.push(squad);
-        }
+        self.squad_vector = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "squad_vector")));
+        self.squads = self.squad_vector.iter().map(|&s| Squad::new(self, proc, s)).collect();
     }
 
     pub unsafe fn load_dwarves(&mut self, proc: &Process) {
@@ -336,34 +319,3 @@ impl DFInstance {
     }
 }
 
-fn print_dwarf(d: &Dwarf) {
-    println!("----------------------------");
-            println!("-Dwarf-");
-            println!("Name: {}", d.first_name);
-            println!("Profession: {}", d.profession.name);
-            println!("----------------------------");
-            println!("Traits");
-            println!("----------------------------");
-            for t in d.traits.iter() {
-                println!("{} | Value: {}", t.0.name, t.1);
-            }
-            println!("\n----------------------------");
-            println!("Beliefs");
-            println!("----------------------------");
-            for b in d.beliefs.iter() {
-                println!("{:?} | Value: {}", b.0.name, b.1);
-            }
-            println!("\n----------------------------");
-            println!("Goals");
-            println!("----------------------------");
-            for g in d.goals.iter() {
-                println!("{:?} | Value: {}", g.0.name, g.1);
-            }
-            println!("\n");
-            println!("Mood: {:?}", d.mood);
-            println!("Sex: {:?}, ", d.sex);
-            println!("Sexual Orientation: {:?} ", d.orientation);
-            println!("[Male Interest: {:?} | Female Interest: {:?}]", d.orient_vec[0], d.orient_vec[1]);
-            println!("Birth Year: {}, Birth Time: {}", d._birth_date.0, d._birth_date.1);
-            println!("Noble Position: {:?}", d.noble_position);
-        }
