@@ -41,7 +41,7 @@ pub struct DFInstance {
     pub creature_vector: Vec<usize>,
     pub syndromes_vector: Vec<usize>,
     pub historical_figures: HashMap<i32, usize>,
-    pub fake_identities_vector: Vec<i32>,
+    pub fake_identities_vector: Vec<usize>,
     pub squad_vector: Vec<usize>,
     pub squads: Vec<Squad>,
     pub positions: HashMap<i32, FortressPosition>,
@@ -177,13 +177,13 @@ impl DFInstance {
             self.historical_figures.insert(id, fig);
         }
 
-        self.fake_identities_vector = enum_mem_vec::<i32>(&proc.handle, self.memory_layout.field_offset(OffsetSection::Addresses, "fake_identities_vector"));
+        self.fake_identities_vector = enum_mem_vec::<usize>(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fake_identities_vector")));
     }
 
-    pub unsafe fn get_fake_identity(&self, id: i32) -> Option<&i32> {
+    pub unsafe fn get_fake_identity(&self, id: i32) -> Option<i32> {
         for f in &self.fake_identities_vector {
-            if *f == id {
-                return Some(f);
+            if *f == id as usize{
+                return Some(id);
             }
         }
         None
@@ -301,10 +301,11 @@ impl DFInstance {
             };
             dwarves.push(d);
         }
-
-        for d in &dwarves {
-            print_dwarf(d);
-        }
+        println!("Loaded {} dwarves", dwarves.len());
+        self.dwarves = dwarves;
+        // for d in &dwarves {
+        //     print_dwarf(d);
+        // }
     }
 
     /// Returns the current time in the game
