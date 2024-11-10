@@ -102,35 +102,39 @@ impl DFInstance {
         }
     }
 
-    pub fn get_material(&self, mat_idx: usize, mat_type: i16) {
-        let mut mat: &Material;
+    pub fn get_material(&self, proc: &Process, mat_idx: i32, mat_type: i16, ) -> Material {
+        let mut mat = Material::default();
 
+        // raw material
         if mat_idx < 0 {
-            mat = self.base_materials.get(mat_idx).unwrap();
+            mat = self.base_materials.get(mat_idx as usize).unwrap().clone();
+        } else if mat_type == 0 {
+            mat = self.inorganic_materials.get(mat_idx as usize).unwrap().clone();
+        } else if mat_type < 19 {
+            mat = self.base_materials.get(mat_idx as usize).unwrap().clone();
+        } else if mat_type < 219 {
+            let race = self.get_race(mat_idx);
+            if !race.is_none() {
+                mat = race.unwrap().creature_mats.get(mat_idx as usize).unwrap().clone();
+            }
+        } else if mat_type < 419 {
+            let histfig = self.historical_figures.get(&mat_idx);
+            if !histfig.is_none() {
+                unsafe {
+                let hist_race_bit = read_mem::<i16>(&proc.handle, histfig.unwrap() + self.memory_layout.field_offset(OffsetSection::HistFigure, "hist_race"));
+                let histfig_race: Race =  self.get_race(hist_race_bit as i32).unwrap().clone();
+                mat = histfig_race.creature_mats.get(mat_idx as usize).unwrap().clone();
+                }
+            }
         }
 
-        if mat_idx == 0 {
-            mat = self.inorganic_materials.get(mat_idx).unwrap();
-            // TODO inorganic material
-        }
-
-        if mat_idx < 19 {
-            mat = self.base_materials.get(mat_idx).unwrap();
-        }
-
-        if mat_idx < 219 {
-            // TODO: creature material
-        }
-
-        if mat_idx < 419 {
-            // TODO: historical material
-        }
-
+        // plant
         if mat_idx < 619 {
             // TODO plant
         }
-
         // NONE
+
+        return mat
 
     }
 

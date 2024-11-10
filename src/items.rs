@@ -109,11 +109,11 @@ pub mod material {
     }
 
     impl Material {
-        pub unsafe fn new(df: &DFInstance, proc: &Process, index: i32, addr: usize, organic: bool) -> Material {
+        pub unsafe fn new(df: &DFInstance, proc: &Process, index: usize, addr: usize, organic: bool) -> Material {
 
 
             let mut mat = Material {
-                index,
+                index: index as i32,
                 flags: FlagArray::default(),
                 organic,
                 prefix: String::new(),

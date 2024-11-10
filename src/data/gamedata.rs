@@ -212,23 +212,23 @@ pub struct UnitMoods {
 #[serde(default)]
 pub struct UnitThoughts {
     pub title: String,
-    pub thought: String,
+    pub description: String,
     pub subthoughts_type: i32,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct SubThoughts {
-    id: i32,
-    placeholder: String,
-    subthoughts: Vec<Subthought>,
+    pub id: i32,
+    pub placeholder: String,
+    pub subthoughts: Vec<Subthought>,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct Subthought {
-    id: i32,
-    thought: String,
+    pub id: i32,
+    pub thought: String,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]

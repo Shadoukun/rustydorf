@@ -15,10 +15,10 @@ def display_data_in_tab(tab_frame, data, parent_key=""):
     for i, (key, value) in enumerate(data.items()):
         label_key = f"{parent_key}.{key}" if parent_key else key
         label_key_widget = tk.Label(tab_frame, text=f"{label_key}:", anchor="w", width=20)
-        label_key_widget.grid(row=i, column=0, padx=5, pady=2, sticky="w")
+        label_key_widget.grid(row=i, column=0, padx=2, pady=2, sticky="w")
 
-        label_value_widget = tk.Label(tab_frame, text=str(value), anchor="w")
-        label_value_widget.grid(row=i, column=1, padx=5, pady=2, sticky="w")
+        label_value_widget = tk.Label(tab_frame, text=str(value), anchor="w", wraplength=500)
+        label_value_widget.grid(row=i, column=1, padx=5, pady=0, sticky="w")
 
 # Create a scrollable tab
 def create_tab(entry):

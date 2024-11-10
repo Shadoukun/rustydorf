@@ -2,6 +2,7 @@ pub mod race {
     use std::{fmt::Error, ops::Add};
     use serde::{Deserialize, Serialize};
 
+    use crate::items::material::Material;
     use crate::DFInstance;
     use crate::caste::caste::Caste;
     use crate::data::memorylayout::OffsetSection;
@@ -25,8 +26,10 @@ pub mod race {
         pub flags: FlagArray,
 
         pub pop_ratio_vector: usize,
-        pub materials_vector: usize,
+        pub materials_vector: Vec<usize>,
         pub tissues_vector: usize,
+
+        pub creature_mats: Vec<Material>,
     }
 
     impl Race {
@@ -45,7 +48,7 @@ pub mod race {
 
             // TODO: implement these?
             r.pop_ratio_vector = df.memory_layout.field_offset(OffsetSection::Race, "pop_ratio_vector");
-            r.materials_vector = df.memory_layout.field_offset(OffsetSection::Race, "materials_vector");
+            r.materials_vector = enum_mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "materials_vector"));
             r.tissues_vector   = df.memory_layout.field_offset(OffsetSection::Race, "tissues_vector");
 
             r.pref_strings = enum_mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "pref_string_vector"))
@@ -90,5 +93,17 @@ pub mod race {
             self.baby_name = capitalize_each(&self.baby_name);
             self.baby_name_plural = capitalize_each(&self.baby_name_plural);
         }
+
+        pub unsafe fn load_materials(&mut self, df: &DFInstance, proc: &Process) {
+            if self.materials_vector.is_empty() {
+                return;
+            }
+
+            self.creature_mats = self.materials_vector.iter()
+                .enumerate()
+                .map(|(i, &m)| Material::new(df, proc, i, m, true))
+                .collect();
+        }
+
     }
 }

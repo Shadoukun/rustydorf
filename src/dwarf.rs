@@ -6,6 +6,7 @@ pub mod dwarf {
     use serde::Deserialize;
     use serde::Serialize;
 
+    use crate::emotion::Emotion;
     use crate::histfigure::FortressPosition;
     use crate::preference::Commitment;
     use crate::preference::Orientation;
@@ -63,13 +64,14 @@ pub mod dwarf {
         pub profession: Profession,
         pub custom_profession_name: String,
 
+        pub personality_addr: usize,
         pub beliefs: Vec<(Beliefs, i16)>,
         pub traits: Vec<(Facet, i16)>,
         pub goals: Vec<(Goal, i16)>,
         pub goals_realized: i32,
-        pub personality_addr: usize,
-        pub emotions: Vec<UnitEmotion>,
-        pub thoughts: Vec<i32>,
+        pub emotions: Vec<Emotion>,
+        pub thought_ids: Vec<i32>,
+        pub thoughts: Vec<UnitThoughts>,
         pub stress_level: i32,
         pub happiness_level: HappinessLevel,
         pub mood: Mood,
@@ -394,35 +396,31 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_emotions(&mut self, df: &DFInstance, proc: &Process) {
-            let emotions_addr = self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions");
-            for e in enum_mem_vec::<usize>(&proc.handle, emotions_addr) {
-                let emotion_type = read_mem::<i32>(&proc.handle, e + df.memory_layout.field_offset(OffsetSection::Emotion, "emotion_type"));
-                let thought_id = read_mem::<i32>(&proc.handle, e + df.memory_layout.field_offset(OffsetSection::Emotion, "thought_id"));
-                // println!("Emotion Type: {}", emotion_type);
-
-                if !self.thoughts.contains(&thought_id) {
-                    self.emotions.push(df.game_data.unit_emotions[emotion_type as usize].clone());
-                }
+            let emotions = enum_mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions"));
+            for e in emotions {
+                let emote = Emotion::new(df, proc, e);
 
                 // TODO: sort in descending order
-                if thought_id >= 0 {
-                    self.thoughts.push(thought_id);
+                if emote.thought_id >= 0 {
+                    self.thought_ids.push(emote.thought_id);
                 }
 
-                for e in self.emotions.iter() {
-                    // println!("Emotion: {:?}", e.emotion);
-                }
-                // println!("\nThoughts: ");
-                for t in self.thoughts.iter() {
-                    println!("{:?}", df.game_data.unit_thoughts[*t as usize - 1]);
-                }
-
-                // TODO: stress effects
-
+                self.emotions.push(emote);
                 // TODO: dated emotions
                 self.read_happiness_level(df, proc);
-                self.check_trauma(); // lol I know that feel
+
+                //TODO: Fix trauma
+                // self.check_trauma(); // lol I know that feel
             }
+
+            self.thoughts = self.thought_ids.iter().map(|&t| df.game_data.unit_thoughts[t as usize - 1].clone()).collect();
+
+            // for t in thoughts.iter() {
+                //     println!("Thought: {:?}", df.game_data.unit_thoughts[*t as usize - 1]);
+                //     let thought = Emotion::new(df, proc, *e);
+                //     println!("Thought: {:?}", thought);
+                // }
+
         }
 
         pub unsafe fn read_happiness_level(&mut self, df: &DFInstance, proc: &Process) {
@@ -437,24 +435,23 @@ pub mod dwarf {
             self.happiness_level = happiness_level;
         }
 
-        pub unsafe fn check_trauma(&mut self) {
-            if self.mood == Mood::Trauma {
-                let stress_msg = "has been overthrown by the stresses of day-to-day living";
-                self.emotions.insert(0, UnitEmotion{
-                    emotion: stress_msg.to_string(),
-                    color: 0,
-                    divider: 0,
-                });
-            }
-        }
+        // pub unsafe fn check_trauma(&mut self) {
+        //     if self.mood == Mood::Trauma {
+        //         let stress_msg = "has been overthrown by the stresses of day-to-day living";
+        //         self.emotions.insert(0, UnitEmotion{
+        //             emotion: stress_msg.to_string(),
+        //             color: 0,
+        //             divider: 0,
+        //         });
+        //     }
+        // }
 
         pub unsafe fn read_mood(&mut self, df: &DFInstance, proc: &Process) {
             let mood_id = read_mem::<i16>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "mood"));
             let mut mood = Mood::from(mood_id);
-            let temp_mood_offset = df.memory_layout.field_offset(OffsetSection::Dwarf, "temp_mood");
 
             if mood == Mood::None {
-                let temp_mood = read_mem::<i16>(&proc.handle, self.addr + temp_mood_offset);
+                let temp_mood = read_mem::<i16>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "temp_mood"));
                 if temp_mood != -1 {
                     mood = Mood::from(10 + temp_mood);
                 }
@@ -497,7 +494,7 @@ pub mod dwarf {
         println!("----------------------------");
         println!("Emotions");
         for e in d.emotions.iter() {
-            println!("{:?}", e.emotion);
+            println!("{:?}", e);
         }
         println!("----------------------------");
 

@@ -1,6 +1,7 @@
 mod dfinstance;
 mod dwarf;
 mod caste;
+mod emotion;
 mod flagarray;
 mod language;
 mod win;
@@ -13,6 +14,7 @@ mod preference;
 mod data;
 mod race;
 mod util;
+
 use axum::{extract::State, Json};
 use dwarf::dwarf::Dwarf;
 
