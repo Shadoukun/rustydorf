@@ -6,7 +6,7 @@ pub mod dwarf {
     use serde::Deserialize;
     use serde::Serialize;
 
-    use crate::emotion::Emotion;
+    use crate::thought::Thought;
     use crate::histfigure::FortressPosition;
     use crate::preference::Commitment;
     use crate::preference::Orientation;
@@ -69,9 +69,8 @@ pub mod dwarf {
         pub traits: Vec<(Facet, i16)>,
         pub goals: Vec<(Goal, i16)>,
         pub goals_realized: i32,
-        pub emotions: Vec<Emotion>,
         pub thought_ids: Vec<i32>,
-        pub thoughts: Vec<UnitThoughts>,
+        pub thoughts: Vec<Thought>,
         pub stress_level: i32,
         pub happiness_level: HappinessLevel,
         pub mood: Mood,
@@ -396,16 +395,16 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_emotions(&mut self, df: &DFInstance, proc: &Process) {
-            let emotions = enum_mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions"));
-            for e in emotions {
-                let emote = Emotion::new(df, proc, e);
+            let thoughts = enum_mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions"));
+            for th in thoughts {
+                let thought = Thought::new(df, proc, th);
 
                 // TODO: sort in descending order
-                if emote.thought_id >= 0 {
-                    self.thought_ids.push(emote.thought_id);
+                if thought.id >= 0 {
+                    self.thought_ids.push(thought.id);
                 }
 
-                self.emotions.push(emote);
+                self.thoughts.push(thought);
                 // TODO: dated emotions
                 self.read_happiness_level(df, proc);
 
@@ -413,7 +412,6 @@ pub mod dwarf {
                 // self.check_trauma(); // lol I know that feel
             }
 
-            self.thoughts = self.thought_ids.iter().map(|&t| df.game_data.unit_thoughts[t as usize - 1].clone()).collect();
 
             // for t in thoughts.iter() {
                 //     println!("Thought: {:?}", df.game_data.unit_thoughts[*t as usize - 1]);
@@ -492,8 +490,8 @@ pub mod dwarf {
         println!("Stress Level: {}", d.stress_level);
         println!("Happiness Level: {:?}", d.happiness_level);
         println!("----------------------------");
-        println!("Emotions");
-        for e in d.emotions.iter() {
+        println!("Thoughts");
+        for e in d.thoughts.iter() {
             println!("{:?}", e);
         }
         println!("----------------------------");

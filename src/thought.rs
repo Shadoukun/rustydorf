@@ -3,15 +3,18 @@ use serde::{Deserialize, Serialize};
 use crate::{data::{gamedata::{Subthought, UnitThoughts}, memorylayout::OffsetSection}, dfinstance::DFInstance, time::DfTime, win::{memory::memory::read_mem, process::Process}};
 
 #[derive(Default, Serialize, Deserialize, Clone, Debug)]
-pub struct Emotion {
+pub struct Thought {
+    pub id: i32,
     pub emotion_type: EmotionType,
-    pub thought_id: i32,
-    pub thought: UnitThoughts,
+    pub data: UnitThoughts,
     pub subthought: Subthought,
     pub subthought_id: i32,
-    pub description: String,
+    pub placeholder: String,
+
+    pub text: String,
     pub count: i32,
     pub strength: i32,
+    // TODO: implement effects
     pub effect: i32,
     pub total_effect: i32,
     pub intensifier: i32,
@@ -20,43 +23,41 @@ pub struct Emotion {
     pub time: DfTime,
 }
 
-impl Emotion {
+impl Thought {
     pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize) -> Self {
-        let mut e = Emotion{
+        let mut t = Thought{
+            id:              read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "thought_id")),
             emotion_type:    EmotionType::from(read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "emotion_type"))),
             strength:        read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "strength")),
-            thought_id:      read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "thought_id")),
             subthought_id:   read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "sub_id")),
             optional_levels: read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "level")),
             ..Default::default()
         };
 
-        let year      = read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year"));
-        let year_tick = read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year_tick"));
-        e.time        = DfTime::from_seconds((year as u64 * 1200 * 28 * 12) + (year_tick as u64));
+        let year:      u64 = read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year")) as u64;
+        let year_tick: u64 = read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year_tick")) as u64;
+        t.time             = DfTime::from_seconds((year * 1200 * 28 * 12) + (year_tick));
 
-        e.parse_thought(df);
-        println!("{:?}", e);
-        e
+        t.parse_data(df);
+        t
     }
 
-    pub fn parse_thought(&mut self, df: &DFInstance) {
-        self.thought = df.game_data.unit_thoughts.get(self.thought_id as usize - 1).unwrap().clone();
-        self.description = self.thought.description.clone();
+    pub fn parse_data(&mut self, df: &DFInstance) {
+        self.data = df.game_data.unit_thoughts.get(self.id as usize - 1).unwrap().clone();
+        self.text = self.data.thought.clone();
 
-        println!("Thought: {:?}", self.thought);
-        if self.thought.subthoughts_type >= 0 {
-            let subthought = df.game_data.unit_subthoughts
-            .get(self.thought.subthoughts_type as usize)
-            .unwrap()
-                .subthoughts
-                .iter()
+        if self.data.subthoughts_type >= 0 {
+            let subthought_data = df.game_data.unit_subthoughts.get(self.data.subthoughts_type as usize).unwrap();
+            self.placeholder = subthought_data.placeholder.clone();
+            self.subthought = subthought_data.subthoughts.iter()
                 .find(|s| s.id == self.subthought_id)
-                .unwrap();
+                .unwrap()
+                .clone();
 
-            self.subthought = subthought.clone()
+            // replace placeholder with subthought
+            self.text = self.text.replace(self.placeholder.as_str(), self.subthought.thought.as_str());
         }
-        println!("Subthought: {:?}", self.subthought);
+
     }
 }
 

@@ -212,7 +212,7 @@ pub struct UnitMoods {
 #[serde(default)]
 pub struct UnitThoughts {
     pub title: String,
-    pub description: String,
+    pub thought: String,
     pub subthoughts_type: i32,
 }
 

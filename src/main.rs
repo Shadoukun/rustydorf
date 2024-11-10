@@ -1,7 +1,7 @@
 mod dfinstance;
 mod dwarf;
 mod caste;
-mod emotion;
+mod thought;
 mod flagarray;
 mod language;
 mod win;
