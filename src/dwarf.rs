@@ -118,10 +118,10 @@ pub mod dwarf {
             d.read_body_size(df, proc);
             d.read_syndromes(df, proc);
             d.read_soul(df, proc);
+            d.read_traits(df, proc);
             d.read_mood(df, proc);
             d.read_emotions(df, proc);
             d.read_beliefs(df, proc);
-            d.read_traits(df, proc);
             d.read_goals(df, proc);
             d.read_gender_orientation(df, proc);
             d.read_noble_position(df);
@@ -396,8 +396,11 @@ pub mod dwarf {
 
         pub unsafe fn read_emotions(&mut self, df: &DFInstance, proc: &Process) {
             let thoughts = enum_mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions"));
+            // ensure traits are loaded first
+            let stress_vuln: i16 = self.traits.get(8).unwrap().1;
+
             for th in thoughts {
-                let thought = Thought::new(df, proc, th);
+                let thought = Thought::new(df, proc, th, stress_vuln);
 
                 // TODO: sort in descending order
                 if thought.id >= 0 {
@@ -405,19 +408,17 @@ pub mod dwarf {
                 }
 
                 self.thoughts.push(thought);
+            }
+
+            println!("Stress Vuln {:?}", stress_vuln);
+
+
                 // TODO: dated emotions
-                self.read_happiness_level(df, proc);
+            self.read_happiness_level(df, proc);
 
                 //TODO: Fix trauma
                 // self.check_trauma(); // lol I know that feel
-            }
 
-
-            // for t in thoughts.iter() {
-                //     println!("Thought: {:?}", df.game_data.unit_thoughts[*t as usize - 1]);
-                //     let thought = Emotion::new(df, proc, *e);
-                //     println!("Thought: {:?}", thought);
-                // }
 
         }
 

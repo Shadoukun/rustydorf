@@ -15,16 +15,16 @@ pub struct Thought {
     pub count: i32,
     pub strength: i32,
     // TODO: implement effects
-    pub effect: i32,
-    pub total_effect: i32,
-    pub intensifier: i32,
+    pub effect: f32,
+    pub divider: i32,
+    pub multiplier: f32,
     pub optional_levels: i32,
     pub compare_id: String,
     pub time: DfTime,
 }
 
 impl Thought {
-    pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize) -> Self {
+    pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize, stress_vuln: i16) -> Self {
         let mut t = Thought{
             id:              read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "thought_id")),
             emotion_type:    EmotionType::from(read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "emotion_type"))),
@@ -38,14 +38,15 @@ impl Thought {
         let year_tick: u64 = read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year_tick")) as u64;
         t.time             = DfTime::from_seconds((year * 1200 * 28 * 12) + (year_tick));
 
-        t.parse_data(df);
+        t.parse_data(df, stress_vuln);
         t
     }
 
-    pub fn parse_data(&mut self, df: &DFInstance) {
+    pub fn parse_data(&mut self, df: &DFInstance, stress_vuln: i16) {
         self.data = df.game_data.unit_thoughts.get(self.id as usize - 1).unwrap().clone();
         self.text = self.data.thought.clone();
 
+        // if subthoughts exist, replace placeholder with subthought
         if self.data.subthoughts_type >= 0 {
             let subthought_data = df.game_data.unit_subthoughts.get(self.data.subthoughts_type as usize).unwrap();
             self.placeholder = subthought_data.placeholder.clone();
@@ -54,9 +55,32 @@ impl Thought {
                 .unwrap()
                 .clone();
 
-            // replace placeholder with subthought
             self.text = self.text.replace(self.placeholder.as_str(), self.subthought.thought.as_str());
         }
+
+        // calculate effect
+        let mut base_effect = 1.0;
+        self.divider = df.game_data.unit_emotions.get(self.emotion_type as usize).unwrap().divider;
+        self.multiplier = match stress_vuln {
+            s if s >= 91 => 5.0,
+            s if s >= 76 =>  3.0,
+            s if s >= 61 =>  2.0,
+            s if s <= 24 =>  0.25,
+            s if s <= 39 =>  0.5,
+            s if s <= 9 => {
+                self.divider = 0;
+                0.0
+            },
+            _ => {
+                self.divider = 0;
+                0.0
+            },
+        };
+
+        if self.divider != 0 {
+            base_effect = (self.strength / self.divider) as f32;
+        }
+        self.effect = base_effect * self.multiplier;
 
     }
 }
