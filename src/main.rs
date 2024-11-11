@@ -25,6 +25,11 @@ use tokio::sync::Mutex;
 use dfinstance::DFInstance;
 use win::process::Process;
 
+#[derive(Clone)]
+struct AppState {
+    df: Arc<Mutex<DFInstance>>,
+}
+
 unsafe fn get_df_instance() -> DFInstance {
     let proc = Process::new_by_name("Dwarf Fortress.exe");
     let df = DFInstance::new(&proc);
@@ -32,11 +37,11 @@ unsafe fn get_df_instance() -> DFInstance {
     df
 }
 
-#[derive(Clone)]
-struct AppState {
-    df: Arc<Mutex<DFInstance>>,
+#[axum::debug_handler]
+async fn get_dwarves_handler(State(state): State<AppState>) -> Json<Vec<Dwarf>> {
+    let df = state.df.lock().await;
+    Json(df.dwarves.clone())
 }
-
 
 #[tokio::main]
 async fn main() {
@@ -49,11 +54,4 @@ async fn main() {
         let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
         axum::serve(listener, rest).await.unwrap();
     }
-}
-
-
-#[axum::debug_handler]
-async fn get_dwarves_handler(State(state): State<AppState>) -> Json<Vec<Dwarf>> {
-    let df = state.df.lock().await;
-    Json(df.dwarves.clone())
 }

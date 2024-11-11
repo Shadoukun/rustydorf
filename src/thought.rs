@@ -1,17 +1,17 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{data::{gamedata::{Subthought, UnitThoughts}, memorylayout::OffsetSection}, dfinstance::DFInstance, time::DfTime, win::{memory::memory::read_mem, process::Process}};
+use crate::{data::{gamedata::{Subthought, UnitThoughts}, memorylayout::OffsetSection}, dfinstance::DFInstance, dwarf::dwarf::Dwarf, time::DfTime, win::{memory::memory::read_mem, process::Process}};
 
 #[derive(Default, Serialize, Deserialize, Clone, Debug)]
 pub struct Thought {
     pub id: i32,
     pub emotion_type: EmotionType,
     pub data: UnitThoughts,
+    pub thought: String,
     pub subthought: Subthought,
     pub subthought_id: i32,
     pub placeholder: String,
 
-    pub text: String,
     pub count: i32,
     pub strength: i32,
     // TODO: implement effects
@@ -24,7 +24,7 @@ pub struct Thought {
 }
 
 impl Thought {
-    pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize, stress_vuln: i16) -> Self {
+    pub unsafe fn new(df: &DFInstance, proc: &Process, dwarf: &Dwarf, addr: usize) -> Self {
         let mut t = Thought{
             id:              read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "thought_id")),
             emotion_type:    EmotionType::from(read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "emotion_type"))),
@@ -38,24 +38,30 @@ impl Thought {
         let year_tick: u64 = read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year_tick")) as u64;
         t.time             = DfTime::from_seconds((year * 1200 * 28 * 12) + (year_tick));
 
+        let stress_vuln: i16 = dwarf.traits.get(8).unwrap().1;
         t.parse_data(df, stress_vuln);
         t
     }
 
     pub fn parse_data(&mut self, df: &DFInstance, stress_vuln: i16) {
         self.data = df.game_data.unit_thoughts.get(self.id as usize - 1).unwrap().clone();
-        self.text = self.data.thought.clone();
+        self.thought = self.data.thought.clone();
 
         // if subthoughts exist, replace placeholder with subthought
         if self.data.subthoughts_type >= 0 {
             let subthought_data = df.game_data.unit_subthoughts.get(self.data.subthoughts_type as usize).unwrap();
-            self.placeholder = subthought_data.placeholder.clone();
-            self.subthought = subthought_data.subthoughts.iter()
-                .find(|s| s.id == self.subthought_id)
-                .unwrap()
-                .clone();
 
-            self.text = self.text.replace(self.placeholder.as_str(), self.subthought.thought.as_str());
+            self.placeholder = subthought_data.placeholder.clone();
+            // TODO: I might be able to simplify this after I fix the subthoughts data
+            self.subthought = match subthought_data.subthoughts.iter().find(|s| s.id == self.subthought_id) {
+                Some(subthought) => subthought.clone(),
+                None => {
+                    eprintln!("Warning: Subthought with id {} not found", self.subthought_id);
+                    Subthought::default()
+                }
+            };
+
+            self.thought = self.thought.replace(self.placeholder.as_str(), self.subthought.thought.as_str());
         }
 
         // calculate effect

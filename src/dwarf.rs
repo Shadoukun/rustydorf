@@ -44,7 +44,8 @@ pub mod dwarf {
         pub _birth_date: (u64, u64),
         pub birth_date: DfTime,
         pub real_birth_date: DfTime,
-        pub age: DfTime,
+        pub _age: DfTime,
+        pub age: u64,
         pub arrival_time: DfTime,
         pub body_size: i32,
         pub body_size_base: i32,
@@ -203,7 +204,9 @@ pub mod dwarf {
             self._birth_date.0 = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_year")) as u64;
             self._birth_date.1 = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_time")) as u64;
             self.birth_date    = DfTime::from_years(self._birth_date.0).add(self._birth_date.1);
-            self.age           = df.current_time(proc).sub(self.birth_date.to_seconds());
+
+            // ISSUE: age is off by 1. The game might ceil the age to the next year?
+            self.age           = df.current_time(proc).sub(self.birth_date.to_seconds()).to_years() + 1;
             self.arrival_time  = df.current_time(proc).sub(self.turn_count as u64);
         }
 
@@ -397,10 +400,9 @@ pub mod dwarf {
         pub unsafe fn read_emotions(&mut self, df: &DFInstance, proc: &Process) {
             let thoughts = enum_mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions"));
             // ensure traits are loaded first
-            let stress_vuln: i16 = self.traits.get(8).unwrap().1;
 
             for th in thoughts {
-                let thought = Thought::new(df, proc, th, stress_vuln);
+                let thought = Thought::new(df, proc, self, th);
 
                 // TODO: sort in descending order
                 if thought.id >= 0 {
@@ -410,10 +412,7 @@ pub mod dwarf {
                 self.thoughts.push(thought);
             }
 
-            println!("Stress Vuln {:?}", stress_vuln);
-
-
-                // TODO: dated emotions
+            // TODO: dated emotions
             self.read_happiness_level(df, proc);
 
                 //TODO: Fix trauma
@@ -481,42 +480,50 @@ pub mod dwarf {
     }
 
     pub fn print_dwarf(d: &Dwarf) {
-        println!("Name: {}", d.first_name);
-        println!("Profession: {}", d.profession.name);
-        println!("Noble Position: {:?}", d.noble_position);
-        println!("Birth Year: {}, Birth Time: {}", d._birth_date.0, d._birth_date.1);
-        println!("Sex: {:?}, ", d.sex);
-        println!("Sexual Orientation: {:?}, [Male Interest: {:?} | Female Interest: {:?}]", d.orientation, d.orient_vec[0], d.orient_vec[1]);
-        println!("Mood: {:?}", d.mood);
-        println!("Stress Level: {}", d.stress_level);
-        println!("Happiness Level: {:?}", d.happiness_level);
+        println!("----------------------------");
+        println!(
+            "{}", format!(
+            "Name: {}, Profession: {}\n\
+            Position: {}\n\
+            Age: {} | Birth Year: {} Birth time: {}\n\
+            Sex: {:?}\n\
+            Orientation: {:?}\n\
+            Mood: {:?}\n\
+            Stress Level: {}\n\
+            Happiness Level: {:?}\n",
+            d.first_name, d.profession.name, d.noble_position.name,
+            d.age, d._birth_date.0, d._birth_date.1,
+            d.sex, d.orientation, d.mood,
+            d.stress_level, d.happiness_level
+        ));
+
         println!("----------------------------");
         println!("Thoughts");
+        println!("----------------------------");
         for e in d.thoughts.iter() {
             println!("{:?}", e);
         }
-        println!("----------------------------");
 
+        println!("----------------------------");
         println!("Traits");
         println!("----------------------------");
         for t in d.traits.iter() {
             println!("{} | Value: {}", t.0.name, t.1);
         }
-        println!("\n----------------------------");
 
+        println!("\n----------------------------");
         println!("Beliefs");
         println!("----------------------------");
         for b in d.beliefs.iter() {
             println!("{:?} | Value: {}", b.0.name, b.1);
         }
-        println!("\n----------------------------");
 
+        println!("\n----------------------------");
         println!("Goals");
         println!("----------------------------");
         for g in d.goals.iter() {
             println!("{:?} | Value: {}", g.0.name, g.1);
         }
-
         println!("----------------------------");
         println!("\n");
 
