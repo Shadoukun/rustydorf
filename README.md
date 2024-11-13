@@ -5,7 +5,8 @@ This application is designed for displaying and manipulating dwarfs in Dwarf For
 ## Features
 
 - Rust backend to interact with the Dwarf Fortress process.
-- Basic Python GUI using a REST API for displaying data.
+- Basic Python GUI using a REST API for displaying data. My rational for using the Qt binding for python is that it makes it easier to customize and update without having to do anything to the backend.
+
 
 ###
 

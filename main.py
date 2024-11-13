@@ -1,118 +1,137 @@
-import json
+from PyQt5 import uic
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableWidget, QWidget, QVBoxLayout, QLabel, QSpacerItem, QSizePolicy, QGridLayout
+
+from PyQt5.QtCore import Qt
+from math import ceil
+import sys
 import requests
-import tkinter as tk
-from tkinter import ttk
+
+class DwarfAssistant(QMainWindow):
+    def __init__(self, data: list[dict]):
+        super(DwarfAssistant, self).__init__()
+        uic.loadUi("main.ui", self)
+        self.setGeometry(100, 100, 2000, 1000)
+        self.setWindowTitle("Dwarf Assistant")
+        self.nameList.setRowCount(len(data))
+        self.nameList.setColumnCount(1)
+
+        for i, entry in enumerate(data):
+            item = QTableWidgetItem(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
+            self.nameList.setItem(i, 0, item)
+            self.nameList.itemSelectionChanged.connect(self.change_tab)
+
+        self.create_tabs(data)
+
+    def create_tabs(self, data: list[dict]):
+
+        self.tabWidget.tabBar().hide()
+        # Create tabs for each dwarf
+        for row in range(self.nameList.rowCount()):
+            tab = DwarfInfoWidget(data, row)
+            # the tab widget doesn't need to have tab titles,
+            # so pass an empty string
+            self.tabWidget.addTab(tab, "")
 
 
-def display_data_in_tab(tab_frame, data, parent_key=""):
-    name_label = data.get("first_name", "Unknown")
-    name_widget = tk.Label(tab_frame, text=f"Name: {name_label}", anchor="nw", width=20)
-    name_widget.grid(row=0, column=0, padx=5, pady=2, sticky="nw")
+    def change_tab(self):
+        """Change the tab based on the selected item in the table."""
 
-    profession_label = data.get("profession", "Unknown")['name']
-    profession_widget = tk.Label(tab_frame, text=f"Profession: {profession_label}", anchor="nw", width=20)
-    profession_widget.grid(row=0, column=1, padx=5, pady=2, sticky="nw")
+        selected_items = self.nameList.selectedItems()
+        if selected_items:
+            selected_item = selected_items[0]
+            row = selected_item.row()
+            self.tabWidget.setCurrentIndex(row)
 
-    sex_label = data.get("sex", "Unknown")
-    sex_widget = tk.Label(tab_frame, text=f"Sex: {sex_label}")
-    sex_widget.grid(row=1, column=0, padx=5, pady=2, sticky="nw")
+class DwarfInfoWidget(QWidget):
+    def __init__(self, data: dict[list], row: int):
+        super(DwarfInfoWidget, self).__init__()
+        self.ui = DwarfForm()
+        self.ui.setupUi(self)
+        self.populate_info_section(data, row)
+        self.populate_trait_table(data, row)
 
-    age_label = data.get("age", "Unknown")
-    age_widget = tk.Label(tab_frame, text=f"Age: {age_label}", anchor="nw", width=20)
-    age_widget.grid(row=1, column=1, padx=5, pady=2, sticky="nw")
+    def populate_info_section(self, data: list[dict], row: int):
+        self.ui.infoSection.setLayout(QGridLayout())
+        self.ui.infoSection.layout().addWidget(QLabel(f"Name: {data[row].get('first_name', 'Unknown')} {data[row].get('last_name', '')}\n" +
+                                                      f"Profession: {data[row].get('profession', 'Unknown')['name']}\n" +
+                                                      f"Age: {data[row].get('age', 'Unknown')}\n" +
+                                                      f"Sex: {data[row].get('sex', 'Unknown')}"))
 
-    orientation_label = data.get("orientation", "Unknown")
-    orientation_widget = tk.Label(tab_frame, text=f"Orientation: {orientation_label}", anchor="nw", width=20)
-    orientation_widget.grid(row=2, column=0, padx=5, pady=2, sticky="nw")
+        self.ui.infoSection.layout().addItem(QSpacerItem(20, 40, 0, QSizePolicy.Expanding))
 
+        beliefs = data[row].get('beliefs', [])
+        self.ui.infoSection.layout().addWidget(QLabel("Beliefs:"))
+        for belief in beliefs:
+            label = QLabel(belief[0]['name'])
+            self.ui.infoSection.layout().addWidget(label)
 
-    # Traits
-    row = 0
-    traits_widget = tk.Label(tab_frame, text="Traits:", anchor="nw", width=20)
-    traits_widget.grid(row=row, column=2, padx=5, pady=0, sticky="nw")
-    traits = data.get("traits", [])
-    row += 1
-    for idx, t in enumerate(traits):
-        name = t[0]['name']
-        value = t[1]
-        trait_label = tk.Label(tab_frame, text=f"{name}: {value}", anchor="w", width=20)
-        column = idx % 2
-        trait_label.grid(row=row, column=column + 2, padx=5, pady=2, sticky="w")
-        if column == 1:
-            row += 1
+        goals = data[row].get('goals', [])
+        self.ui.infoSection.layout().addWidget(QLabel("Goals:"))
+        for goal in goals:
+            label = QLabel(goal[0]['name'])
+            self.ui.infoSection.layout().addWidget(label)
 
-    # Beliefs
-    row = 3
-    beliefs_widget = tk.Label(tab_frame, text="Beliefs:", anchor="nw", width=20)
-    beliefs_widget.grid(row=row, column=0, padx=5, pady=2, sticky="nw")
-    beliefs = data.get("beliefs", [])
-    row += 1
-    for idx, b in enumerate(beliefs):
-        name = b[0]['name']
-        value = b[1]
-        belief_label = tk.Label(tab_frame, text=f"{name}: {value}", anchor="w", width=20)
-        column = idx % 2
-        belief_label.grid(row=row, column=column, padx=5, pady=2, sticky="w")
-        if column == 1:
-            row += 1
+        self.ui.infoSection.layout().addItem(QSpacerItem(20, 40, 0, QSizePolicy.Expanding))
 
-    # Goals
-    goals_widget = tk.Label(tab_frame, text="Goals:", anchor="nw", width=20)
-    goals_widget.grid(row=row, column=0, padx=5, pady=2, sticky="nw")
-    goals = data.get("goals", [])
-    row += 1
-    for idx, g in enumerate(goals):
-        name = g[0]['name']
-        value = g[1]
-        goal_label = tk.Label(tab_frame, text=f"{name}: {value}", anchor="w", width=20)
-        column = idx % 2
-        goal_label.grid(row=row, column=column, padx=5, pady=2, sticky="w")
-        if column == 1:
-            row += 1
+    def populate_trait_table(self, data: list[dict], row: int):
+            traits = data[row].get('traits', [])
 
-    # for i, (key, value) in enumerate(data.items()):
-    #     label_key = f"{parent_key}.{key}" if parent_key else key
-    #     label_key_widget = tk.Label(tab_frame, text=f"{label_key}:", anchor="w", width=20)
-    #     label_key_widget.grid(row=i, column=0, padx=2, pady=2, sticky="w")
+            self.ui.traitTable.verticalHeader().hide()
+            self.ui.traitTable.horizontalHeader().hide()
+            self.ui.traitTable.setColumnCount(8)
+            self.ui.traitTable.setRowCount(15)
 
-    #     label_value_widget = tk.Label(tab_frame, text=str(value), anchor="w", wraplength=500)
-    #     label_value_widget.grid(row=i, column=1, padx=5, pady=0, sticky="w")
+            row = 0
+            col = 0
+            for trait in traits:
+                name, value = trait[0]['name'], trait[1]
+                self.ui.traitTable.setItem(row, col, QTableWidgetItem(name))
+                self.ui.traitTable.setItem(row, col + 1, QTableWidgetItem(str(value)))
+                row += 1
+                # wrap
+                if row >= 15:
+                    row = 0
+                    col += 2
 
-# Create a scrollable tab
-def create_tab(entry):
-    # Create the main frame for the tab
-    tab = ttk.Frame(notebook)
-    notebook.add(tab, text=entry.get("first_name", "Unknown"))
+            self.ui.traitTable.resizeColumnsToContents()
+            self.ui.traitTable.resizeRowsToContents()
 
-    canvas = tk.Canvas(tab)
+class DwarfForm(object):
+    def setupUi(self, Form):
+        Form.setObjectName("DwarfForm")
+        Form.resize(400, 300)
+        self.gridLayout = QtWidgets.QGridLayout(Form)
+        self.gridLayout.setObjectName("gridLayout")
+        self.traitTable = QtWidgets.QTableWidget(Form)
 
-    scrollbar = ttk.Scrollbar(tab, orient="vertical", command=canvas.yview)
-    scrollable_frame = ttk.Frame(canvas)
-    scrollable_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        self.infoSection = QtWidgets.QWidget(Form)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.infoSection.setSizePolicy(sizePolicy)
+        self.infoSection.setObjectName("infoSection")
+        self.gridLayout.addWidget(self.infoSection, 0, 0, 2, 2)
 
-    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-    canvas.configure(yscrollcommand=scrollbar.set)
-    # Pack the canvas and scrollbar into the tab frame
-    canvas.pack(side="left", fill="both", expand=True)
-    scrollbar.pack(side="right", fill="y")
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHeightForWidth(self.traitTable.sizePolicy().hasHeightForWidth())
+        self.traitTable.setSizePolicy(sizePolicy)
+        self.traitTable.setObjectName("traitTable")
+        self.traitTable.setColumnCount(0)
+        self.traitTable.setRowCount(0)
+        self.gridLayout.addWidget(self.traitTable, 0, 1, 2, 3)
 
-    # Display each field in rows within the scrollable frame
-    display_data_in_tab(scrollable_frame, entry)
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     response = requests.get('http://127.0.0.1:3000/dwarves')
     data = response.json()
+    app = QApplication(sys.argv)
 
-    root = tk.Tk()
-    root.title("2Dorf 2Therapist")
-    notebook = ttk.Notebook(root)
-
-    # Create a tab for each entry in the JSON data
-    for entry in data:
-        create_tab(entry)
-
-    notebook.pack(expand=True, fill="both")
-    # Configure columns to expand proportionally
-    root.geometry("1000x500")
-    root.mainloop()
+    window = DwarfAssistant(data)
+    window.show()
+    sys.exit(app.exec_())
