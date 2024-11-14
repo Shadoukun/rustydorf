@@ -1,6 +1,10 @@
 # rustydorf
 
-This application is designed for displaying and manipulating dwarfs in Dwarf Fortress. It aims to be a complete port and rewrite of Dwarf Therapist, providing enhanced functionality and a modern interface.
+This application is designed for displaying and manipulating dwarfs in Dwarf Fortress. It hopes to be a complete port and rewrite of Dwarf Therapist, providing enhanced functionality and a modern interface.
+
+At this stage, it can only display serialized data from the game.
+
+![screenshot](https://raw.githubusercontent.com/shadoukun/rustydorf/main/screenshot.png)
 
 ## Features
 
@@ -10,4 +14,4 @@ This application is designed for displaying and manipulating dwarfs in Dwarf For
 
 ###
 
-This project is currently a work in progress. At this stage, it can only display serialized data from the game.
+This project is currently a work in progress.
