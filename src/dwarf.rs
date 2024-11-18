@@ -41,7 +41,6 @@ pub mod dwarf {
         pub race: Race,
         pub caste: Caste,
         pub souls: Vec<usize>,
-        pub _birth_date: (u64, u64),
         pub birth_date: DfTime,
         pub real_birth_date: DfTime,
         pub _age: DfTime,
@@ -187,7 +186,7 @@ pub mod dwarf {
         }
 
         unsafe fn read_squad(&mut self, df: &DFInstance, proc: &Process) {
-            let squad_id = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "squad_id"));
+            let squad_id: i32   = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "squad_id"));
             self.squad_position = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "squad_position"));
             self.pending_squad_position = self.squad_position;
 
@@ -200,14 +199,19 @@ pub mod dwarf {
         }
 
         unsafe fn read_age(&mut self, df: &DFInstance, proc: &Process) {
-            self.turn_count    = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "turn_count"));
-            self._birth_date.0 = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_year")) as u64;
-            self._birth_date.1 = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_time")) as u64;
-            self.birth_date    = DfTime::from_years(self._birth_date.0).add(self._birth_date.1);
+            let mut birth_year = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_year"));
+            let mut birth_time = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "birth_time"));
+            self.age = (df.current_time(proc).to_years() as i32).abs_diff(birth_year) as u64;
 
-            // ISSUE: age is off by 1. The game might ceil the age to the next year?
-            self.age           = df.current_time(proc).sub(self.birth_date.to_seconds()).to_years() + 1;
+            // dwarfs can be older than time itself, but unsigned integers cannot
+            if birth_year < 0 || birth_time < 0 {
+                birth_year = 0;
+                birth_time = 0;
+            }
+            self.birth_date    = DfTime::from_years(birth_year as u64) + DfTime::from_seconds(birth_time as u64);
+            self.turn_count    = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "turn_count"));
             self.arrival_time  = df.current_time(proc).sub(self.turn_count as u64);
+
         }
 
         unsafe fn read_historical_figure(&mut self, df: &DFInstance, proc: &Process) {
@@ -225,7 +229,8 @@ pub mod dwarf {
                 self.first_name = self.histfig.fake_identity.fake_name.clone();
                 self.nickname = self.histfig.fake_identity.fake_nickname.clone();
                 let fake_birth_year = DfTime::from_years(self.histfig.fake_identity.fake_birth_year as u64);
-                self.birth_date = fake_birth_year.add(self.histfig.fake_identity.fake_birth_time as u64);
+                let fake_birth_time = DfTime::from_seconds(self.histfig.fake_identity.fake_birth_time as u64);
+                self.birth_date = fake_birth_year + fake_birth_time;
                 // TODO: last name
             }
         }
@@ -485,14 +490,14 @@ pub mod dwarf {
             "{}", format!(
             "Name: {}, Profession: {}\n\
             Position: {}\n\
-            Age: {} | Birth Year: {} Birth time: {}\n\
+            Age: {} | {:?}\n\
             Sex: {:?}\n\
             Orientation: {:?}\n\
             Mood: {:?}\n\
             Stress Level: {}\n\
             Happiness Level: {:?}\n",
             d.first_name, d.profession.name, d.noble_position.name,
-            d.age, d._birth_date.0, d._birth_date.1,
+            d.age, d.birth_date,
             d.sex, d.orientation, d.mood,
             d.stress_level, d.happiness_level
         ));

@@ -71,7 +71,9 @@ impl DFInstance {
         df.creature_vector    = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
         df.syndromes_vector   = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
 
-        df.load_materials(&proc);
+        // TODO: fix materials
+        // df.load_materials(&proc);
+
         df.load_item_definitions(&proc);
         df.load_arts(&proc);
         df.load_languages(&proc);

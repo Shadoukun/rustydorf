@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{ops::Add, time::Duration};
 
 use serde::{Deserialize, Serialize};
 
@@ -23,7 +23,8 @@ impl DfTime {
     }
 
     pub fn from_years(years: u64) -> Self {
-        DfTime(Duration::from_secs(years * 1200 * 28 * 12))
+        let year: u64 = years.checked_mul(1200 * 28 * 12).unwrap_or_default();
+        DfTime(Duration::from_secs(year))
     }
 
     pub fn from_months(months: u64) -> Self {
@@ -86,7 +87,12 @@ impl DfTime {
         DfTime(self.0 - Duration::from_secs(other))
     }
 
-    pub fn add(&self, other: u64) -> Self {
-        DfTime(self.0 + Duration::from_secs(other))
+}
+
+impl Add for DfTime {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        DfTime(self.0 + other.0)
     }
 }

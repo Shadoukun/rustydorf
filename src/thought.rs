@@ -34,45 +34,62 @@ impl Thought {
             ..Default::default()
         };
 
-        let year:      u64 = read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year")) as u64;
-        let year_tick: u64 = read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year_tick")) as u64;
-        t.time             = DfTime::from_seconds((year * 1200 * 28 * 12) + (year_tick));
+        let year      = DfTime::from_years(read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year")) as u64);
+        let year_tick = DfTime::from_seconds(read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year_tick")) as u64);
+        t.time        = year + year_tick;
 
-        let stress_vuln: i16 = dwarf.traits.get(8).unwrap().1;
-        t.parse_data(df, stress_vuln);
+        match df.game_data.unit_thoughts.get(t.id as usize - 1) {
+            Some(data) => {
+                t.data = data.clone();
+                t.thought = t.data.thought.clone();
+                t.check_subthought(df);
+                t.calculate_effect(df, dwarf);
+            },
+            None => {
+                eprintln!("Warning: Thought with id {} not found", t.id);
+                t.data = UnitThoughts::default();
+            }
+        }
+
         t
     }
 
-    pub fn parse_data(&mut self, df: &DFInstance, stress_vuln: i16) {
-        self.data = df.game_data.unit_thoughts.get(self.id as usize - 1).unwrap().clone();
-        self.thought = self.data.thought.clone();
+    fn check_subthought(&mut self, df: &DFInstance) {
+        if self.data.subthoughts_type.is_positive() {
+            match df.game_data.unit_subthoughts.get(self.data.subthoughts_type as usize) {
+                Some(data) => {
+                    // if subthoughts exist, replace placeholder with subthought
+                    self.placeholder = data.placeholder.clone();
+                    // TODO: I might be able to simplify this after I fix the subthoughts data
+                    self.subthought = match data.subthoughts.iter().find(|s| s.id == self.subthought_id) {
+                        Some(subthought) => subthought.clone(),
+                        None => {
+                            eprintln!("Warning: Subthought with id {} not found", self.subthought_id);
+                            Subthought::default()
+                        }
+                    };
+                    self.thought = self.thought.replace(self.placeholder.as_str(), self.subthought.thought.as_str());
 
-        // if subthoughts exist, replace placeholder with subthought
-        if self.data.subthoughts_type >= 0 {
-            let subthought_data = df.game_data.unit_subthoughts.get(self.data.subthoughts_type as usize).unwrap();
-
-            self.placeholder = subthought_data.placeholder.clone();
-            // TODO: I might be able to simplify this after I fix the subthoughts data
-            self.subthought = match subthought_data.subthoughts.iter().find(|s| s.id == self.subthought_id) {
-                Some(subthought) => subthought.clone(),
+                },
                 None => {
-                    eprintln!("Warning: Subthought with id {} not found", self.subthought_id);
-                    Subthought::default()
+                    eprintln!("Warning: Subthoughts with id {} not found", self.data.subthoughts_type);
+                    return;
                 }
             };
-
-            self.thought = self.thought.replace(self.placeholder.as_str(), self.subthought.thought.as_str());
         }
+    }
 
-        // calculate effect
+    fn calculate_effect(&mut self, df: &DFInstance, dwarf: &Dwarf) {
         let mut base_effect = 1.0;
+        let stress_vuln: i16 = dwarf.traits.get(8).unwrap().1;
+
         self.divider = df.game_data.unit_emotions.get(self.emotion_type as usize).unwrap().divider;
         self.multiplier = match stress_vuln {
             s if s >= 91 => 5.0,
-            s if s >= 76 =>  3.0,
-            s if s >= 61 =>  2.0,
-            s if s <= 24 =>  0.25,
-            s if s <= 39 =>  0.5,
+            s if s >= 76 => 3.0,
+            s if s >= 61 => 2.0,
+            s if s <= 24 => 0.25,
+            s if s <= 39 => 0.5,
             s if s <= 9 => {
                 self.divider = 0;
                 0.0
@@ -86,8 +103,8 @@ impl Thought {
         if self.divider != 0 {
             base_effect = (self.strength / self.divider) as f32;
         }
-        self.effect = base_effect * self.multiplier;
 
+        self.effect = base_effect * self.multiplier;
     }
 }
 
