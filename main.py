@@ -1,49 +1,49 @@
 from PyQt5 import uic
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableWidget, QWidget, QVBoxLayout, QLabel, QSpacerItem, QSizePolicy, QGridLayout, QAbstractItemView
-
-from PyQt5.QtCore import Qt
-from math import ceil
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableWidget, QWidget, QLabel, QGridLayout, QAbstractItemView
+from PyQt5.QtGui import QFont
 import sys
 import requests
 
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
-
 class DwarfAssistant(QMainWindow):
+
     def __init__(self, data: list[dict]):
         super(DwarfAssistant, self).__init__()
-        uic.loadUi("main.ui", self)
         self.setGeometry(100, 100, 600, 300)
         self.setWindowTitle("Dwarf Assistant")
 
         self.centralwidget = QtWidgets.QWidget(self)
-        self.centralwidget.setObjectName("centralwidget")
         self.setCentralWidget(self.centralwidget)
-
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName("gridLayout")
 
-        # self.menubar = QtWidgets.QMenuBar(self)
-        # self.menubar.setGeometry(QtCore.QRect(0, 0, 750, 20))
-        # self.menubar.setObjectName("menubar")
-        # self.menuFile = QtWidgets.QMenu(self.menubar)
-        # self.menuFile.setObjectName("menuFile")
-        # self.setMenuBar(self.menubar)
-        # self.menubar.addAction(self.menuFile.menuAction())
+        # Set font on central widget
+        font = QFont()
+        font.setPointSize(6)
+        self.setFont(font)
+        self._menu_bar()
+        self._name_list(data)
+        self._main_panel(data)
 
+        # this errors if infoTabWidget is empty so do this after creating the tabs
+        self.nameList.setCurrentCell(0, 0)
+
+    def _menu_bar(self):
+        # Create empty menu bar and status bar
+        self.menubar = QtWidgets.QMenuBar(self)
+        self.menubar.setObjectName("menubar")
+        self.menuFile = QtWidgets.QMenu(self.menubar)
+        self.menuFile.setObjectName("menuFile")
+        self.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
         self.setStatusBar(self.statusbar)
-        self.create_name_list(data)
-        self.create_info_tabs(data)
 
-        # errors if infoTabWidget is empty so do this after creating the tabs
-        self.nameList.setCurrentCell(0, 0)
+    def _name_list(self, data: list[dict]):
+        '''Create the table of names on the left side of the window.'''
 
-
-    def create_name_list(self, data: list[dict]):
         self.nameList = QtWidgets.QTableWidget(self.centralwidget)
         self.nameList.setObjectName("nameList")
 
@@ -53,160 +53,205 @@ class DwarfAssistant(QMainWindow):
         self.nameList.setSizePolicy(sizePolicy)
         self.nameList.setShowGrid(False)
 
+        # for some reason the nameList font size is not
+        # being set by by the central widget font
         font = self.nameList.font()
-        font.setPointSize(6)  # Set the desired font size
+        font.setPointSize(6)
         self.nameList.setFont(font)
+
+        self.nameList.setMaximumWidth(100)
         self.nameList.setColumnCount(1)
-        self.nameList.setRowCount(0)
-        self.nameList.setMaximumSize(100, 16777215)
+        self.nameList.setRowCount(len(data))
+        self.nameList.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.nameList.setSelectionMode(QAbstractItemView.SingleSelection)
+
         self.nameList.horizontalHeader().setVisible(False)
         self.nameList.horizontalHeader().setHighlightSections(False)
         self.nameList.verticalHeader().setVisible(False)
         self.nameList.verticalHeader().setHighlightSections(False)
-
-        self.gridLayout.addWidget(self.nameList, 0, 0, 1, 1)
-
-        self.nameList.setRowCount(len(data))
-        self.nameList.setColumnCount(1)
 
         for i, entry in enumerate(data):
             item = QTableWidgetItem(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
             self.nameList.setItem(i, 0, item)
             self.nameList.itemSelectionChanged.connect(self.change_tab)
 
-        self.nameList.setStyleSheet("QTableView::item:selected { border: 3px solid gold; margin-right: 2px; background-color: transparent; color: black; }")
-        self.nameList.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.nameList.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.nameList.setStyleSheet(
+            """QTableView::item:selected { \
+                border: 3px solid gold; \
+                margin-right: 2px; \
+                background-color: transparent; \
+                color: black; \
+            }""")
 
+        self.gridLayout.addWidget(self.nameList, 0, 0, 1, 1)
 
+    def _main_panel(self, data: list[dict]):
+        '''Create the main panel on the right side of the window.'''
 
-    def create_info_tabs(self, data: list[dict]):
-        self.infoTabWidget = QtWidgets.QTabWidget(self.centralwidget)
-        self.gridLayout.addWidget(self.infoTabWidget, 0, 1, 1, 1)
+        self.mainPanel = QtWidgets.QTabWidget(self.centralwidget)
 
-        self.infoTabWidget.tabBar().hide()
         # Create tabs for each dwarf
         for row in range(self.nameList.rowCount()):
             # the tab widget doesn't need to have tab titles,
             # so pass an empty string
-            self.infoTabWidget.addTab(DwarfInfoWidget(data, row), "")
+            self.mainPanel.addTab(DwarfInfoWidget(data, row), "")
+
+        self.mainPanel.tabBar().hide()
+        self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
 
 
     def change_tab(self):
-        """Change the tab based on the selected item in the table."""
+        '''Change the tab when a new name is selected in the name list.'''
 
         selected_items = self.nameList.selectedItems()
         if selected_items:
             selected_item = selected_items[0]
             row = selected_item.row()
-            self.infoTabWidget.setCurrentIndex(row)
+            self.mainPanel.setCurrentIndex(row)
+
 
 class DwarfInfoWidget(QWidget):
 
     def __init__(self, data: dict[list], row: int):
         super(DwarfInfoWidget, self).__init__()
-        self.ui = DwarfForm()
-        self.ui.setupUi(self)
-        self.create_info_section(data, row)
-        self.create_trait_table(data, row)
-        self.create_thoughts_table(data, row)
+        self.gridLayout = QtWidgets.QGridLayout(self)
+        self.gridLayout.setObjectName("gridLayout")
 
-    def create_info_section(self, data: list[dict], row: int):
-        self.ui.infoSection.setLayout(QGridLayout())
-        self.ui.infoSection.layout().addWidget(QLabel(f"Name: {data[row].get('first_name', 'Unknown')} {data[row].get('last_name', '')}\n" +
-                                                      f"Profession: {data[row].get('profession', 'Unknown')['name']}\n" +
-                                                      f"Age: {data[row].get('age', 'Unknown')}\n" +
-                                                      f"Sex: {data[row].get('sex', 'Unknown')}"))
+        self.infoSection = QtWidgets.QWidget(self)
+        self.infoSection.setLayout(QGridLayout())
+        self.infoSection.setObjectName("infoSection")
 
-        font = self.ui.infoSection.font()
-        font.setPointSize(6)  # Set the desired font size
-        self.ui.infoSection.setFont(font)
+        self.goalsBeliefs = QtWidgets.QWidget(self)
+        self.goalsBeliefs.setLayout(QGridLayout())
+        self.goalsBeliefs.setObjectName("goalsBeliefs")
 
-        belief_string = "Beliefs: \n"
-        beliefs = data[row].get('beliefs', [])
-        # create rows
-        belief_list = [beliefs[i:i+4] for i in range(0, len(beliefs), 4)]
-        belief_list = [[belief[0]['name'] for belief in belief_group] for belief_group in belief_list]
-        for b in belief_list:
-            belief_string += f" {', '.join(b)}\n"
-        self.ui.infoSection.layout().addWidget(QLabel(belief_string))
+        self.thoughtsTable = QtWidgets.QTableWidget(self)
+        self.thoughtsTable.setObjectName("thoughtsTable")
 
-        goal_string = "Goals: \n"
-        for goal in data[row].get('goals', []):
-            goal_string += f" {goal[0]['name']}\n"
-        self.ui.infoSection.layout().addWidget(QLabel(goal_string))
-        self.ui.infoSection.layout().addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        self.traitTable = QtWidgets.QTableWidget(self)
+        self.traitTable.setObjectName("traitTable")
 
-    def create_trait_table(self, data: list[dict], row: int):
+        self._info_section(data, row)
+        self._trait_table(data, row)
+        self._thoughts_table(data, row)
+        self._beliefs_table(data, row)
+        self._goals_table(data, row)
+
+        self.gridLayout.addWidget(self.infoSection, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.goalsBeliefs, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.thoughtsTable, 2, 0, 1, 2)
+        self.gridLayout.addWidget(self.traitTable, 0, 2, 3, 1)
+
+    def _info_section(self, data: list[dict], row: int):
+        info = QLabel(f"Name: {data[row].get('first_name', 'Unknown')} {data[row].get('last_name', '')}\n" +
+                      f"Profession: {data[row].get('profession', 'Unknown')['name']}\n" +
+                      f"Age: {data[row].get('age', 'Unknown')}\n" +
+                      f"Sex: {data[row].get('sex', 'Unknown')}")
+        self.infoSection.layout().addWidget(info)
+
+    def _trait_table(self, data: list[dict], row: int):
         traits = data[row].get('traits', [])
 
-        self.ui.traitTable.verticalHeader().hide()
-        self.ui.traitTable.horizontalHeader().hide()
-        self.ui.traitTable.setColumnCount(2)
-        self.ui.traitTable.setRowCount(len(traits))
+        self.traitTable.verticalHeader().hide()
+        self.traitTable.horizontalHeader().hide()
+        self.traitTable.setColumnCount(2)
+        self.traitTable.setRowCount(len(traits))
 
         row = 0
         for trait in traits:
             name, value = trait[0]['name'], trait[1]
-            self.ui.traitTable.setItem(row, 0, QTableWidgetItem(name))
-            self.ui.traitTable.setItem(row, 1, QTableWidgetItem(str(value)))
+            self.traitTable.setItem(row, 0, QTableWidgetItem(name))
+            self.traitTable.setItem(row, 1, QTableWidgetItem(str(value)))
             row += 1
 
-        # shrink the table to fit the contents
-        self.ui.traitTable.resizeColumnsToContents()
-        self.ui.traitTable.resizeRowsToContents()
-        self.ui.traitTable.setFixedWidth(self.ui.traitTable.columnWidth(0))
+        # set the vertical header to resize to the contents
+        # This feels janky but it works
+        self.traitTable.resizeColumnsToContents()
+        self.traitTable.resizeRowsToContents()
+        self.traitTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.traitTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.traitTable.setFixedWidth(self.traitTable.columnWidth(0))
 
-        font = self.ui.traitTable.font()
-        font.setPointSize(6)  # Set the desired font size
-        self.ui.traitTable.setFont(font)
-        self.ui.traitTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
-        self.ui.traitTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.traitTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.traitTable.setSelectionMode(QAbstractItemView.NoSelection)
 
-    def create_thoughts_table(self, data: list[dict], row: int):
+    def _thoughts_table(self, data: list[dict], row: int):
         thoughts = data[row].get('thoughts', [])
 
-        thoughtsTable = QTableWidget()
-        thoughtsTable.verticalHeader().hide()
-        thoughtsTable.horizontalHeader().hide()
-        thoughtsTable.setColumnCount(1)
-        thoughtsTable.setRowCount(len(thoughts))
+        self.thoughtsTable.verticalHeader().hide()
+        self.thoughtsTable.horizontalHeader().hide()
+        self.thoughtsTable.setColumnCount(1)
+        self.thoughtsTable.setRowCount(len(thoughts))
 
         row = 0
         for thought in thoughts:
             text = f"felt {thought['emotion_type'].lower()} {thought['thought']}"
-            thoughtsTable.setItem(row, 0, QTableWidgetItem(text))
+            self.thoughtsTable.setItem(row, 0, QTableWidgetItem(text))
             row += 1
 
-        thoughtsTable.resizeColumnsToContents()
-        thoughtsTable.resizeRowsToContents()
-        self.ui.infoSection.layout().addWidget(thoughtsTable)
+        self.thoughtsTable.resizeColumnsToContents()
+        self.thoughtsTable.resizeRowsToContents()
 
+        self.thoughtsTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.thoughtsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.thoughtsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.thoughtsTable.setSelectionMode(QAbstractItemView.NoSelection)
 
-class DwarfForm(object):
-    def setupUi(self, Form):
-        Form.setObjectName("DwarfForm")
-        self.gridLayout = QtWidgets.QGridLayout(Form)
-        self.gridLayout.setObjectName("gridLayout")
-        self.traitTable = QtWidgets.QTableWidget(Form)
+    def _beliefs_table(self, data: list[dict], row: int):
+        beliefs = data[row].get('beliefs', [])
 
-        self.infoSection = QtWidgets.QWidget(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.infoSection.setSizePolicy(sizePolicy)
-        self.infoSection.setObjectName("infoSection")
-        self.gridLayout.addWidget(self.infoSection, 0, 0, 1, 1)
+        beliefsTable = QTableWidget()
+        beliefsTable.verticalHeader().hide()
+        beliefsTable.horizontalHeader().hide()
+        beliefsTable.setRowCount(len(beliefs))
+        beliefsTable.setColumnCount(2)
 
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        self.traitTable.setSizePolicy(sizePolicy)
-        self.traitTable.setObjectName("traitTable")
-        self.gridLayout.addWidget(self.traitTable, 0, 1, 1, 1)
+        row = 0
+        for belief in beliefs:
+            name, value = belief[0]['name'], belief[1]
+            beliefsTable.setItem(row, 0, QTableWidgetItem(belief[0]['name']))
+            beliefsTable.setItem(row, 1, QTableWidgetItem(str(belief[1])))
+            row += 1
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        beliefsTable.resizeColumnsToContents()
+        beliefsTable.resizeRowsToContents()
 
-    def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        # set the vertical header to resize to the contents and stretch the first column
+        beliefsTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        beliefsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+
+        beliefsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        beliefsTable.setSelectionMode(QAbstractItemView.NoSelection)
+
+        self.goalsBeliefs.layout().addWidget(beliefsTable, 0, 0)
+
+    def _goals_table(self, data: list[dict], row: int):
+        goals = data[row].get('goals', [])
+
+        goalsTable = QTableWidget()
+        goalsTable.verticalHeader().hide()
+        goalsTable.horizontalHeader().hide()
+        goalsTable.setRowCount(len(goals))
+        goalsTable.setColumnCount(2)
+
+        row = 0
+        for goal in goals:
+            name, value = goal[0]['name'], goal[1]
+            goalsTable.setItem(row, 0, QTableWidgetItem(goal[0]['name']))
+            goalsTable.setItem(row, 1, QTableWidgetItem(str(goal[1])))
+            row += 1
+
+        goalsTable.resizeColumnsToContents()
+        goalsTable.resizeRowsToContents()
+
+        # set the vertical header to resize to the contents and stretch the first column
+        goalsTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        goalsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+
+        goalsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        goalsTable.setSelectionMode(QAbstractItemView.NoSelection)
+
+        self.goalsBeliefs.layout().addWidget(goalsTable, 0, 1)
 
 
 if __name__ == '__main__':
