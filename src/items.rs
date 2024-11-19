@@ -123,11 +123,11 @@ pub mod material {
 
             mat.prefix = read_mem_as_string(&proc, addr + df.memory_layout.field_offset(OffsetSection::Material, "prefix"));
             if !organic {
-                mat.flags = FlagArray::new(&df, proc, addr + df.memory_layout.field_offset(OffsetSection::Material, "inorganic_flags"));
+                mat.flags = FlagArray::new(proc, addr + df.memory_layout.field_offset(OffsetSection::Material, "inorganic_flags"));
                 // is_generated?
                 mat.is_generated = true;
             } else {
-                mat.flags = FlagArray::new(&df, proc, addr + df.memory_layout.field_offset(OffsetSection::Material, "flags"));
+                mat.flags = FlagArray::new(proc, addr + df.memory_layout.field_offset(OffsetSection::Material, "flags"));
             }
 
             mat.load_state_names(df, proc, addr);
@@ -177,7 +177,7 @@ pub mod material {
             let plant_name_plural = read_mem_as_string(&proc, df.memory_layout.field_offset(OffsetSection::Plant, "name_plural"));
             let leaf_plural = read_mem_as_string(&proc, df.memory_layout.field_offset(OffsetSection::Plant, "name_leaf_plural"));
             let seed_plural = read_mem_as_string(&proc, df.memory_layout.field_offset(OffsetSection::Plant, "name_seed_plural"));
-            let flags = FlagArray::new(&df, proc, addr + df.memory_layout.field_offset(OffsetSection::Plant, "flags"));
+            let flags = FlagArray::new(proc, addr + df.memory_layout.field_offset(OffsetSection::Plant, "flags"));
 
             let p = Plant{
                 name: plant_name,
@@ -193,7 +193,7 @@ pub mod material {
         }
 
         pub unsafe fn get_flags(df: &DFInstance, proc: &Process, addr: usize) -> FlagArray {
-            let mut flags = FlagArray::new(&df, proc, addr + df.memory_layout.field_offset(OffsetSection::Plant, "flags"));
+            let mut flags = FlagArray::new(proc, addr + df.memory_layout.field_offset(OffsetSection::Plant, "flags"));
 
             // TODO: use enum for flags
             if flags.flags.get(0).unwrap()||
@@ -235,7 +235,7 @@ use std::hash::Hash;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Default, Serialize, Deserialize, Debug, Eq, PartialEq, Hash, Clone)]
+#[derive(Default, Serialize, Deserialize, Debug, Eq, PartialEq, Hash, Clone, Copy)]
 pub enum ItemType {
     #[default]
     None = -1,

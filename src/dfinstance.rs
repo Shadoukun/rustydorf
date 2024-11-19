@@ -142,11 +142,17 @@ impl DFInstance {
 
 
     pub unsafe fn load_arts(&mut self, proc: &Process) {
-        self.color_vector  = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "colors_vector")));
-        self.shape_vector  = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "shapes_vector")));
-        self.poetry_vector = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "poetic_forms_vector")));
-        self.music_vector  = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "musical_forms_vector")));
-        self.dance_vector  = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dance_forms_vector")));
+        let arts = [
+            (&mut self.color_vector, "colors_vector"),
+            (&mut self.shape_vector, "shapes_vector"),
+            (&mut self.poetry_vector, "poetic_forms_vector"),
+            (&mut self.music_vector, "musical_forms_vector"),
+            (&mut self.dance_vector, "dance_forms_vector"),
+        ];
+
+        for (vector, offset_name) in arts {
+            *vector = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, offset_name)));
+        }
     }
 
     pub unsafe fn load_item_definitions(&mut self, proc: &Process) {
@@ -199,53 +205,57 @@ impl DFInstance {
         let entities_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "historical_entities_vector"));
         let entities_vec = enum_mem_vec(&proc.handle, entities_addr);
         for e in entities_vec {
-            let e_type = read_mem::<i16>(&proc.handle, e);
-            if e_type == 0 || e == entities_addr {
-                let pos_addr_vec = enum_mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "positions"));
-                let assign_addr_vec = enum_mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "assignments"));
+            let ent_type = read_mem::<i16>(&proc.handle, e);
+            if ent_type == 0 || e == entities_addr {
+                let position_addr_vec = enum_mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "positions"));
+                let assignment_addr_vec = enum_mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "assignments"));
 
                 // positions
-                for p in pos_addr_vec {
+                self.positions = position_addr_vec.iter().map(|&p| {
                     let pos_id = read_mem::<i32>(&proc.handle, p + self.memory_layout.field_offset(OffsetSection::HistEntity, "position_id"));
                     let pos = FortressPosition {
                         name: read_mem_as_string(proc, p + self.memory_layout.field_offset(OffsetSection::HistEntity, "position_name")),
                         name_male: read_mem_as_string(proc, p + self.memory_layout.field_offset(OffsetSection::HistEntity, "position_male_name")),
                         name_female: read_mem_as_string(proc, p + self.memory_layout.field_offset(OffsetSection::HistEntity, "position_female_name")),
                     };
-                    self.positions.insert(pos_id, pos);
-                }
+                    (pos_id, pos)
+                }).collect();
 
-                // assignments
-                for a in assign_addr_vec {
+                // assignments / nobles
+                self.nobles = assignment_addr_vec.iter().filter_map(|&a| {
                     let assign_pos_id = read_mem::<i32>(&proc.handle, a + self.memory_layout.field_offset(OffsetSection::HistEntity, "assign_position_id"));
                     let hist_id = read_mem::<i32>(&proc.handle, a + self.memory_layout.field_offset(OffsetSection::HistEntity, "assign_hist_id"));
                     if hist_id > 0 {
                         let pos = self.positions.get(&assign_pos_id).unwrap().clone();
-                        self.nobles.insert(assign_pos_id, pos);
+                        Some((assign_pos_id, pos))
+                    } else {
+                        None
                     }
-                }
+                }).collect();
             }
         }
     }
 
     pub unsafe fn load_beliefs(&mut self, proc: &Process) {
         let beliefs_addr = self.fortress_addr + self.memory_layout.field_offset(OffsetSection::HistEntity, "beliefs");
-        for (i, _) in self.game_data.beliefs.iter().enumerate() {
-            let mut val = read_mem::<i32>(&proc.handle, beliefs_addr + i * 4);
-            if val > 100 {
-                val = 100;
+        self.beliefs = self.game_data.beliefs.iter().enumerate().filter_map(|(i, _)| {
+            let val = read_mem::<i32>(&proc.handle, beliefs_addr + i * 4);
+            if val > 100 { // if the value is greater than 100, set it to 100
+                Some((i, 100))
+            } else {
+                Some((i, val))
             }
-            self.beliefs.insert(i, val);
-        }
+        }).collect();
     }
 
     pub unsafe fn load_languages(&mut self, proc: &Process) {
         let language_vector_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "language_vector"));
         let translation_vector_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "translation_vector"));
         let word_table_offset = &self.memory_layout.field_offset(OffsetSection::Language, "word_table");
-        let mut l = Languages::default();
+        self.languages = Languages::default();
+
         for word_ptr in enum_mem_vec(&proc.handle, language_vector_addr) {
-            l.words.push(Word::new(word_ptr, proc, &self.memory_layout));
+            self.languages.words.push(Word::new(word_ptr, proc, &self.memory_layout));
         }
 
         let mut id = 0;
@@ -262,17 +272,15 @@ impl DFInstance {
                     translation_words.push(read_mem_as_string(proc, word));
                 }
             }
-            l.translation_map.insert(id, Translation{name: lang_name, words: translation_words});
+            self.languages.translation_map.insert(id, Translation{name: lang_name, words: translation_words});
             id+=1;
         }
-        self.languages = l;
     }
 
     pub unsafe fn load_races(&mut self, proc: &Process) {
         let mut races: Vec<Race> = vec![];
             let race_vector_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "races_vector"));
             let races_vector = enum_mem_vec(&proc.handle, race_vector_addr);
-
             if !races_vector.is_empty() {
                 let mut id: i32 = 0;
                 for ptr in races_vector {
@@ -295,20 +303,16 @@ impl DFInstance {
     }
 
     pub unsafe fn load_dwarves(&mut self, proc: &Process) {
-        let mut dwarves: Vec<Dwarf> = vec![];
         if self.creature_vector.is_empty() {
             return;
         }
 
-        for &c in &self.creature_vector {
-            let d = match Dwarf::new(self, proc, c) {
-                Ok(d) => d,
-                Err(_) => continue,
-            };
-            dwarves.push(d);
-        }
-        println!("Loaded {} dwarves", dwarves.len());
-        self.dwarves = dwarves;
+        self.dwarves = self.creature_vector.iter().filter_map(|&c| {
+            Dwarf::new(self, proc, c).ok()
+        }).collect();
+
+        println!("Loaded {} dwarves", self.dwarves.len());
+
         // for d in &dwarves {
         //     print_dwarf(d);
         // }
@@ -321,8 +325,7 @@ impl DFInstance {
         let curr_year_tick_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "cur_year_tick"));
         let curr_year_tick = read_mem::<i32>(&proc.handle, curr_year_tick_addr);
 
-        let time = DfTime::from_seconds((year as u64 * 1200 * 28 * 12) + (curr_year_tick as u64));
-        time
+        DfTime::from_seconds((year as u64 * 1200 * 28 * 12) + (curr_year_tick as u64))
     }
 }
 

@@ -1,5 +1,5 @@
 pub mod race {
-    use std::{fmt::Error, ops::Add};
+    use std::fmt::Error;
     use serde::{Deserialize, Serialize};
 
     use crate::items::material::Material;
@@ -65,7 +65,7 @@ pub mod race {
                 // TODO: caste ratios
             }
 
-            r.flags = FlagArray::new(&df, proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "flags"));
+            r.flags = FlagArray::new(proc, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "flags"));
             r.fix_child_names();
             Ok(r)
         }

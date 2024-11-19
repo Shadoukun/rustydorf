@@ -23,10 +23,7 @@ pub unsafe fn address_plus_offset(proc: &Process, mut offset: usize) -> usize {
 }
 
 pub mod memory {
-    use std::fmt::Error;
-
-    use crate::win::{memory::memory::{enum_mem_vec, read_mem, read_raw}, process::Process};
-    use crate::data::memorylayout::{MemoryOffsets, OffsetSection};
+    use crate::win::{memory::memory::{read_mem, read_raw}, process::Process};
 
     const STRING_BUFFER_LENGTH: usize = 16;
     const POINTER_SIZE: usize = std::mem::size_of::<usize>();

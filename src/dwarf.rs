@@ -394,7 +394,7 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_preferences(&mut self, df: &DFInstance, proc: &Process) {
-            let prefs = enum_mem_vec(&proc.handle,  self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "preferences"));
+            let prefs: Vec<usize> = enum_mem_vec(&proc.handle,  self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "preferences"));
             for p in prefs {
                 let pref = Preference::new(df, proc, p);
                 // TODO: add to preferences
@@ -416,14 +416,10 @@ pub mod dwarf {
 
                 self.thoughts.push(thought);
             }
-
             // TODO: dated emotions
             self.read_happiness_level(df, proc);
-
-                //TODO: Fix trauma
-                // self.check_trauma(); // lol I know that feel
-
-
+            //TODO: Fix trauma
+            // self.check_trauma(); // lol I know that feel
         }
 
         pub unsafe fn read_happiness_level(&mut self, df: &DFInstance, proc: &Process) {

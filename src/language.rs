@@ -131,14 +131,14 @@ pub struct Word {
 
     impl Word {
         pub unsafe fn new(address: usize, process: &Process, memory_layout: &MemoryOffsets) -> Self {
-            let base = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "base"));
-            let noun = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "noun_singular"));
-            let plural_noun = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "noun_plural"));
-            let adjective = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "adjective"));
-            let verb = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "verb"));
-            let present_simple_verb = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "present_simple_verb"));
-            let past_simple_verb = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "past_simple_verb"));
-            let past_participle_verb = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "past_participle_verb"));
+            let base                    = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "base"));
+            let noun                    = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "noun_singular"));
+            let plural_noun             = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "noun_plural"));
+            let adjective               = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "adjective"));
+            let verb                    = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "verb"));
+            let present_simple_verb     = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "present_simple_verb"));
+            let past_simple_verb        = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "past_simple_verb"));
+            let past_participle_verb    = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "past_participle_verb"));
             let present_participle_verb = read_mem_as_string(&process, address + memory_layout.field_offset(OffsetSection::Word, "present_participle_verb"));
 
             Word {

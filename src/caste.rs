@@ -30,7 +30,7 @@ pub mod caste {
                 name_plural:        read_mem_as_string(&proc, address + df.memory_layout.field_offset(OffsetSection::Word, "noun_plural")),
                 adult_size:         read_mem::<i32>(&proc.handle, address + df.memory_layout.field_offset(OffsetSection::Caste, "adult_size")),
                 body_parts_addr:    enum_mem_vec(&proc.handle, address + df.memory_layout.field_offset(OffsetSection::Caste, "body_info")),
-                flags:              FlagArray::new(&df, proc, address + df.memory_layout.field_offset(OffsetSection::Caste, "flags")),
+                flags:              FlagArray::new(proc, address + df.memory_layout.field_offset(OffsetSection::Caste, "flags")),
                 ..Default::default()
             };
 

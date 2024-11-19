@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use std::env::current_dir;
 use std::fmt::Error;
 use std::{collections::HashMap, fs};

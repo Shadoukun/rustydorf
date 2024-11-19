@@ -1,9 +1,10 @@
-use std::{ops::Add, time::Duration};
+#![allow(dead_code)]
+use std::{ops::{Add, Sub}, time::Duration};
 
 use serde::{Deserialize, Serialize};
 
-pub const DF_SEASONS: [&str; 4] = ["Spring", "Summer", "Autumn", "Winter"];
-pub const DF_MONTHS: [&str; 12] = [
+pub const DF_SEASONS: [&str;  4] = ["Spring", "Summer", "Autumn", "Winter"];
+pub const DF_MONTHS:  [&str; 12] = [
     "Granite", "Slate", "Felsite",
     "Hematite", "Malachite", "Galena",
     "Limestone", "Sandstone", "Timber",
@@ -94,5 +95,13 @@ impl Add for DfTime {
 
     fn add(self, other: Self) -> Self {
         DfTime(self.0 + other.0)
+    }
+}
+
+impl Sub for DfTime {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        DfTime(self.0 - other.0)
     }
 }

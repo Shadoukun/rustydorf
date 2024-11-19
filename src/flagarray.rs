@@ -1,10 +1,10 @@
-use std::fmt::{Debug, Error, Formatter};
+#![allow(dead_code)]
 
+use std::fmt::{Debug, Error, Formatter};
 use serde::{Deserialize, Serialize};
 
 use crate::win::memory::memory::read_mem;
 use crate::win::process::Process;
-use crate::DFInstance;
 
 #[derive(Serialize, Deserialize)]
 pub struct FlagArray {
@@ -13,7 +13,7 @@ pub struct FlagArray {
 }
 
 impl FlagArray {
-        pub unsafe fn new(df: &DFInstance, proc: &Process, address: usize) -> Self {
+        pub unsafe fn new(proc: &Process, address: usize) -> Self {
             let mut flags_addr = read_mem::<usize>(&proc.handle, address);
             let size_in_bytes = read_mem::<u32>(&proc.handle, address + std::mem::size_of::<usize>()) as usize;
 
