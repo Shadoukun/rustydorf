@@ -55,7 +55,7 @@ impl Thought {
     }
 
     fn check_subthought(&mut self, df: &DFInstance) {
-        if self.data.subthoughts_type.is_positive() {
+        if self.data.subthoughts_type >= 0 {
             match df.game_data.unit_subthoughts.get(self.data.subthoughts_type as usize) {
                 Some(data) => {
                     // if subthoughts exist, replace placeholder with subthought

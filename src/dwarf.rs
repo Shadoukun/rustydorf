@@ -3,6 +3,7 @@ pub mod dwarf {
     use std::collections::HashMap;
     use std::fmt::Error;
 
+    use serde::de::value;
     use serde::Deserialize;
     use serde::Serialize;
 
@@ -26,6 +27,7 @@ pub mod dwarf {
     use crate::win::memory::memory::read_raw;
     use crate::win::process::Process;
     use crate::{util::memory::read_mem_as_string, DFInstance};
+use std::mem::size_of;
 
     #[derive(Default, Serialize, Deserialize, Clone, Debug)]
     pub struct Dwarf {
@@ -37,6 +39,7 @@ pub mod dwarf {
         pub histfig: HistoricalFigure,
         pub turn_count: i32,
         pub states: HashMap<i16, i32>,
+        pub attributes: HashMap<AttributeType, Attribute>,
 
         pub race: Race,
         pub caste: Caste,
@@ -126,7 +129,75 @@ pub mod dwarf {
             d.read_gender_orientation(df, proc);
             d.read_noble_position(df);
             d.read_preferences(df, proc);
+            d.read_attributes(df, proc);
             Ok(d)
+        }
+
+        pub unsafe fn read_attributes(&mut self, df: &DFInstance, proc: &Process) {
+
+            // Physical attributes
+            let physical_attr_addr = self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "physical_attrs");
+            let physical_attributes = [
+                AttributeType::Strength,
+                AttributeType::Agility,
+                AttributeType::Toughness,
+                AttributeType::Endurance,
+                AttributeType::Recuperation,
+                AttributeType::DiseaseResistance,
+            ];
+
+            for attr_type in physical_attributes {
+                self.load_attribute(df, proc, physical_attr_addr, attr_type);
+            }
+
+            // Mental attributes
+            let mental_attr_addr = self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "mental_attrs");
+            let mental_attributes = [
+                AttributeType::AnalyticalAbility,
+                AttributeType::Focus,
+                AttributeType::Willpower,
+                AttributeType::Creativity,
+                AttributeType::Intuition,
+                AttributeType::Patience,
+                AttributeType::Memory,
+                AttributeType::LinguisticAbility,
+                AttributeType::SpatialSense,
+                AttributeType::Musicality,
+                AttributeType::KinestheticSense,
+                AttributeType::Empathy,
+                AttributeType::SocialAwareness,
+            ];
+
+            for attr_type in mental_attributes {
+                self.load_attribute(df, proc, mental_attr_addr, attr_type);
+            }
+        }
+
+        #[allow(unused_variables)]
+        pub unsafe fn load_attribute(&mut self, df: &DFInstance, proc: &Process, addr: usize, id: AttributeType) {
+            let cti = 500;
+            // let desc: Hashmap<i32, String>
+
+            let value = read_mem::<i32>(&proc.handle, addr);
+            let display_value = value;
+            let max = read_mem::<i32>(&proc.handle, addr + 0x4);
+
+            // TODO: permanent syndromes
+            // TODO: temporary syndromes
+            // TODO: caste?
+            // TODO: baby/animal
+            // TODO: syndrome names
+
+            let a = Attribute{
+                id,
+                value,
+                display_value,
+                max,
+                cti,
+                ..Default::default()
+            };
+
+            self.attributes.insert(id, a);
         }
 
         unsafe fn read_body_size(&mut self, df: &DFInstance, proc: &Process) {
@@ -406,16 +477,16 @@ pub mod dwarf {
             let thoughts = enum_mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions"));
             // ensure traits are loaded first
 
-            for th in thoughts {
-                let thought = Thought::new(df, proc, self, th);
-
-                // TODO: sort in descending order
+            self.thoughts = thoughts.iter().filter_map(|&addr| {
+                let thought = Thought::new(df, proc, self, addr);
                 if thought.id >= 0 {
                     self.thought_ids.push(thought.id);
+                    Some(thought)
+                } else {
+                    None
                 }
+            }).collect();
 
-                self.thoughts.push(thought);
-            }
             // TODO: dated emotions
             self.read_happiness_level(df, proc);
             //TODO: Fix trauma
@@ -423,8 +494,8 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_happiness_level(&mut self, df: &DFInstance, proc: &Process) {
-            let stress_level_addr = self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "stress_level");
-            self.stress_level = read_mem::<i32>(&proc.handle, stress_level_addr);
+            self.stress_level = read_mem::<i32>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "stress_level"));
+             // default to miserable
             let mut happiness_level = df.game_data.happiness_levels[0].clone();
             for h in &df.game_data.happiness_levels {
                 if (self.stress_level - h.threshold).abs() < (self.stress_level - happiness_level.threshold).abs() {
@@ -588,6 +659,73 @@ pub mod dwarf {
                 0 => Sex::Female,
                 1 => Sex::Male,
                 _ => Sex::Unknown,
+            }
+        }
+    }
+
+    #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone)]
+    struct Attribute {
+        id: AttributeType,
+        value: i32,
+        value_potential: i32,
+        value_balanced: i32,
+        display_value: i32,
+        max: i32,
+        rating_potential: i32,
+        rating: i32,
+        cti: i32,
+        descriptor: String,
+        descriptor_index: i32,
+    }
+
+    #[derive(Debug, Default, PartialEq, Clone, Copy, Serialize, Deserialize, Eq, Hash)]
+    pub enum AttributeType {
+        #[default]
+        None = -1,
+        Strength = 0,
+        Agility = 1,
+        Toughness = 2,
+        Endurance = 3,
+        Recuperation = 4,
+        DiseaseResistance = 5,
+        AnalyticalAbility = 6,
+        Focus = 7,
+        Willpower = 8,
+        Creativity = 9,
+        Intuition = 10,
+        Patience = 11,
+        Memory = 12,
+        LinguisticAbility = 13,
+        SpatialSense = 14,
+        Musicality = 15,
+        KinestheticSense = 16,
+        Empathy = 17,
+        SocialAwareness = 18,
+    }
+
+    impl From<i32> for AttributeType {
+        fn from(value: i32) -> Self {
+            match value {
+                0 => AttributeType::Strength,
+                1 => AttributeType::Agility,
+                2 => AttributeType::Toughness,
+                3 => AttributeType::Endurance,
+                4 => AttributeType::Recuperation,
+                5 => AttributeType::DiseaseResistance,
+                6 => AttributeType::AnalyticalAbility,
+                7 => AttributeType::Focus,
+                8 => AttributeType::Willpower,
+                9 => AttributeType::Creativity,
+                10 => AttributeType::Intuition,
+                11 => AttributeType::Patience,
+                12 => AttributeType::Memory,
+                13 => AttributeType::LinguisticAbility,
+                14 => AttributeType::SpatialSense,
+                15 => AttributeType::Musicality,
+                16 => AttributeType::KinestheticSense,
+                17 => AttributeType::Empathy,
+                18 => AttributeType::SocialAwareness,
+                _ => AttributeType::None,
             }
         }
     }
