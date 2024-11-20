@@ -168,7 +168,7 @@ pub struct Word {
             }
         }
     }
-    enum WordType {
+    pub enum WordType {
         Noun,
         PluralNoun,
         Adjective,

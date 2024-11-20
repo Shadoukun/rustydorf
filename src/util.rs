@@ -23,6 +23,8 @@ pub unsafe fn address_plus_offset(proc: &Process, mut offset: usize) -> usize {
 }
 
 pub mod memory {
+    use codepage_437::{FromCp437,CP437_CONTROL} ;
+
     use crate::win::{memory::memory::{read_mem, read_raw}, process::Process};
 
     const STRING_BUFFER_LENGTH: usize = 16;
@@ -40,7 +42,8 @@ pub mod memory {
         }
         let mut buf = vec![0; len as usize];
         read_raw(&proc.handle, offset, len, buf.as_mut_ptr());
-        String::from_utf8_lossy(&buf).to_string()
+        // Dwarf Fortress uses CP437 encoding for strings
+        String::from_cp437(buf, &CP437_CONTROL)
     }
 
 }

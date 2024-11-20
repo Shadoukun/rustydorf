@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+codepage-437 = "0.1.0"
 axum = { version = "0.7", features = ["macros"] }
 serde = { version = "1.0.210", features = ["derive"] }
 toml = "0.8.19"
