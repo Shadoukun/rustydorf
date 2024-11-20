@@ -134,7 +134,7 @@ pub mod dwarf {
         pub unsafe fn read_attributes(&mut self, df: &DFInstance, proc: &Process) {
 
             // Physical attributes
-            let physical_attr_addr = self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "physical_attrs");
+            let mut physical_attr_addr = self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "physical_attrs");
             let physical_attributes = [
                 AttributeType::Strength,
                 AttributeType::Agility,
@@ -146,10 +146,11 @@ pub mod dwarf {
 
             for attr_type in physical_attributes {
                 self.load_attribute(df, proc, physical_attr_addr, attr_type);
+                physical_attr_addr += 0x1c
             }
 
             // Mental attributes
-            let mental_attr_addr = self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "mental_attrs");
+            let mut mental_attr_addr = self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "mental_attrs");
             let mental_attributes = [
                 AttributeType::AnalyticalAbility,
                 AttributeType::Focus,
@@ -168,6 +169,7 @@ pub mod dwarf {
 
             for attr_type in mental_attributes {
                 self.load_attribute(df, proc, mental_attr_addr, attr_type);
+                mental_attr_addr += 0x1c
             }
         }
 

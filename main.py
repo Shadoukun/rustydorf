@@ -12,7 +12,6 @@ class DwarfAssistant(QMainWindow):
 
     def __init__(self, data: list[dict]):
         super(DwarfAssistant, self).__init__()
-        self.setGeometry(100, 100, 600, 300)
         self.setWindowTitle("Dwarf Assistant")
 
         self.centralwidget = QtWidgets.QWidget(self)
@@ -128,10 +127,13 @@ class DwarfInfoWidget(QWidget):
         self.thoughtsTable = QtWidgets.QTableWidget(self)
         self.thoughtsTable.setObjectName("thoughtsTable")
 
+        self.attributeTable = QtWidgets.QTableWidget(self)
+
         self.traitTable = QtWidgets.QTableWidget(self)
         self.traitTable.setObjectName("traitTable")
 
         self._info_section(data, row)
+        self._attribute_table(data, row)
         self._trait_table(data, row)
         self._thoughts_table(data, row)
         self._beliefs_table(data, row)
@@ -140,7 +142,8 @@ class DwarfInfoWidget(QWidget):
         self.gridLayout.addWidget(self.infoSection, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.goalsBeliefs, 1, 0, 1, 1)
         self.gridLayout.addWidget(self.thoughtsTable, 2, 0, 1, 2)
-        self.gridLayout.addWidget(self.traitTable, 0, 2, 3, 1)
+        self.gridLayout.addWidget(self.attributeTable, 0, 2, 3, 1)
+        self.gridLayout.addWidget(self.traitTable, 0, 3, 3, 1)
 
     def _info_section(self, data: list[dict], row: int):
         info = QLabel(f"Name: {data[row].get('first_name', 'Unknown')} {data[row].get('last_name', '')}\n" +
@@ -148,6 +151,29 @@ class DwarfInfoWidget(QWidget):
                       f"Age: {data[row].get('age', 'Unknown')}\n" +
                       f"Sex: {data[row].get('sex', 'Unknown')}")
         self.infoSection.layout().addWidget(info)
+
+    def _attribute_table(self, data: list[dict], row: int):
+        attributes: dict = data[row].get('attributes', {})
+        self.attributeTable.verticalHeader().hide()
+        self.attributeTable.horizontalHeader().hide()
+        self.attributeTable.setColumnCount(2)
+        self.attributeTable.setRowCount(len(attributes))
+
+        row = 0
+        p = True
+        for attribute in attributes.items():
+            name, value = attribute[0], attribute[1]['value']
+            self.attributeTable.setItem(row, 0, QTableWidgetItem(name))
+            self.attributeTable.setItem(row, 1, QTableWidgetItem(str(value)))
+            row += 1
+
+        self.attributeTable.resizeColumnsToContents()
+        self.attributeTable.resizeRowsToContents()
+
+        self.attributeTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.attributeTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.attributeTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.attributeTable.setSelectionMode(QAbstractItemView.NoSelection)
 
     def _trait_table(self, data: list[dict], row: int):
         traits = data[row].get('traits', [])
