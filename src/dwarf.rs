@@ -3,7 +3,6 @@ pub mod dwarf {
     use std::collections::HashMap;
     use std::fmt::Error;
 
-    use serde::de::value;
     use serde::Deserialize;
     use serde::Serialize;
 
@@ -27,7 +26,6 @@ pub mod dwarf {
     use crate::win::memory::memory::read_raw;
     use crate::win::process::Process;
     use crate::{util::memory::read_mem_as_string, DFInstance};
-use std::mem::size_of;
 
     #[derive(Default, Serialize, Deserialize, Clone, Debug)]
     pub struct Dwarf {
@@ -179,8 +177,8 @@ use std::mem::size_of;
             // let desc: Hashmap<i32, String>
 
             let value = read_mem::<i32>(&proc.handle, addr);
-            let display_value = value;
             let max = read_mem::<i32>(&proc.handle, addr + 0x4);
+            let display_value = value;
 
             // TODO: permanent syndromes
             // TODO: temporary syndromes
@@ -214,27 +212,27 @@ use std::mem::size_of;
         }
 
         unsafe fn read_syndromes(&mut self, df: &DFInstance, proc: &Process) {
-            let syndromes_addr = self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "active_syndrome_vector");
-            let syndromes = enum_mem_vec(&proc.handle, syndromes_addr);
+            self.syndromes = enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "active_syndrome_vector")).iter()
+                .map(|&s| Syndrome::new(df, proc, s))
+                .collect();
 
-            for s in syndromes {
-                let syn = Syndrome::new(df, proc, s);
-
-                let d = syn.clone().display_name().to_lowercase();
-                match d {
-                    d if d.contains("vampcurse") => {
+            // check for curses and transformations
+            for s in &self.syndromes {
+                // check display names for curses
+                match s.clone().display_name().to_lowercase() {
+                    n if n.contains("vampcurse") => {
                         self.is_cursed = true;
                         self.curse = Curse{
                             name: "Vampirism".to_string(),
                             curse_type: CurseType::Vampire,}
                     },
-                    d if d.contains("werecurse") => {
+                    n if n.contains("werecurse") => {
                         self.is_cursed = true;
                         self.curse = Curse{
                             name: "Werebeast".to_string(),
                             curse_type: CurseType::Werebeast,}
                     },
-                    d if d.contains("curse") => {
+                    n if n.contains("curse") => {
                         self.is_cursed = true;
                         self.curse = Curse{
                             name: "Curse".to_string(),
@@ -243,18 +241,16 @@ use std::mem::size_of;
                     _ => (),
                 }
 
-                if syn.has_transform == true {
-                    let race_id = syn.transform_race;
+                if s.has_transform == true {
+                    let race_id = s.transform_race;
                     if race_id >= 0 {
+                        // TODO: transform
                         let trans_race = df.races.iter().find(|&x| x.id == race_id).unwrap();
                         // TODO: crazed night creature
                     }
                 }
-
-                self.syndromes.push(syn);
-                // TODO: attribute changes
             }
-        }
+     }
 
         unsafe fn read_squad(&mut self, df: &DFInstance, proc: &Process) {
             let squad_id: i32   = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "squad_id"));
@@ -664,7 +660,7 @@ use std::mem::size_of;
     }
 
     #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone)]
-    struct Attribute {
+    pub struct Attribute {
         id: AttributeType,
         value: i32,
         value_potential: i32,
