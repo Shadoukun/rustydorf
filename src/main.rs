@@ -1,3 +1,4 @@
+mod attribute;
 mod dfinstance;
 mod dwarf;
 mod caste;

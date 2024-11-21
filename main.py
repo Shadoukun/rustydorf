@@ -154,6 +154,7 @@ class DwarfInfoWidget(QWidget):
 
     def _attribute_table(self, data: list[dict], row: int):
         attributes: dict = data[row].get('attributes', {})
+
         self.attributeTable.verticalHeader().hide()
         self.attributeTable.horizontalHeader().hide()
         self.attributeTable.setColumnCount(2)
@@ -161,8 +162,9 @@ class DwarfInfoWidget(QWidget):
 
         row = 0
         p = True
-        for attribute in attributes.items():
-            name, value = attribute[0], attribute[1]['value']
+        attributes = sorted(attributes.items(), key=lambda item: item[1]["id"])
+        for attribute in attributes:
+            name, value = attribute[1]['name'], attribute[1]['value']
             self.attributeTable.setItem(row, 0, QTableWidgetItem(name))
             self.attributeTable.setItem(row, 1, QTableWidgetItem(str(value)))
             row += 1

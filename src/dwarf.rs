@@ -6,6 +6,7 @@ pub mod dwarf {
     use serde::Deserialize;
     use serde::Serialize;
 
+    use crate::attribute::{Attribute, AttributeType};
     use crate::thought::Thought;
     use crate::histfigure::FortressPosition;
     use crate::preference::Commitment;
@@ -37,7 +38,7 @@ pub mod dwarf {
         pub histfig: HistoricalFigure,
         pub turn_count: i32,
         pub states: HashMap<i16, i32>,
-        pub attributes: HashMap<AttributeType, Attribute>,
+        pub attributes: HashMap<i32, Attribute>,
 
         pub race: Race,
         pub caste: Caste,
@@ -174,7 +175,7 @@ pub mod dwarf {
         }
 
         #[allow(unused_variables)]
-        pub unsafe fn load_attribute(&mut self, df: &DFInstance, proc: &Process, addr: usize, id: AttributeType) {
+        pub unsafe fn load_attribute(&mut self, df: &DFInstance, proc: &Process, addr: usize, attr_type: AttributeType) {
             let cti = 500;
             // let desc: Hashmap<i32, String>
 
@@ -189,7 +190,8 @@ pub mod dwarf {
             // TODO: syndrome names
 
             let a = Attribute{
-                id,
+                id: attr_type as i32,
+                name: attr_type.to_string(),
                 value,
                 display_value,
                 max,
@@ -197,7 +199,7 @@ pub mod dwarf {
                 ..Default::default()
             };
 
-            self.attributes.insert(id, a);
+            self.attributes.insert(attr_type as i32, a);
         }
 
         unsafe fn read_body_size(&mut self, df: &DFInstance, proc: &Process) {
@@ -387,8 +389,7 @@ pub mod dwarf {
 
         pub unsafe fn read_profession(&mut self, df: &DFInstance, proc: &Process) {
             self.raw_prof_id = read_mem::<u8>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "profession"));
-            let prof = df.game_data.professions.iter().find(|&x| x.id == self.raw_prof_id as i32).unwrap();
-            self.profession = prof.clone();
+            self.profession = df.game_data.professions.iter().find(|&x| x.id == self.raw_prof_id as i32).unwrap().clone();
             // TODO: custom profession
         }
 
@@ -431,6 +432,11 @@ pub mod dwarf {
                 self.traits.push((tr, val));
             }
 
+            self._special_traits(df, proc);
+
+        }
+
+        unsafe fn _special_traits(&mut self, df: &DFInstance, proc: &Process) {
             // special traits
             let combat_hardened_base = read_mem::<i16>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "combat_hardened"));
             let combat_hardened = ((combat_hardened_base*(90-40)) / 100) + 40;
@@ -442,7 +448,6 @@ pub mod dwarf {
             self.traits.push((f, combat_hardened));
 
             // TODO: cave adapt/other special traits
-
         }
 
         pub unsafe fn read_goals(&mut self, df: &DFInstance, proc: &Process) {
@@ -657,73 +662,6 @@ pub mod dwarf {
                 0 => Sex::Female,
                 1 => Sex::Male,
                 _ => Sex::Unknown,
-            }
-        }
-    }
-
-    #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone)]
-    pub struct Attribute {
-        id: AttributeType,
-        value: i32,
-        value_potential: i32,
-        value_balanced: i32,
-        display_value: i32,
-        max: i32,
-        rating_potential: i32,
-        rating: i32,
-        cti: i32,
-        descriptor: String,
-        descriptor_index: i32,
-    }
-
-    #[derive(Debug, Default, PartialEq, Clone, Copy, Serialize, Deserialize, Eq, Hash)]
-    pub enum AttributeType {
-        #[default]
-        None = -1,
-        Strength = 0,
-        Agility = 1,
-        Toughness = 2,
-        Endurance = 3,
-        Recuperation = 4,
-        DiseaseResistance = 5,
-        AnalyticalAbility = 6,
-        Focus = 7,
-        Willpower = 8,
-        Creativity = 9,
-        Intuition = 10,
-        Patience = 11,
-        Memory = 12,
-        LinguisticAbility = 13,
-        SpatialSense = 14,
-        Musicality = 15,
-        KinestheticSense = 16,
-        Empathy = 17,
-        SocialAwareness = 18,
-    }
-
-    impl From<i32> for AttributeType {
-        fn from(value: i32) -> Self {
-            match value {
-                0 => AttributeType::Strength,
-                1 => AttributeType::Agility,
-                2 => AttributeType::Toughness,
-                3 => AttributeType::Endurance,
-                4 => AttributeType::Recuperation,
-                5 => AttributeType::DiseaseResistance,
-                6 => AttributeType::AnalyticalAbility,
-                7 => AttributeType::Focus,
-                8 => AttributeType::Willpower,
-                9 => AttributeType::Creativity,
-                10 => AttributeType::Intuition,
-                11 => AttributeType::Patience,
-                12 => AttributeType::Memory,
-                13 => AttributeType::LinguisticAbility,
-                14 => AttributeType::SpatialSense,
-                15 => AttributeType::Musicality,
-                16 => AttributeType::KinestheticSense,
-                17 => AttributeType::Empathy,
-                18 => AttributeType::SocialAwareness,
-                _ => AttributeType::None,
             }
         }
     }
