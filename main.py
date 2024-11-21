@@ -1,6 +1,6 @@
 from PyQt5 import uic
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableWidget, QWidget, QLabel, QGridLayout, QAbstractItemView
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableWidget, QWidget, QLabel, QGridLayout, QAbstractItemView, QHeaderView
 from PyQt5.QtGui import QFont
 import sys
 import requests
@@ -77,7 +77,6 @@ class DwarfAssistant(QMainWindow):
         self.nameList.setStyleSheet(
             """QTableView::item:selected { \
                 border: 3px solid gold; \
-                margin-right: 2px; \
                 background-color: transparent; \
                 color: black; \
             }""")
@@ -110,7 +109,6 @@ class DwarfAssistant(QMainWindow):
 
 
 class DwarfInfoWidget(QWidget):
-
     def __init__(self, data: dict[list], row: int):
         super(DwarfInfoWidget, self).__init__()
         self.gridLayout = QtWidgets.QGridLayout(self)
@@ -128,6 +126,7 @@ class DwarfInfoWidget(QWidget):
         self.thoughtsTable.setObjectName("thoughtsTable")
 
         self.attributeTable = QtWidgets.QTableWidget(self)
+        self.attributeTable.setObjectName("attributeTable")
 
         self.traitTable = QtWidgets.QTableWidget(self)
         self.traitTable.setObjectName("traitTable")
@@ -141,15 +140,18 @@ class DwarfInfoWidget(QWidget):
 
         self.gridLayout.addWidget(self.infoSection, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.goalsBeliefs, 1, 0, 1, 1)
-        self.gridLayout.addWidget(self.thoughtsTable, 2, 0, 1, 2)
-        self.gridLayout.addWidget(self.attributeTable, 0, 2, 3, 1)
-        self.gridLayout.addWidget(self.traitTable, 0, 3, 3, 1)
+
+        self.gridLayout.addWidget(self.attributeTable, 0, 2, 2, 1)
+        self.gridLayout.addWidget(self.traitTable, 0, 3, 2, 1)
+
+        self.gridLayout.addWidget(self.thoughtsTable, 3, 0, 1, 4)
 
     def _info_section(self, data: list[dict], row: int):
         info = QLabel(f"Name: {data[row].get('first_name', 'Unknown')} {data[row].get('last_name', '')}\n" +
                       f"Profession: {data[row].get('profession', 'Unknown')['name']}\n" +
                       f"Age: {data[row].get('age', 'Unknown')}\n" +
                       f"Sex: {data[row].get('sex', 'Unknown')}")
+
         self.infoSection.layout().addWidget(info)
 
     def _attribute_table(self, data: list[dict], row: int):
@@ -161,21 +163,26 @@ class DwarfInfoWidget(QWidget):
         self.attributeTable.setRowCount(len(attributes))
 
         row = 0
-        p = True
         attributes = sorted(attributes.items(), key=lambda item: item[1]["id"])
+
         for attribute in attributes:
             name, value = attribute[1]['name'], attribute[1]['value']
             self.attributeTable.setItem(row, 0, QTableWidgetItem(name))
             self.attributeTable.setItem(row, 1, QTableWidgetItem(str(value)))
             row += 1
 
-        self.attributeTable.resizeColumnsToContents()
-        self.attributeTable.resizeRowsToContents()
 
+        # set the vertical header to resize to the contents and prevent the table from resizing
+        # This feels janky but it works
+        header = self.attributeTable.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        self.attributeTable.setFixedWidth(self.attributeTable.horizontalHeader().length() + 15)
         self.attributeTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
-        self.attributeTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
         self.attributeTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.attributeTable.setSelectionMode(QAbstractItemView.NoSelection)
+
 
     def _trait_table(self, data: list[dict], row: int):
         traits = data[row].get('traits', [])
@@ -192,13 +199,14 @@ class DwarfInfoWidget(QWidget):
             self.traitTable.setItem(row, 1, QTableWidgetItem(str(value)))
             row += 1
 
-        # set the vertical header to resize to the contents
+        # set the vertical header to resize to the contents and prevent the table from resizing
         # This feels janky but it works
-        self.traitTable.resizeColumnsToContents()
-        self.traitTable.resizeRowsToContents()
-        self.traitTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        header = self.traitTable.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        self.traitTable.setFixedWidth(self.traitTable.horizontalHeader().length() + 15)
         self.traitTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
-        self.traitTable.setFixedWidth(self.traitTable.columnWidth(0))
+
 
         self.traitTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.traitTable.setSelectionMode(QAbstractItemView.NoSelection)
