@@ -64,12 +64,12 @@ impl DFInstance {
             ..Default::default()
         };
 
-        df.fortress_addr      = read_mem::<usize>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
-        df.fortress_id        = read_mem::<i32>(&proc.handle, df.fortress_addr + size_of::<usize>());
-        df.dwarf_race_id      = read_mem::<i16>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
-        df.dwarf_civ_id       = read_mem::<i32>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
-        df.creature_vector    = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
-        df.syndromes_vector   = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
+        df.fortress_addr    = read_mem::<usize>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
+        df.fortress_id      = read_mem::<i32>(&proc.handle, df.fortress_addr + size_of::<usize>());
+        df.dwarf_race_id    = read_mem::<i16>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
+        df.dwarf_civ_id     = read_mem::<i32>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
+        df.creature_vector  = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
+        df.syndromes_vector = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
 
         // TODO: fix materials
         // df.load_materials(&proc);

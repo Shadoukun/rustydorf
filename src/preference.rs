@@ -62,7 +62,7 @@ impl Preference {
 }
 
 #[derive(Debug, Default)]
-enum PreferenceType {
+pub enum PreferenceType {
     #[default]
     LikesNone = -1,
     LikeMaterial = 0,
