@@ -68,7 +68,8 @@ pub mod dwarf {
 
         pub personality_addr: usize,
         pub beliefs: Vec<(Beliefs, i16)>,
-        pub traits: Vec<(Facet, i16)>,
+        pub traits: Vec<(i32, String, i16)>,
+        pub trait_belief_conflicts: Vec<i32>,
         pub goals: Vec<(Goal, i16)>,
         pub goals_realized: i32,
         pub thought_ids: Vec<i32>,
@@ -435,7 +436,7 @@ pub mod dwarf {
                         }
                     }
                 }
-                self.traits.push((tr, val));
+                self.traits.push((tr.id, tr.name, val));
             }
 
             self._special_traits(df, proc);
@@ -451,7 +452,7 @@ pub mod dwarf {
                 name: "Combat Hardened".to_string(),
                 ..Default::default()
             };
-            self.traits.push((f, combat_hardened));
+            self.traits.push((f.id, f.name, combat_hardened));
 
             // TODO: cave adapt/other special traits
         }
@@ -589,7 +590,7 @@ pub mod dwarf {
         println!("Traits");
         println!("----------------------------");
         for t in d.traits.iter() {
-            println!("{} | Value: {}", t.0.name, t.1);
+            println!("{} | Value: {}", t.1, t.2);
         }
 
         println!("\n----------------------------");

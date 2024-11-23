@@ -81,7 +81,7 @@ impl Thought {
 
     fn calculate_effect(&mut self, df: &DFInstance, dwarf: &Dwarf) {
         let mut base_effect = 1.0;
-        let stress_vuln: i16 = dwarf.traits.get(8).unwrap().1;
+        let stress_vuln: i16 = dwarf.traits.get(8).unwrap().2;
 
         self.divider = df.game_data.unit_emotions.get(self.emotion_type as usize).unwrap().divider;
         self.multiplier = match stress_vuln {
