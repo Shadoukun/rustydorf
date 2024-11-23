@@ -13,7 +13,7 @@ pub struct GameData {
     pub happiness_levels:   Vec<HappinessLevel>,
     pub health_info:        Vec<HealthInfo>,
     pub knowledge:          Vec<Knowledge>,
-    pub labors:             Vec<Labor>,
+    pub labors:             Vec<UnitLabor>,
     pub needs:              Vec<Need>,
     pub professions:        Vec<Profession>,
     pub skills:             Vec<Skill>,
@@ -113,7 +113,7 @@ pub struct KnowledgeTopic {
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
-pub struct Labor {
+pub struct UnitLabor {
     pub name: String,
     pub id: i32,
     pub skill: i32,

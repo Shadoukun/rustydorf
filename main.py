@@ -6,7 +6,7 @@ import sys
 import requests
 
 from app.namelist import NameListWidget
-from app.infotab import DwarfInfoTabWidget
+from app.dwarftab import DwarfTabWidget
 
 # Enable high DPI scaling
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
@@ -71,10 +71,11 @@ class DwarfAssistant(QMainWindow):
         for row in range(self.nameList.table.rowCount()):
             # the tab widget doesn't need to have tab titles,
             # so pass an empty string
-            self.mainPanel.addTab(DwarfInfoTabWidget(data, row), "")
+            self.mainPanel.addTab(DwarfTabWidget(data, row), "")
 
         self.mainPanel.tabBar().hide()
         self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
+        self.adjustSize()
 
 
     def change_tab(self):

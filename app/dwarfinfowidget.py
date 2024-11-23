@@ -2,9 +2,9 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableWidget, QWidget, QLabel, QGridLayout, QAbstractItemView, QHeaderView
 
-class DwarfInfoTabWidget(QWidget):
+class DwarfInfoWidget(QWidget):
     def __init__(self, data: dict[list], row: int):
-        super(DwarfInfoTabWidget, self).__init__()
+        super(DwarfInfoWidget, self).__init__()
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setObjectName("gridLayout")
 

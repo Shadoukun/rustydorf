@@ -88,7 +88,7 @@ pub mod dwarf {
         pub pending_squad_name: String,
 
         pub noble_position: FortressPosition,
-        pub labors: HashMap<i32, bool>,
+        pub labors: HashMap<i32, Labor>,
     }
 
     impl Dwarf {
@@ -211,8 +211,14 @@ pub mod dwarf {
             let addr = self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "labors");
             let mut buf = vec![0u8; 94];
             read_raw(&proc.handle, addr, buf.len(), buf.as_mut_ptr());
-
-            self.labors = df.game_data.labors.iter().map(|labor| (labor.id, buf[labor.id as usize] > 0)).collect();
+            self.labors = df.game_data.labors.iter().map(|labor| {
+                let id = labor.id;
+                (id, Labor{
+                    id: labor.id,
+                    name: labor.name.clone(),
+                    enabled: buf[id as usize] > 0,
+                })
+            }).collect();
         }
 
         unsafe fn read_syndromes(&mut self, df: &DFInstance, proc: &Process) {
@@ -666,4 +672,11 @@ pub mod dwarf {
         }
     }
 
+    #[derive(Default, Debug, PartialEq, Serialize, Deserialize, Clone)]
+    /// At the moment I'm not using the rest of the data from UnitLabor
+    pub struct Labor {
+        id: i32,
+        name: String,
+        enabled: bool,
+    }
 }
