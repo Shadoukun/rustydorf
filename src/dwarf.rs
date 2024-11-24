@@ -67,8 +67,9 @@ pub mod dwarf {
         pub custom_profession_name: String,
 
         pub personality_addr: usize,
-        pub beliefs: Vec<(Beliefs, i16)>,
-        pub traits: Vec<(i32, String, i16)>,
+        pub beliefs: Vec<(i32, String, i16)>, // id, name, value
+        pub belief_trait_conflicts: Vec<i32>,
+        pub traits: Vec<(i32, String, i16)>, // id, name, value
         pub trait_belief_conflicts: Vec<i32>,
         pub goals: Vec<(Goal, i16)>,
         pub goals_realized: i32,
@@ -408,7 +409,7 @@ pub mod dwarf {
                     if belief_id >= 0 {
                         let b = df.game_data.beliefs[belief_id as usize].clone();
                         let val = read_mem::<i16>(&proc.handle, addr + 0x4);
-                        Some((b, val))
+                        Some((belief_id, b.name, val))
                     } else {
                         None
                     }
@@ -430,9 +431,9 @@ pub mod dwarf {
                 // trait belief conflicts. no idea if this works.
                 for conflict in tr.clone().belief_conflicts {
                     let belief = df.game_data.beliefs[conflict.1 as usize].clone();
-                    if let Some(b) = self.beliefs.iter_mut().find(|x| x.0 == belief) {
-                        if (b.1 > 10 && val < 40 ) || (b.1 < -10 && val > 60) {
-                            b.0.trait_conflicts.push(conflict.1);
+                    if let Some(b) = self.beliefs.iter_mut().find(|x| x.1 == belief.name) {
+                        if (b.2 > 10 && val < 40 ) || (b.2 < -10 && val > 60) {
+                            self.trait_belief_conflicts.push(conflict.1);
                         }
                     }
                 }
@@ -597,7 +598,7 @@ pub mod dwarf {
         println!("Beliefs");
         println!("----------------------------");
         for b in d.beliefs.iter() {
-            println!("{:?} | Value: {}", b.0.name, b.1);
+            println!("{:?} | Value: {}", b.1, b.2);
         }
 
         println!("\n----------------------------");

@@ -55,28 +55,37 @@ impl Thought {
     }
 
     fn check_subthought(&mut self, df: &DFInstance) {
-        if self.data.subthoughts_type.is_positive() {
-            match df.game_data.unit_subthoughts.get(self.data.subthoughts_type as usize) {
-                Some(data) => {
-                    // if subthoughts exist, replace placeholder with subthought
-                    self.placeholder = data.placeholder.clone();
-                    // TODO: I might be able to simplify this after I fix the subthoughts data
-                    self.subthought = match data.subthoughts.iter().find(|s| s.id == self.subthought_id) {
-                        Some(subthought) => subthought.clone(),
-                        None => {
-                            eprintln!("Warning: Subthought with id {} not found", self.subthought_id);
-                            Subthought::default()
-                        }
-                    };
-                    self.thought = self.thought.replace(self.placeholder.as_str(), self.subthought.thought.as_str());
+        // TODO: I might be able to simplify this after I fix the subthoughts data
 
-                },
-                None => {
-                    eprintln!("Warning: Subthoughts with id {} not found", self.data.subthoughts_type);
-                    return;
-                }
-            };
+        // seemingly, subthoughts_type 0 and 1 are weird
+        if self.data.subthoughts_type < 2 {
+            return;
         }
+
+        match df.game_data.unit_subthoughts.get(self.data.subthoughts_type as usize) {
+            Some(data) => {
+                self.placeholder = data.placeholder.clone();
+                self.subthought = match data.subthoughts.iter().find(|s| s.id == self.subthought_id) {
+                    Some(subthought) => subthought.clone(),
+                    None => {
+                        eprintln!("Warning: Subthought with id {} not found", self.subthought_id);
+                        Subthought::default()
+                    }
+                };
+
+                if self.placeholder == "" {
+                    // if the placeholder is empty, append the subthought to the thought
+                    self.thought = self.thought.clone() + &self.subthought.thought.clone();
+                } else {
+                    // otherwise, replace the placeholder with the subthought
+                    self.thought = self.thought.replace(self.placeholder.as_str(), self.subthought.thought.as_str());
+                }
+            },
+            None => {
+                eprintln!("Warning: Subthoughts with id {} not found", self.data.subthoughts_type);
+                return;
+            }
+        };
     }
 
     fn calculate_effect(&mut self, df: &DFInstance, dwarf: &Dwarf) {

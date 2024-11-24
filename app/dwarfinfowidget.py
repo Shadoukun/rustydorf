@@ -78,7 +78,7 @@ class DwarfInfoWidget(QWidget):
         self.traitTable.setRowCount(len(traits))
 
         for i, trait in enumerate(traits):
-            name, value = trait[0]['name'], trait[1]
+            name, value = trait[1], trait[2]
             self.traitTable.setItem(i, 0, QTableWidgetItem(name))
             self.traitTable.setItem(i, 1, QTableWidgetItem(str(value)))
 
@@ -124,7 +124,7 @@ class DwarfInfoWidget(QWidget):
         beliefsTable.setColumnCount(2)
 
         for i, belief in enumerate(beliefs):
-            name, value = belief[0]['name'], str(belief[1])
+            name, value = belief[1], str(belief[2])
             beliefsTable.setItem(i, 0, QTableWidgetItem(name))
             beliefsTable.setItem(i, 1, QTableWidgetItem(value))
         beliefsTable.resizeColumnsToContents()
