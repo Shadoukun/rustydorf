@@ -329,3 +329,9 @@ impl DFInstance {
     }
 }
 
+pub unsafe fn get_df_instance() -> DFInstance {
+    let proc = Process::new_by_name("Dwarf Fortress.exe");
+    let df = DFInstance::new(&proc);
+    println!("Dwarves: {}", df.dwarves.len());
+    df
+}
