@@ -385,10 +385,11 @@ pub mod dwarf {
 
         pub unsafe fn read_names(&mut self, df: &DFInstance, proc: &Process) {
             let name_offset =  self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "name");
+            self.last_name = df.languages.language_word(df, proc, name_offset);
             self.first_name = read_mem_as_string(&proc, name_offset + df.memory_layout.field_offset(OffsetSection::Word, "first_name"));
             self.nickname = read_mem_as_string(&proc, name_offset + df.memory_layout.field_offset(OffsetSection::Word, "nickname"));
-            // TODO: last_name
-            self.last_name = "".to_string();
+
+            // TODO: translated last name
         }
 
         pub unsafe fn read_last_name(df: &DFInstance, proc: &Process, offset: usize) -> String {
