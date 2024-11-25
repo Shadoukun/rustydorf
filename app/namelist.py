@@ -10,7 +10,9 @@ class NameListWidget(QWidget):
         sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
+
         self.table.setSizePolicy(sizePolicy)
+        self.table.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
         self.table.setShowGrid(False)
 
         # for some reason the table font size is not
@@ -19,7 +21,6 @@ class NameListWidget(QWidget):
         font.setPointSize(6)
         self.table.setFont(font)
 
-        self.table.setMaximumWidth(100)
         self.table.setColumnCount(1)
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)

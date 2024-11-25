@@ -1,6 +1,7 @@
 
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableWidget, QWidget, QLabel, QGridLayout, QAbstractItemView, QHeaderView
+from PyQt5.QtCore import Qt
 
 class DwarfInfoWidget(QWidget):
     def __init__(self, data: dict[list], row: int):
@@ -33,13 +34,14 @@ class DwarfInfoWidget(QWidget):
         self.gridLayout.addWidget(self.traitTable, 0, 3, 2, 1)
         self.gridLayout.addWidget(self.thoughtsTable, 3, 0, 1, 4)
 
+
     def setup_info_section(self, data: list[dict], row: int):
         info = QLabel(f"Name: {data[row].get('first_name', 'Unknown')} {data[row].get('last_name', '')}\n" +
                       f"Profession: {data[row].get('profession', 'Unknown')['name']}\n" +
                       f"Age: {data[row].get('age', 'Unknown')}\n" +
                       f"Sex: {data[row].get('sex', 'Unknown')}")
 
-        self.infoSection.layout().addWidget(info)
+        self.infoSection.layout().addWidget(info, 0, 0)
 
     def setup_attribute_table(self, data: list[dict], row: int):
         attributes: dict = data[row].get('attributes', {})
@@ -55,6 +57,7 @@ class DwarfInfoWidget(QWidget):
             name, value = attribute[1]['name'], attribute[1]['value']
             self.attributeTable.setItem(i, 0, QTableWidgetItem(name))
             self.attributeTable.setItem(i, 1, QTableWidgetItem(str(value)))
+            self.attributeTable.item(i, 1).setTextAlignment(Qt.AlignCenter)
 
 
         # set the vertical header to resize to the contents and prevent the table from resizing
@@ -81,6 +84,7 @@ class DwarfInfoWidget(QWidget):
             name, value = trait[1], trait[2]
             self.traitTable.setItem(i, 0, QTableWidgetItem(name))
             self.traitTable.setItem(i, 1, QTableWidgetItem(str(value)))
+            self.traitTable.item(i, 1).setTextAlignment(Qt.AlignCenter)
 
         # set the vertical header to resize to the contents and prevent the table from resizing
         # This feels janky but it works
@@ -117,7 +121,7 @@ class DwarfInfoWidget(QWidget):
     def setup_beliefs_table(self, data: list[dict], row: int):
         beliefs = data[row].get('beliefs', [])
 
-        beliefsTable = QTableWidget()
+        beliefsTable = QTableWidget(self.infoSection)
         beliefsTable.verticalHeader().hide()
         beliefsTable.horizontalHeader().hide()
         beliefsTable.setRowCount(len(beliefs))
@@ -127,12 +131,13 @@ class DwarfInfoWidget(QWidget):
             name, value = belief[1], str(belief[2])
             beliefsTable.setItem(i, 0, QTableWidgetItem(name))
             beliefsTable.setItem(i, 1, QTableWidgetItem(value))
+            beliefsTable.item(i, 1).setTextAlignment(Qt.AlignCenter)
+
         beliefsTable.resizeColumnsToContents()
         beliefsTable.resizeRowsToContents()
-
-        # set the vertical header to resize to the contents and stretch the first column
-        beliefsTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        # # set the vertical header to resize to the contents and stretch the first column
         beliefsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        beliefsTable.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
 
         beliefsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
         beliefsTable.setSelectionMode(QAbstractItemView.NoSelection)
@@ -142,7 +147,7 @@ class DwarfInfoWidget(QWidget):
     def setup_goals_table(self, data: list[dict], row: int):
         goals = data[row].get('goals', [])
 
-        goalsTable = QTableWidget()
+        goalsTable = QTableWidget(self.infoSection)
         goalsTable.verticalHeader().hide()
         goalsTable.horizontalHeader().hide()
         goalsTable.setRowCount(len(goals))
@@ -152,13 +157,13 @@ class DwarfInfoWidget(QWidget):
             name, value = goal[0]['name'], str(goal[1])
             goalsTable.setItem(i, 0, QTableWidgetItem(name))
             goalsTable.setItem(i, 1, QTableWidgetItem(value))
-
-        goalsTable.resizeColumnsToContents()
-        goalsTable.resizeRowsToContents()
+            goalsTable.item(i, 1).setTextAlignment(Qt.AlignCenter)
 
         # set the vertical header to resize to the contents and stretch the first column
-        goalsTable.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        goalsTable.resizeColumnsToContents()
+        goalsTable.resizeRowsToContents()
         goalsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        goalsTable.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
 
         goalsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
         goalsTable.setSelectionMode(QAbstractItemView.NoSelection)
