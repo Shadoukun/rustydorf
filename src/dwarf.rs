@@ -9,6 +9,7 @@ pub mod dwarf {
     use crate::attribute::{Attribute, AttributeType};
     use crate::thought::Thought;
     use crate::histfigure::FortressPosition;
+    use crate::need::Need;
     use crate::preference::Commitment;
     use crate::preference::Orientation;
     use crate::preference::Preference;
@@ -75,6 +76,7 @@ pub mod dwarf {
         pub goals_realized: i32,
         pub thought_ids: Vec<i32>,
         pub thoughts: Vec<Thought>,
+        pub needs: Vec<Need>,
         pub stress_level: i32,
         pub happiness_level: HappinessLevel,
         pub mood: Mood,
@@ -127,6 +129,10 @@ pub mod dwarf {
             d.read_emotions(df, proc);
             d.read_beliefs(df, proc);
             d.read_goals(df, proc);
+            d.read_needs(df, proc);
+            for n in &d.needs {
+                println!("Need: {:?}", n);
+            }
             d.read_gender_orientation(df, proc);
             d.read_noble_position(df);
             d.read_preferences(df, proc);
@@ -341,15 +347,6 @@ pub mod dwarf {
             };
         }
 
-        unsafe fn read_soul(&mut self, df: &DFInstance, proc: &Process) {
-            self.souls = enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "souls"));
-            if self.souls.len() > 1 {
-                println!("Dwarf has more than one soul");
-            }
-            // get personality from the first soul
-            self.personality_addr = self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "personality");
-        }
-
         unsafe fn read_race_and_caste(&mut self, df: &DFInstance, proc: &Process) -> Result<(), Error> {
             let race_id = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "race"));
             let race = df.get_race(race_id).unwrap();
@@ -388,7 +385,6 @@ pub mod dwarf {
             self.last_name = df.languages.language_word(df, proc, name_offset);
             self.first_name = read_mem_as_string(&proc, name_offset + df.memory_layout.field_offset(OffsetSection::Word, "first_name"));
             self.nickname = read_mem_as_string(&proc, name_offset + df.memory_layout.field_offset(OffsetSection::Word, "nickname"));
-
             // TODO: translated last name
         }
 
@@ -400,6 +396,16 @@ pub mod dwarf {
             self.raw_prof_id = read_mem::<u8>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "profession"));
             self.profession = df.game_data.professions.iter().find(|&x| x.id == self.raw_prof_id as i32).unwrap().clone();
             // TODO: custom profession
+        }
+
+        unsafe fn read_soul(&mut self, df: &DFInstance, proc: &Process) {
+            self.souls = enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "souls"));
+            if self.souls.len() > 1 {
+                println!("Dwarf has more than one soul");
+            }
+            // get personality from the first soul
+            self.personality_addr = self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "personality");
+            // TODO: consider consolidating traits/goals/beliefs/needs/preferences into soul since personality_addr is defined by soul
         }
 
         pub unsafe fn read_beliefs(&mut self, df: &DFInstance, proc: &Process) {
@@ -473,6 +479,13 @@ pub mod dwarf {
                         None
                     }
                 })
+                .collect();
+        }
+
+        pub unsafe fn read_needs(&mut self, df: &DFInstance, proc: &Process) {
+            self.needs = enum_mem_vec(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "needs"))
+                .iter()
+                .map(|&n| Need::new(df, proc, n))
                 .collect();
         }
 

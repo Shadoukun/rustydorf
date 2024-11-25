@@ -6,6 +6,7 @@ mod caste;
 mod thought;
 mod flagarray;
 mod language;
+mod need;
 mod win;
 mod histfigure;
 mod squad;
