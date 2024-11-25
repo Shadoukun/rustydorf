@@ -124,6 +124,7 @@ pub struct UnitLabor {
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct Need {
+    id: i32,
     name: String,
     positive: String,
     negative: String,
