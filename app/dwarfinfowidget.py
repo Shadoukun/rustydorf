@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QTableW
 from PyQt5.QtCore import Qt
 
 class DwarfInfoWidget(QWidget):
-    def __init__(self, data: dict[list], row: int):
+    def __init__(self, game_data: dict, data: dict[list], row: int):
         super(DwarfInfoWidget, self).__init__()
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setObjectName("gridLayout")
@@ -12,6 +12,12 @@ class DwarfInfoWidget(QWidget):
         self.infoSection = QtWidgets.QWidget(self)
         self.infoSection.setLayout(QGridLayout())
         self.infoSection.setObjectName("infoSection")
+
+        self.beliefsTable = QtWidgets.QTableWidget(self)
+        self.beliefsTable.setObjectName("beliefsTable")
+
+        self.goalsTable = QtWidgets.QTableWidget(self)
+        self.goalsTable.setObjectName("goalsTable")
 
         self.thoughtsTable = QtWidgets.QTableWidget(self)
         self.thoughtsTable.setObjectName("thoughtsTable")
@@ -22,17 +28,25 @@ class DwarfInfoWidget(QWidget):
         self.traitTable = QtWidgets.QTableWidget(self)
         self.traitTable.setObjectName("traitTable")
 
+        self.needsTable = QtWidgets.QTableWidget(self)
+        self.needsTable.setObjectName("needsTable")
+
         self.setup_info_section(data, row)
         self.setup_attribute_table(data, row)
         self.setup_trait_table(data, row)
         self.setup_thoughts_table(data, row)
         self.setup_beliefs_table(data, row)
         self.setup_goals_table(data, row)
+        self.setup_needs_table(game_data, data, row)
+
+        self.infoSection.layout().addWidget(self.beliefsTable, 1, 0)
+        self.infoSection.layout().addWidget(self.goalsTable, 1, 1)
 
         self.gridLayout.addWidget(self.infoSection, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.attributeTable, 0, 2, 2, 1)
         self.gridLayout.addWidget(self.traitTable, 0, 3, 2, 1)
         self.gridLayout.addWidget(self.thoughtsTable, 3, 0, 1, 4)
+        self.gridLayout.addWidget(self.needsTable, 4, 0, 1, 4)
 
 
     def setup_info_section(self, data: list[dict], row: int):
@@ -60,7 +74,7 @@ class DwarfInfoWidget(QWidget):
             self.attributeTable.item(i, 1).setTextAlignment(Qt.AlignCenter)
 
 
-        # set the vertical header to resize to the contents and prevent the table from resizing
+        # set the vertical header to resize to the contents and then prevent the table from resizing
         # This feels janky but it works
         header = self.attributeTable.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
@@ -121,51 +135,68 @@ class DwarfInfoWidget(QWidget):
     def setup_beliefs_table(self, data: list[dict], row: int):
         beliefs = data[row].get('beliefs', [])
 
-        beliefsTable = QTableWidget(self.infoSection)
-        beliefsTable.verticalHeader().hide()
-        beliefsTable.horizontalHeader().hide()
-        beliefsTable.setRowCount(len(beliefs))
-        beliefsTable.setColumnCount(2)
+        self.beliefsTable.verticalHeader().hide()
+        self.beliefsTable.horizontalHeader().hide()
+        self.beliefsTable.setRowCount(len(beliefs))
+        self.beliefsTable.setColumnCount(2)
 
         for i, belief in enumerate(beliefs):
             name, value = belief[1], str(belief[2])
-            beliefsTable.setItem(i, 0, QTableWidgetItem(name))
-            beliefsTable.setItem(i, 1, QTableWidgetItem(value))
-            beliefsTable.item(i, 1).setTextAlignment(Qt.AlignCenter)
+            self.beliefsTable.setItem(i, 0, QTableWidgetItem(name))
+            self.beliefsTable.setItem(i, 1, QTableWidgetItem(value))
+            self.beliefsTable.item(i, 1).setTextAlignment(Qt.AlignCenter)
 
-        beliefsTable.resizeColumnsToContents()
-        beliefsTable.resizeRowsToContents()
+        self.beliefsTable.resizeColumnsToContents()
+        self.beliefsTable.resizeRowsToContents()
         # # set the vertical header to resize to the contents and stretch the first column
-        beliefsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        beliefsTable.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
+        self.beliefsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.beliefsTable.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
 
-        beliefsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        beliefsTable.setSelectionMode(QAbstractItemView.NoSelection)
-
-        self.infoSection.layout().addWidget(beliefsTable, 1, 0)
+        self.beliefsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.beliefsTable.setSelectionMode(QAbstractItemView.NoSelection)
 
     def setup_goals_table(self, data: list[dict], row: int):
         goals = data[row].get('goals', [])
 
-        goalsTable = QTableWidget(self.infoSection)
-        goalsTable.verticalHeader().hide()
-        goalsTable.horizontalHeader().hide()
-        goalsTable.setRowCount(len(goals))
-        goalsTable.setColumnCount(2)
+        self.goalsTable.verticalHeader().hide()
+        self.goalsTable.horizontalHeader().hide()
+        self.goalsTable.setRowCount(len(goals))
+        self.goalsTable.setColumnCount(2)
 
         for i, goal in enumerate(goals):
             name, value = goal[0]['name'], str(goal[1])
-            goalsTable.setItem(i, 0, QTableWidgetItem(name))
-            goalsTable.setItem(i, 1, QTableWidgetItem(value))
-            goalsTable.item(i, 1).setTextAlignment(Qt.AlignCenter)
+            self.goalsTable.setItem(i, 0, QTableWidgetItem(name))
+            self.goalsTable.setItem(i, 1, QTableWidgetItem(value))
+            self.goalsTable.item(i, 1).setTextAlignment(Qt.AlignCenter)
 
         # set the vertical header to resize to the contents and stretch the first column
-        goalsTable.resizeColumnsToContents()
-        goalsTable.resizeRowsToContents()
-        goalsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        goalsTable.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
+        self.goalsTable.resizeColumnsToContents()
+        self.goalsTable.resizeRowsToContents()
+        self.goalsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.goalsTable.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
 
-        goalsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        goalsTable.setSelectionMode(QAbstractItemView.NoSelection)
+        self.goalsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.goalsTable.setSelectionMode(QAbstractItemView.NoSelection)
 
-        self.infoSection.layout().addWidget(goalsTable, 1, 1)
+    def setup_needs_table(self, game_data: dict, data: list[dict], row: int):
+        needs = data[row].get('needs', [])
+
+        self.needsTable.verticalHeader().hide()
+        self.needsTable.horizontalHeader().hide()
+        self.needsTable.setRowCount(len(needs))
+        self.needsTable.setColumnCount(2)
+
+        # convert the need ids to their names
+        for i, need in enumerate(needs):
+            id = need["id"]
+            name = need = game_data["needs"][id]["name"]
+            self.needsTable.setItem(i, 0, QTableWidgetItem(name))
+
+        # set the vertical header to resize to the contents and stretch the first column
+        self.needsTable.resizeColumnsToContents()
+        self.needsTable.resizeRowsToContents()
+        self.needsTable.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.needsTable.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
+
+        self.needsTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.needsTable.setSelectionMode(QAbstractItemView.NoSelection)
