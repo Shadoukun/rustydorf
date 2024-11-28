@@ -95,31 +95,8 @@ class DwarfAssistant(QMainWindow):
 
     def get_game_data(self) -> dict:
         response: list[dict] = requests.get('http://127.0.0.1:3000/data').json()
-        data = unpack_game_data(response)
-        return data
+        return response
 
-
-def unpack_game_data(data: dict) -> dict:
-    """
-    Convert the game data to a more usable format.
-    api.rs::get_gamedata_handler passes each GameDataResponse as a dict with a single uppercase key.
-    This flattens it to a single dict with lowercase keys containing all the data.
-    """
-
-    new = {}
-    for i, r in enumerate(data):
-        if r:
-            # the last GameDataResponse is a None string, ignore it.
-            if isinstance(r, str):
-                continue
-            else:
-                key = list(r.keys())[0]
-                # rust enum variants are uppercase,
-                # convert the key to lowercase cuz thats kinda intense
-                lower = key.lower()
-                new[lower] = data[i][key]
-
-    return new
 
 if __name__ == '__main__':
     response = requests.get('http://127.0.0.1:3000/dwarves')
