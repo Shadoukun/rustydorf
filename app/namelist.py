@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, QAbstractItemView, QSizePolicy, QGridLayout
+from PyQt5.QtGui import QFont
 
 class NameListWidget(QWidget):
     def __init__(self, parent=None):
@@ -10,7 +11,8 @@ class NameListWidget(QWidget):
         sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
-
+        font = QFont("More Perfect DOS VGA")
+        self.table.setFont(font)
         self.table.setSizePolicy(sizePolicy)
         self.table.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
         self.table.setShowGrid(False)

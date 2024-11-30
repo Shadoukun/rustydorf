@@ -7,9 +7,7 @@ import requests
 from pprint import pprint
 
 from app.namelist import NameListWidget
-from app.dwarftab import DwarfTabWidget
-from app.dwarfinfowidget import DwarfInfoWidget
-
+from app.dwarfinfotab import DwarfInfoTab
 # Enable high DPI scaling
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
@@ -31,7 +29,6 @@ class DwarfAssistant(QMainWindow):
         self.centralwidget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.centralwidget)
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
 
         # Set font on central widget
         font = QFont()
@@ -41,6 +38,8 @@ class DwarfAssistant(QMainWindow):
         self.setup_menu_bar()
         self.setup_name_list(data)
         self.setup_main_panel(data)
+        self.setFixedWidth(625)
+        self.setFixedHeight(500)
 
     def setup_menu_bar(self):
         # Create empty menu bar and status bar
@@ -78,7 +77,7 @@ class DwarfAssistant(QMainWindow):
         for row in range(self.nameList.table.rowCount()):
             # the tab widget doesn't need to have tab titles,
             # so pass an empty string
-            self.mainPanel.addTab(DwarfInfoWidget(self.game_data, data, row), "")
+            self.mainPanel.addTab(DwarfInfoTab(self.game_data, data, row, self.mainPanel), "")
 
         self.mainPanel.tabBar().hide()
         self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
