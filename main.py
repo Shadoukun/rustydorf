@@ -8,6 +8,7 @@ from pprint import pprint
 
 from app.namelist import NameListWidget
 from app.dwarfinfotab import DwarfInfoTab
+
 # Enable high DPI scaling
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
@@ -42,9 +43,9 @@ class DwarfAssistant(QMainWindow):
         self.nameList = NameListWidget(self.centralwidget)
         self.nameList.setObjectName("nameList")
 
-        self.mainPanel = QtWidgets.QTabWidget(self.centralwidget)
+        self.mainPanel = QtWidgets.QStackedWidget(self.centralwidget)
         self.mainPanel.setObjectName("mainPanel")
-        self.mainPanel.tabBar().hide()
+        self.mainPanel.setContentsMargins(0, 0, 0, 0)
 
         self.gridLayout.addWidget(self.nameList, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
@@ -54,6 +55,7 @@ class DwarfAssistant(QMainWindow):
     def setup_ui(self):
         self.setup_name_list(data)
         self.setup_main_panel(data)
+
         # select the first name in the list by default
         self.nameList.table.setCurrentCell(0, 0)
         self.nameList.table.itemSelectionChanged.connect(self.change_name_tab)
@@ -72,9 +74,7 @@ class DwarfAssistant(QMainWindow):
 
         # Create tabs for each dwarf
         for row in range(self.nameList.table.rowCount()):
-            # the tab widget doesn't need to have tab titles,
-            # so pass an empty string
-            self.mainPanel.addTab(DwarfInfoTab(self.game_data, data, row, self.centralwidget), "")
+            self.mainPanel.addWidget(DwarfInfoTab(self.game_data, data, row, self.centralwidget))
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
