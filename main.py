@@ -16,72 +16,65 @@ class DwarfAssistant(QMainWindow):
 
     def __init__(self, data: list[dict]):
         super(DwarfAssistant, self).__init__()
-
+        # I guess do this here? clarity.
         self.game_data = self.get_game_data()
-        self.setup_ui()
 
-        # select the first name in the list by default
-        self.nameList.table.setCurrentCell(0, 0)
-        self.nameList.table.itemSelectionChanged.connect(self.change_name_tab)
-
-    def setup_ui(self):
         self.setWindowTitle("Dwarf Assistant")
         self.centralwidget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.centralwidget)
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName("gridLayout")
 
         # Set font on central widget
         font = QFont()
         font.setPointSize(6)
         self.setFont(font)
 
-        self.setup_menu_bar()
-        self.setup_name_list(data)
-        self.setup_main_panel(data)
-        self.setFixedWidth(625)
-        self.setFixedHeight(500)
-
-    def setup_menu_bar(self):
-        # Create empty menu bar and status bar
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setObjectName("menubar")
-
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
-
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
-
         self.setMenuBar(self.menubar)
         self.setStatusBar(self.statusbar)
+
+        self.nameList = NameListWidget(self.centralwidget)
+        self.nameList.setObjectName("nameList")
+
+        self.mainPanel = QtWidgets.QTabWidget(self.centralwidget)
+        self.mainPanel.setObjectName("mainPanel")
+        self.mainPanel.tabBar().hide()
+
+        self.gridLayout.addWidget(self.nameList, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
+
+        self.setup_ui()
+
+    def setup_ui(self):
+        self.setup_name_list(data)
+        self.setup_main_panel(data)
+        # select the first name in the list by default
+        self.nameList.table.setCurrentCell(0, 0)
+        self.nameList.table.itemSelectionChanged.connect(self.change_name_tab)
+
 
     def setup_name_list(self, data: list[dict]):
         '''populate the table of names on the left side of the window.'''
 
-        self.nameList = NameListWidget(self.centralwidget)
         self.nameList.table.setRowCount(len(data))
         for i, entry in enumerate(data):
             item = QTableWidgetItem(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
             self.nameList.table.setItem(i, 0, item)
 
-        self.gridLayout.addWidget(self.nameList, 0, 0, 1, 1)
-
-
     def setup_main_panel(self, data: list[dict]):
         '''Create the main panel on the right side of the window.'''
-
-        self.mainPanel = QtWidgets.QTabWidget(self.centralwidget)
-        self.mainPanel.setObjectName("mainPanel")
 
         # Create tabs for each dwarf
         for row in range(self.nameList.table.rowCount()):
             # the tab widget doesn't need to have tab titles,
             # so pass an empty string
-            self.mainPanel.addTab(DwarfInfoTab(self.game_data, data, row, self.mainPanel), "")
-
-        self.mainPanel.tabBar().hide()
-        self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
-
+            self.mainPanel.addTab(DwarfInfoTab(self.game_data, data, row, self.centralwidget), "")
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
