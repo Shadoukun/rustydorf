@@ -18,10 +18,11 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.setup_traits_table(data, row)
         self.setup_thoughts_table(data, row)
         self.setup_needs_table(game_data, data, row)
+        self.setup_labor_table(data, row)
         self.common_setup()
 
     def common_setup(self):
-        for table in [self.beliefsTable, self.goalsTable, self.attributesTable, self.traitsTable, self.thoughtsTable, self.needsTable]:
+        for table in [self.beliefsTable, self.goalsTable, self.attributesTable, self.traitsTable, self.thoughtsTable, self.needsTable, self.laborTable]:
 
             header = table.horizontalHeader()
             header.setSectionResizeMode(0, QHeaderView.Stretch)
@@ -100,3 +101,15 @@ class DwarfInfoTab(QtWidgets.QWidget):
             id = need["id"]
             name = need = game_data["needs"][id]["name"]
             self.needsTable.setItem(i, 0, QTableWidgetItem(name))
+
+    def setup_labor_table(self, data: list[dict], row: int):
+
+        labors: dict = data[row].get('labors', {})
+        labors = sorted(labors.items(), key=lambda item: item[1]["id"])
+
+        self.laborTable.setRowCount(len(labors))
+        self.laborTable.setColumnCount(2)
+
+        for i, labor in enumerate(labors):
+            self.laborTable.setItem(i, 0, QTableWidgetItem(labor[1]["name"]))
+            self.laborTable.setItem(i, 1, QTableWidgetItem(str(labor[1]["enabled"])))
