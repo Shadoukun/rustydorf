@@ -134,7 +134,7 @@ pub mod material {
 
             // Bad wuju
             //
-            // let react_class = enum_mem_vec(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Material, "reaction_class"));
+            // let react_class = mem_vec(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Material, "reaction_class"));
             // for rc in react_class {
             //     let reaction = read_mem_as_string(&proc, rc);
             //     // ???

@@ -18,11 +18,15 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.setup_traits_table(data, row)
         self.setup_thoughts_table(data, row)
         self.setup_needs_table(game_data, data, row)
-        self.setup_labor_table(data, row)
+        self.setup_labors_table(data, row)
+        self.setup_skills_table(data, row)
         self.common_setup()
 
+        self.laborsButton.clicked.connect(self.laborsButtonClicked)
+        self.skillsButton.clicked.connect(self.skillsButtonClicked)
+
     def common_setup(self):
-        for table in [self.beliefsTable, self.goalsTable, self.attributesTable, self.traitsTable, self.thoughtsTable, self.needsTable, self.laborTable]:
+        for table in [self.beliefsTable, self.goalsTable, self.attributesTable, self.traitsTable, self.thoughtsTable, self.needsTable, self.laborsTable]:
 
             header = table.horizontalHeader()
             header.setSectionResizeMode(0, QHeaderView.Stretch)
@@ -102,14 +106,34 @@ class DwarfInfoTab(QtWidgets.QWidget):
             name = need = game_data["needs"][id]["name"]
             self.needsTable.setItem(i, 0, QTableWidgetItem(name))
 
-    def setup_labor_table(self, data: list[dict], row: int):
-
+    def setup_labors_table(self, data: list[dict], row: int):
         labors: dict = data[row].get('labors', {})
-        labors = sorted(labors.items(), key=lambda item: item[1]["id"])
 
-        self.laborTable.setRowCount(len(labors))
-        self.laborTable.setColumnCount(2)
+        # sort the labors by enabled and then by id
+        labors = sorted(labors.items(), key=lambda item: (not item[1]["enabled"], item[1]["id"]))
+
+
+        self.laborsTable.setRowCount(len(labors))
+        self.laborsTable.setColumnCount(2)
 
         for i, labor in enumerate(labors):
-            self.laborTable.setItem(i, 0, QTableWidgetItem(labor[1]["name"]))
-            self.laborTable.setItem(i, 1, QTableWidgetItem(str(labor[1]["enabled"])))
+            self.laborsTable.setItem(i, 0, QTableWidgetItem(labor[1]["name"]))
+            self.laborsTable.setItem(i, 1, QTableWidgetItem(str(labor[1]["enabled"])))
+
+    def setup_skills_table(self, data: list[dict], row: int):
+        skills: dict = data[row].get('skills', {})
+
+        # if the dwarf doesn't have 15 skills, fill the rest of the table with empty rows
+        rows = len(skills) if len(skills) > 14 else 14
+        self.skillsTable.setRowCount(rows)
+        self.skillsTable.setColumnCount(2)
+
+        for i, skill in enumerate(skills):
+            self.skillsTable.setItem(i, 0, QTableWidgetItem(skill["name"]))
+            self.skillsTable.setItem(i, 1, QTableWidgetItem(str(skill["raw_level"])))
+
+    def laborsButtonClicked(self):
+        self.skillStack.setCurrentIndex(0)
+
+    def skillsButtonClicked(self):
+        self.skillStack.setCurrentIndex(1)

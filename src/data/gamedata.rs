@@ -16,7 +16,7 @@ pub struct GameData {
     pub labors:             Vec<UnitLabor>,
     pub needs:              Vec<Need>,
     pub professions:        Vec<Profession>,
-    pub skills:             Vec<Skill>,
+    pub skills:             Vec<UnitSkill>,
     pub skill_levels:       HashMap<String, String>,
     pub sphere_names:       HashMap<String, String>,
     pub unit_activities:    Vec<UnitActivities>,
@@ -30,9 +30,9 @@ pub struct GameData {
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Attribute {
-    id: i32,
-    name: String,
-    levels: HashMap<String, String>
+    pub id: i32,
+    pub name: String,
+    pub levels: HashMap<String, String>
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -58,8 +58,8 @@ pub struct Facet {
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct FacetsSpecial {
-    limit: i32,
-    msg: String
+    pub limit: i32,
+    pub msg: String
 
 }
 
@@ -82,33 +82,33 @@ pub struct HappinessLevel {
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct HealthInfo {
-    id: i32,
-    name: String,
-    color: String,
-    descriptions: Vec<HealthDescription>,
-    r#type: i32,
+    pub id: i32,
+    pub name: String,
+    pub color: String,
+    pub descriptions: Vec<HealthDescription>,
+    pub r#type: i32,
 
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct HealthDescription {
-    desc: String,
-    symbol: String
+    pub desc: String,
+    pub symbol: String
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct Knowledge {
-    name: String,
-    topics: Vec<KnowledgeTopic>,
+    pub name: String,
+    pub topics: Vec<KnowledgeTopic>,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct KnowledgeTopic {
-    area: String,
-    subject: String,
+    pub area: String,
+    pub subject: String,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -124,10 +124,10 @@ pub struct UnitLabor {
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct Need {
-    id: i32,
-    name: String,
-    positive: String,
-    negative: String,
+    pub id: i32,
+    pub name: String,
+    pub positive: String,
+    pub negative: String,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -144,68 +144,68 @@ pub struct Profession {
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
-pub struct Skill {
-    name: String,
-    noun: String,
-    profession_id: i32,
-    mood: i32
+pub struct UnitSkill {
+    pub name: String,
+    pub noun: String,
+    pub profession_id: i32,
+    pub mood: i32
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct SphereName {
-    name: String,
+    pub name: String,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct UnitJobs {
-    id: i32,
-    name: String,
-    img: String,
-    sub: Vec<SubJob>
+    pub id: i32,
+    pub name: String,
+    pub img: String,
+    pub sub: Vec<SubJob>
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct SubJob {
-    id: i32,
-    name: String,
-    img: String,
+    pub id: i32,
+    pub name: String,
+    pub img: String,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct UnitActivities {
-    id: i32,
-    name: String,
-    img: String,
-    sub: Vec<SubActivity>,
-    is_military: bool
+    pub id: i32,
+    pub name: String,
+    pub img: String,
+    pub sub: Vec<SubActivity>,
+    pub is_military: bool
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct SubActivity {
-    id: i32,
-    name: String,
-    img: String,
+    pub id: i32,
+    pub name: String,
+    pub img: String,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct UnitOrders {
-    id: i32,
-    name: String,
-    img: String,
+    pub id: i32,
+    pub name: String,
+    pub img: String,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(default)]
 pub struct UnitMoods {
-    name: String,
-    description: String,
-    color: String,
+    pub name: String,
+    pub description: String,
+    pub color: String,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]

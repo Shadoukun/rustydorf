@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::DFInstance;
 use crate::data::memorylayout::OffsetSection;
 use crate::util::memory::read_mem_as_string;
-use crate::win::{memory::memory::{enum_mem_vec, read_mem}, process::Process};
+use crate::win::{memory::memory::{mem_vec, read_mem}, process::Process};
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 pub struct Syndrome {
@@ -29,14 +29,14 @@ impl Syndrome {
             ..Default::default()
         };
 
-        let syn_classes = enum_mem_vec(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "syn_classes_vector"));
+        let syn_classes = mem_vec(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "syn_classes_vector"));
         for c in syn_classes {
             let class_name = read_mem_as_string(&proc, c);
             // TODO: trim class names
             s.class_names.push(class_name);
         };
 
-        let effects = enum_mem_vec(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "cie_effects"));
+        let effects = mem_vec(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Syndrome, "cie_effects"));
         for e in effects {
             let vtable_addr = read_mem::<usize>(&proc.handle, e);
             let vtable = read_mem::<usize>(&proc.handle, vtable_addr);

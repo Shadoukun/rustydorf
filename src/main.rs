@@ -9,6 +9,7 @@ mod language;
 mod need;
 mod win;
 mod histfigure;
+mod skill;
 mod squad;
 mod time;
 mod syndromes;

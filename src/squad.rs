@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::DFInstance;
 use crate::data::memorylayout::OffsetSection;
-use crate::win::memory::memory::{enum_mem_vec, read_mem};
+use crate::win::memory::memory::{mem_vec, read_mem};
 use crate::win::process::Process;
 
 #[derive(Debug, Default, PartialEq, Clone, Serialize, Deserialize)]
@@ -49,7 +49,7 @@ impl Squad {
 
     pub unsafe fn read_members(&mut self, df: &DFInstance, proc: &Process) {
         let members_addr = self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "members");
-        let members_vector = enum_mem_vec(&proc.handle, members_addr);
+        let members_vector = mem_vec(&proc.handle, members_addr);
 
         // not sure why not just members_vector.len()
         let mut member_count = 0;
@@ -65,7 +65,7 @@ impl Squad {
 
         // add ammo qty of each member to ammo count
         let mut ammo_count = 0;
-        for a in enum_mem_vec::<usize>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "ammunition")) {
+        for a in mem_vec::<usize>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "ammunition")) {
              ammo_count += read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "ammunition_qty"));
         }
 
@@ -79,7 +79,7 @@ impl Squad {
 
         pub unsafe fn read_current_orders(&mut self, df: &DFInstance, proc: &Process) {
             let orders_addr = self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "orders");
-            let orders_vector = enum_mem_vec(&proc.handle, orders_addr);
+            let orders_vector = mem_vec(&proc.handle, orders_addr);
 
             // current orders
             for o in orders_vector {
@@ -89,15 +89,15 @@ impl Squad {
         }
 
         pub unsafe fn read_scheduled_orders(&mut self, df: &DFInstance, proc: &Process) {
-            let schedules = enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "schedule"));
+            let schedules = mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "schedule"));
             // no idea what alert is
             let idx = read_mem::<i32>(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Squad, "alert"));
             let schedule_size = df.memory_layout.field_offset(OffsetSection::Squad, "sched_size");
             let current_month = df.current_time(proc).current_month();
 
             let base_addr = schedules.get(idx as usize).unwrap();
-            let orders = enum_mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Squad, "sched_orders"));
-            let assigned = enum_mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Squad, "sched_assigned"));
+            let orders = mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Squad, "sched_orders"));
+            let assigned = mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Squad, "sched_assigned"));
 
             let pos = 0;
             while pos < assigned.len() {

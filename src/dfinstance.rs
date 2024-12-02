@@ -7,13 +7,13 @@ use crate::items::ItemType;
 use crate::language::{Languages, Translation, Word};
 use crate::squad::Squad;
 use crate::time::DfTime;
-use crate::util::address_plus_offset;
+use crate::util::global_address;
 use crate::race::race::Race;
 use crate::dwarf::dwarf::{Dwarf, print_dwarf};
 
 use crate::util::memory::read_mem_as_string;
 use crate::data::{gamedata::{self, GameData}, memorylayout::{load_memory_layout, MemoryOffsets, OffsetSection}};
-use crate::win::{memory::memory::{enum_mem_vec, read_mem}, process::Process};
+use crate::win::{memory::memory::{mem_vec, read_mem}, process::Process};
 
 /// Represents the Dwarf Fortress instance \
 /// Contains all the data loaded from the game
@@ -64,12 +64,12 @@ impl DFInstance {
             ..Default::default()
         };
 
-        df.fortress_addr    = read_mem::<usize>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
+        df.fortress_addr    = read_mem::<usize>(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
         df.fortress_id      = read_mem::<i32>(&proc.handle, df.fortress_addr + size_of::<usize>());
-        df.dwarf_race_id    = read_mem::<i16>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
-        df.dwarf_civ_id     = read_mem::<i32>(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
-        df.creature_vector  = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
-        df.syndromes_vector = enum_mem_vec(&proc.handle, address_plus_offset(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
+        df.dwarf_race_id    = read_mem::<i16>(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
+        df.dwarf_civ_id     = read_mem::<i32>(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
+        df.creature_vector  = mem_vec(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
+        df.syndromes_vector = mem_vec(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
 
         // TODO: fix materials
         // df.load_materials(&proc);
@@ -87,15 +87,15 @@ impl DFInstance {
     }
 
     pub unsafe fn load_materials(&mut self, proc: &Process) {
-        self.material_templates = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "material_templates_vector")));
+        self.material_templates = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "material_templates_vector")));
 
-        let base_materials_addr = read_mem::<usize>(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "base_materials")));
+        let base_materials_addr = read_mem::<usize>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "base_materials")));
         for i in 0..255 {
             let mat = Material::new(self, proc, i, base_materials_addr, true);
             self.base_materials.push(mat);
         }
 
-        let inorganics_vector = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "inorganics_vector")));
+        let inorganics_vector = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "inorganics_vector")));
         let mut i = 0;
         for mat in inorganics_vector {
             let mat = Material::new(self, proc, i, mat, false);
@@ -151,7 +151,7 @@ impl DFInstance {
         ];
 
         for (vector, offset_name) in arts {
-            *vector = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, offset_name)));
+            *vector = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, offset_name)));
         }
     }
 
@@ -176,20 +176,20 @@ impl DFInstance {
 
         // Iterate over the item types and load them into item_defs
         for (item_type, offset_name) in item_types {
-            let offset = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, offset_name));
-            self.item_defs.insert(item_type, enum_mem_vec(&proc.handle, offset));
+            let offset = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, offset_name));
+            self.item_defs.insert(item_type, mem_vec(&proc.handle, offset));
         }
     }
 
     pub unsafe fn load_historical_figures(&mut self, proc: &Process) {
-        let hist_figs_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "historical_figures_vector"));
-        let hist_figs_vector = enum_mem_vec(&proc.handle, hist_figs_addr);
+        let hist_figs_addr = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "historical_figures_vector"));
+        let hist_figs_vector = mem_vec(&proc.handle, hist_figs_addr);
         for fig in hist_figs_vector {
             let id = read_mem::<i32>(&proc.handle, fig + self.memory_layout.field_offset(OffsetSection::HistFigure, "id"));
             self.historical_figures.insert(id, fig);
         }
 
-        self.fake_identities_vector = enum_mem_vec::<usize>(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fake_identities_vector")));
+        self.fake_identities_vector = mem_vec::<usize>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fake_identities_vector")));
     }
 
     pub unsafe fn get_fake_identity(&self, id: i32) -> Option<i32> {
@@ -202,13 +202,13 @@ impl DFInstance {
     }
 
     pub unsafe fn load_historical_entities(&mut self, proc: &Process) {
-        let entities_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "historical_entities_vector"));
-        let entities_vec = enum_mem_vec(&proc.handle, entities_addr);
+        let entities_addr = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "historical_entities_vector"));
+        let entities_vec = mem_vec(&proc.handle, entities_addr);
         for e in entities_vec {
             let ent_type = read_mem::<i16>(&proc.handle, e);
             if ent_type == 0 || e == entities_addr {
-                let position_addr_vec = enum_mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "positions"));
-                let assignment_addr_vec = enum_mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "assignments"));
+                let position_addr_vec = mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "positions"));
+                let assignment_addr_vec = mem_vec::<usize>(&proc.handle, e + self.memory_layout.field_offset(OffsetSection::HistEntity, "assignments"));
 
                 // positions
                 self.positions = position_addr_vec.iter().map(|&p| {
@@ -249,22 +249,22 @@ impl DFInstance {
     }
 
     pub unsafe fn load_languages(&mut self, proc: &Process) {
-        let language_vector_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "language_vector"));
-        let translation_vector_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "translation_vector"));
+        let language_vector_addr = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "language_vector"));
+        let translation_vector_addr = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "translation_vector"));
         let word_table_offset = &self.memory_layout.field_offset(OffsetSection::Language, "word_table");
         self.languages = Languages::default();
 
-        for word_ptr in enum_mem_vec(&proc.handle, language_vector_addr) {
+        for word_ptr in mem_vec(&proc.handle, language_vector_addr) {
             self.languages.words.push(Word::new(word_ptr, proc, &self.memory_layout));
         }
 
         let mut id = 0;
-        for translate_lang in enum_mem_vec(&proc.handle, translation_vector_addr) {
+        for translate_lang in mem_vec(&proc.handle, translation_vector_addr) {
             // The beginning of the language address is the name of the language
             let lang_name = read_mem_as_string(proc, translate_lang);
             // the word vector begins after the language name
             let lang_vector_addr = translate_lang + word_table_offset;
-            let lang_vector = enum_mem_vec(&proc.handle, lang_vector_addr);
+            let lang_vector = mem_vec(&proc.handle, lang_vector_addr);
 
             let mut translation_words: Vec<String> = vec![];
             if !lang_vector.is_empty() {
@@ -279,8 +279,8 @@ impl DFInstance {
 
     pub unsafe fn load_races(&mut self, proc: &Process) {
         let mut races: Vec<Race> = vec![];
-            let race_vector_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "races_vector"));
-            let races_vector = enum_mem_vec(&proc.handle, race_vector_addr);
+            let race_vector_addr = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "races_vector"));
+            let races_vector = mem_vec(&proc.handle, race_vector_addr);
             if !races_vector.is_empty() {
                 let mut id: i32 = 0;
                 for ptr in races_vector {
@@ -298,7 +298,7 @@ impl DFInstance {
     }
 
     pub unsafe fn load_squads(&mut self, proc: &Process) {
-        self.squad_vector = enum_mem_vec(&proc.handle, address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "squad_vector")));
+        self.squad_vector = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "squad_vector")));
         self.squads = self.squad_vector.iter().map(|&s| Squad::new(self, proc, s)).collect();
     }
 
@@ -320,9 +320,9 @@ impl DFInstance {
 
     /// Returns the current time in the game
     pub unsafe fn current_time(&self, proc: &Process) -> DfTime {
-        let year_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "current_year"));
+        let year_addr = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "current_year"));
         let year = read_mem::<i32>(&proc.handle, year_addr);
-        let curr_year_tick_addr = address_plus_offset(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "cur_year_tick"));
+        let curr_year_tick_addr = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "cur_year_tick"));
         let curr_year_tick = read_mem::<i32>(&proc.handle, curr_year_tick_addr);
 
         DfTime::from_seconds((year as u64 * 1200 * 28 * 12) + (curr_year_tick as u64))

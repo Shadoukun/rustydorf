@@ -17,7 +17,7 @@ pub fn capitalize_each(input: &str) -> String {
 
 /// returns the address of the given process module plus the given offset
 /// Used for global addresses
-pub unsafe fn address_plus_offset(proc: &Process, mut offset: usize) -> usize {
+pub unsafe fn global_address(proc: &Process, mut offset: usize) -> usize {
     offset = offset.wrapping_sub(DEFAULT_BASE_ADDR as usize);
     proc.modules[0].modBaseAddr.add(offset) as usize
 }
@@ -29,6 +29,11 @@ pub mod memory {
 
     const STRING_BUFFER_LENGTH: usize = 16;
     const POINTER_SIZE: usize = std::mem::size_of::<usize>();
+
+    // writing this as a common trait implementation with read_mem would be better,
+    // but due to how Rust infers generics, if it was a trait I wouldn't be able
+    // to use the `read_mem::<T>` syntax directly and I'd have to use to use `T as ReadMem::read_mem` instead.
+    // hopefully this will be fixed in the future. Nightlies?
 
     /// Read memory from a process plus the given offset, and return it as a string
     pub unsafe fn read_mem_as_string(proc: &Process, mut offset: usize) -> String {
@@ -45,5 +50,4 @@ pub mod memory {
         // Dwarf Fortress uses CP437 encoding for strings
         String::from_cp437(buf, &CP437_CONTROL)
     }
-
 }

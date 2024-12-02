@@ -85,7 +85,7 @@ pub mod memory {
         }
     }
 
-    pub unsafe fn enum_mem_vec<T: Default + Clone>(proc: &HANDLE, addr: usize) -> Vec<T> {
+    pub unsafe fn mem_vec<T: Default + Clone>(proc: &HANDLE, addr: usize) -> Vec<T> {
         let pointer_size = std::mem::size_of::<T>();
         let start = read_mem::<usize>(proc, addr);
         let end = read_mem::<usize>(proc, addr + pointer_size);

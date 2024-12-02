@@ -8,7 +8,7 @@ pub mod race {
     use crate::data::memorylayout::OffsetSection;
     use crate::flagarray::FlagArray;
     use crate::util::{capitalize_each, memory::read_mem_as_string};
-    use crate::win::{memory::memory::enum_mem_vec, process::Process};
+    use crate::win::{memory::memory::mem_vec, process::Process};
 
     #[derive(Default, Debug, Clone, Serialize, Deserialize)]
     pub struct Race {
@@ -48,15 +48,15 @@ pub mod race {
 
             // TODO: implement these?
             r.pop_ratio_vector = df.memory_layout.field_offset(OffsetSection::Race, "pop_ratio_vector");
-            r.materials_vector = enum_mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "materials_vector"));
+            r.materials_vector = mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "materials_vector"));
             r.tissues_vector   = df.memory_layout.field_offset(OffsetSection::Race, "tissues_vector");
 
-            r.pref_strings = enum_mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "pref_string_vector"))
+            r.pref_strings = mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "pref_string_vector"))
                 .iter()
                 .map(|&p| read_mem_as_string(&proc, p))
                 .collect();
 
-            r.castes = enum_mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "castes_vector"))
+            r.castes = mem_vec(&proc.handle, base_addr + df.memory_layout.field_offset(OffsetSection::Race, "castes_vector"))
                 .iter()
                 .map(|&c| Caste::new(df, proc, c))
                 .collect();

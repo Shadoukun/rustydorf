@@ -2,7 +2,7 @@ pub mod caste {
     use serde::{Deserialize, Serialize};
 
     use crate::data::memorylayout::OffsetSection;
-    use crate::win::memory::memory::{enum_mem_vec, read_mem};
+    use crate::win::memory::memory::{mem_vec, read_mem};
     use crate::win::process::Process;
     use crate::{flagarray::FlagArray, util::memory::read_mem_as_string, DFInstance};
 
@@ -29,7 +29,7 @@ pub mod caste {
                 name:               read_mem_as_string(&proc, address + df.memory_layout.field_offset(OffsetSection::Caste, "caste_name")),
                 name_plural:        read_mem_as_string(&proc, address + df.memory_layout.field_offset(OffsetSection::Word, "noun_plural")),
                 adult_size:         read_mem::<i32>(&proc.handle, address + df.memory_layout.field_offset(OffsetSection::Caste, "adult_size")),
-                body_parts_addr:    enum_mem_vec(&proc.handle, address + df.memory_layout.field_offset(OffsetSection::Caste, "body_info")),
+                body_parts_addr:    mem_vec(&proc.handle, address + df.memory_layout.field_offset(OffsetSection::Caste, "body_info")),
                 flags:              FlagArray::new(proc, address + df.memory_layout.field_offset(OffsetSection::Caste, "flags")),
                 ..Default::default()
             };
@@ -74,13 +74,13 @@ pub mod caste {
             }
 
             // extracts
-            let extracts = enum_mem_vec::<usize>(&proc.handle, self.address + df.memory_layout.field_offset(OffsetSection::Caste, "extracts"));
+            let extracts = mem_vec::<usize>(&proc.handle, self.address + df.memory_layout.field_offset(OffsetSection::Caste, "extracts"));
             if extracts.len() > 0 {
                 let _ = self.flags.flags.set(200, true);
             }
 
             // shared tissues
-            let share_tissues = enum_mem_vec::<usize>(&proc.handle, self.address + df.memory_layout.field_offset(OffsetSection::Caste, "shearable_tissues_vector"));
+            let share_tissues = mem_vec::<usize>(&proc.handle, self.address + df.memory_layout.field_offset(OffsetSection::Caste, "shearable_tissues_vector"));
             if share_tissues.len() > 0 {
                 let _ = self.flags.flags.set(201, true);
             }

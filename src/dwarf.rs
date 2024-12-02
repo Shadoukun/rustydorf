@@ -7,6 +7,7 @@ pub mod dwarf {
     use serde::Serialize;
 
     use crate::attribute::{Attribute, AttributeType};
+    use crate::skill::Skill;
     use crate::thought::Thought;
     use crate::histfigure::FortressPosition;
     use crate::need::Need;
@@ -23,7 +24,7 @@ pub mod dwarf {
     use crate::data::memorylayout::*;
     use crate::histfigure::HistoricalFigure;
     use crate::race::race::Race;
-    use crate::win::memory::memory::enum_mem_vec;
+    use crate::win::memory::memory::mem_vec;
     use crate::win::memory::memory::read_mem;
     use crate::win::memory::memory::read_raw;
     use crate::win::process::Process;
@@ -77,6 +78,7 @@ pub mod dwarf {
         pub thought_ids: Vec<i32>,
         pub thoughts: Vec<Thought>,
         pub needs: Vec<Need>,
+        pub skills: Vec<Skill>,
         pub stress_level: i32,
         pub happiness_level: HappinessLevel,
         pub mood: Mood,
@@ -130,13 +132,11 @@ pub mod dwarf {
             d.read_beliefs(df, proc);
             d.read_goals(df, proc);
             d.read_needs(df, proc);
-            for n in &d.needs {
-                println!("Need: {:?}", n);
-            }
             d.read_gender_orientation(df, proc);
             d.read_noble_position(df);
             d.read_preferences(df, proc);
             d.read_attributes(df, proc);
+            d.read_skills(df, proc);
             Ok(d)
         }
 
@@ -230,7 +230,7 @@ pub mod dwarf {
         }
 
         unsafe fn read_syndromes(&mut self, df: &DFInstance, proc: &Process) {
-            self.syndromes = enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "active_syndrome_vector")).iter()
+            self.syndromes = mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "active_syndrome_vector")).iter()
                 .map(|&s| Syndrome::new(df, proc, s))
                 .collect();
 
@@ -370,7 +370,7 @@ pub mod dwarf {
         }
 
         unsafe fn read_states(&mut self, df: &DFInstance, proc: &Process) {
-            self.states = enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "states"))
+            self.states = mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "states"))
                 .iter()
                 .map(|&s| {
                     let k = read_mem::<i16>(&proc.handle, s);
@@ -399,7 +399,7 @@ pub mod dwarf {
         }
 
         unsafe fn read_soul(&mut self, df: &DFInstance, proc: &Process) {
-            self.souls = enum_mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "souls"));
+            self.souls = mem_vec(&proc.handle, self.addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "souls"));
             if self.souls.len() > 1 {
                 println!("Dwarf has more than one soul");
             }
@@ -408,8 +408,17 @@ pub mod dwarf {
             // TODO: consider consolidating traits/goals/beliefs/needs/preferences into soul since personality_addr is defined by soul
         }
 
+        unsafe fn read_skills(&mut self, df: &DFInstance, proc: &Process) {
+            self.skills = mem_vec(&proc.handle, self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "skills"))
+                .iter()
+                .map(|&addr| {
+                Skill::new(df, proc, addr)
+            }).collect();
+        }
+            // TODO: mood skills
+
         pub unsafe fn read_beliefs(&mut self, df: &DFInstance, proc: &Process) {
-            self.beliefs = enum_mem_vec(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "beliefs"))
+            self.beliefs = mem_vec(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "beliefs"))
                 .iter()
                 .filter_map(|&addr| {
                     let belief_id = read_mem::<i32>(&proc.handle, addr);
@@ -466,7 +475,7 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_goals(&mut self, df: &DFInstance, proc: &Process) {
-            self.goals = enum_mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "goals"))
+            self.goals = mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "goals"))
                 .iter()
                 .filter_map(|&addr| {
                     let goal_type = read_mem::<i32>(&proc.handle, addr + 0x4);
@@ -483,14 +492,14 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_needs(&mut self, df: &DFInstance, proc: &Process) {
-            self.needs = enum_mem_vec(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "needs"))
+            self.needs = mem_vec(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "needs"))
                 .iter()
                 .map(|&n| Need::new(df, proc, n))
                 .collect();
         }
 
         pub unsafe fn read_preferences(&mut self, df: &DFInstance, proc: &Process) {
-            let prefs: Vec<usize> = enum_mem_vec(&proc.handle,  self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "preferences"));
+            let prefs: Vec<usize> = mem_vec(&proc.handle,  self.souls[0] + df.memory_layout.field_offset(OffsetSection::Soul, "preferences"));
             for p in prefs {
                 let pref = Preference::new(df, proc, p);
                 // TODO: add to preferences
@@ -499,7 +508,7 @@ pub mod dwarf {
         }
 
         pub unsafe fn read_emotions(&mut self, df: &DFInstance, proc: &Process) {
-            let thoughts = enum_mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions"));
+            let thoughts = mem_vec::<usize>(&proc.handle, self.personality_addr + df.memory_layout.field_offset(OffsetSection::Soul, "emotions"));
             // ensure traits are loaded first
 
             self.thoughts = thoughts.iter().filter_map(|&addr| {
