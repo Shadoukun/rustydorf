@@ -25,8 +25,12 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.laborsButton.clicked.connect(self.laborsButtonClicked)
         self.skillsButton.clicked.connect(self.skillsButtonClicked)
 
+        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #aaa;")
+        self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
+
     def common_setup(self):
-        for table in [self.beliefsTable, self.goalsTable, self.attributesTable, self.traitsTable, self.thoughtsTable, self.needsTable, self.laborsTable]:
+        for table in [self.beliefsTable, self.goalsTable, self.attributesTable,
+                      self.traitsTable, self.thoughtsTable, self.needsTable, self.laborsTable]:
 
             header = table.horizontalHeader()
             header.setSectionResizeMode(0, QHeaderView.Stretch)
@@ -132,8 +136,18 @@ class DwarfInfoTab(QtWidgets.QWidget):
             self.skillsTable.setItem(i, 0, QTableWidgetItem(skill["name"]))
             self.skillsTable.setItem(i, 1, QTableWidgetItem(str(skill["raw_level"])))
 
+        # Adjust the column widths
+        # TODO: the column widths still suck
+        self.skillsTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        header = self.skillsTable.horizontalHeader()
+        header.resizeSection(1, 25)
+
     def laborsButtonClicked(self):
         self.skillStack.setCurrentIndex(0)
+        self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #aaa;")
+        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
 
     def skillsButtonClicked(self):
         self.skillStack.setCurrentIndex(1)
+        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #aaa;")
+        self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
