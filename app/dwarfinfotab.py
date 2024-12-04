@@ -25,7 +25,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.laborsButton.clicked.connect(self.laborsButtonClicked)
         self.skillsButton.clicked.connect(self.skillsButtonClicked)
 
-        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #aaa;")
+        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #eee; border :2px solid gold;")
         self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
 
     def common_setup(self):
@@ -144,10 +144,10 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
     def laborsButtonClicked(self):
         self.skillStack.setCurrentIndex(0)
-        self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #aaa;")
+        self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #eee; border :2px solid gold;")
         self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
 
     def skillsButtonClicked(self):
         self.skillStack.setCurrentIndex(1)
-        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #aaa;")
+        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #eee; border :2px solid gold;")
         self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
