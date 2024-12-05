@@ -40,7 +40,7 @@ class DwarfAssistant(QMainWindow):
         self.setMenuBar(self.menubar)
         self.setStatusBar(self.statusbar)
 
-        self.nameList = NameListWidget(self.centralwidget)
+        self.nameList = NameListWidget(self.centralwidget, self.game_data, data)
         self.nameList.setObjectName("nameList")
 
         self.mainPanel = QtWidgets.QStackedWidget(self.centralwidget)
@@ -50,36 +50,24 @@ class DwarfAssistant(QMainWindow):
         self.gridLayout.addWidget(self.nameList, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
 
-        self.setup_ui()
-
-    def setup_ui(self):
-        self.setup_name_list(data)
+        self.nameList.populate_list(data)
         self.setup_main_panel(data)
+        self.connect_slots()
 
-        # select the first name in the list by default
-        self.nameList.table.setCurrentCell(0, 0)
-        self.nameList.table.itemSelectionChanged.connect(self.change_name_tab)
-
-
-    def setup_name_list(self, data: list[dict]):
-        '''populate the table of names on the left side of the window.'''
-
-        self.nameList.table.setRowCount(len(data))
-        for i, entry in enumerate(data):
-            item = QTableWidgetItem(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
-            self.nameList.table.setItem(i, 0, item)
+    def connect_slots(self):
+        self.nameList.itemSelectionChanged.connect(self.change_name_tab)
 
     def setup_main_panel(self, data: list[dict]):
         '''Create the main panel on the right side of the window.'''
 
         # Create tabs for each dwarf
-        for row in range(self.nameList.table.rowCount()):
+        for row in range(self.nameList.rowCount()):
             self.mainPanel.addWidget(DwarfInfoTab(self.game_data, data, row, self.centralwidget))
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
 
-        selected_items = self.nameList.table.selectedItems()
+        selected_items = self.nameList.selectedItems()
         if selected_items:
             selected_item = selected_items[0]
             row = selected_item.row()
