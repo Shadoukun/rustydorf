@@ -19,6 +19,7 @@ class DwarfAssistant(QMainWindow):
         super(DwarfAssistant, self).__init__()
         # I guess do this here? clarity.
         self.game_data = self.get_game_data()
+        self.dwarf_data = data
 
         self.setWindowTitle("Dwarf Assistant")
         self.centralwidget = QtWidgets.QWidget(self)
@@ -40,7 +41,7 @@ class DwarfAssistant(QMainWindow):
         self.setMenuBar(self.menubar)
         self.setStatusBar(self.statusbar)
 
-        self.nameList = NameListWidget(self.centralwidget, self.game_data, data)
+        self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data)
         self.nameList.setObjectName("nameList")
 
         self.mainPanel = QtWidgets.QStackedWidget(self.centralwidget)
@@ -50,19 +51,27 @@ class DwarfAssistant(QMainWindow):
         self.gridLayout.addWidget(self.nameList, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
 
-        self.nameList.populate_list(data)
-        self.setup_main_panel(data)
+        self.nameList.populate_list(self.dwarf_data)
+        self.setup_main_panel()
         self.connect_slots()
 
     def connect_slots(self):
         self.nameList.itemSelectionChanged.connect(self.change_name_tab)
+        self.nameList.refresh_panels.connect(self.setup_main_panel)
 
-    def setup_main_panel(self, data: list[dict]):
+    def setup_main_panel(self):
         '''Create the main panel on the right side of the window.'''
 
-        # Create tabs for each dwarf
-        for row in range(self.nameList.rowCount()):
-            self.mainPanel.addWidget(DwarfInfoTab(self.game_data, data, row, self.centralwidget))
+        # Clear existing widgets
+        while self.mainPanel.count():
+            widget = self.mainPanel.currentWidget()
+            self.mainPanel.removeWidget(widget)
+            widget.deleteLater()
+
+        # Create tabs for each dwarf from name list
+        for row in self.nameList.order:
+            dwarf = next(dwarf for dwarf in self.dwarf_data if dwarf["id"] == row)
+            self.mainPanel.addWidget(DwarfInfoTab(self.game_data, dwarf, self.centralwidget))
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''

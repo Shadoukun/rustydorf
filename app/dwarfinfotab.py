@@ -4,22 +4,22 @@ from PyQt5.QtCore import Qt
 
 
 class DwarfInfoTab(QtWidgets.QWidget):
-    def __init__(self, game_data: dict, data: dict[list], row: int, parent=None):
+    def __init__(self, game_data: dict, data: dict, parent=None):
         super().__init__(parent)
         uic.loadUi('app/dwarfinfotab.ui', self)
-        self.infoLabel.setText(f"Name: {data[row].get('first_name', 'Unknown')} {data[row].get('last_name', '')}\n" +
-                                f"Profession: {data[row].get('profession', 'Unknown')['name']}\n" +
-                                f"Age: {data[row].get('age', 'Unknown')}\n" +
-                                f"Sex: {data[row].get('sex', 'Unknown')}")
+        self.infoLabel.setText(f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n" +
+                                f"Profession: {data.get('profession', 'Unknown')['name']}\n" +
+                                f"Age: {data.get('age', 'Unknown')}\n" +
+                                f"Sex: {data.get('sex', 'Unknown')}")
 
-        self.setup_beliefs_table(data, row)
-        self.setup_goals_table(data, row)
-        self.setup_attributes_table(data, row)
-        self.setup_traits_table(data, row)
-        self.setup_thoughts_table(data, row)
-        self.setup_needs_table(game_data, data, row)
-        self.setup_labors_table(data, row)
-        self.setup_skills_table(data, row)
+        self.setup_beliefs_table(data)
+        self.setup_goals_table(data)
+        self.setup_attributes_table(data)
+        self.setup_traits_table(data)
+        self.setup_thoughts_table(data)
+        self.setup_needs_table(game_data, data)
+        self.setup_labors_table(data)
+        self.setup_skills_table(data)
         self.common_setup()
 
         self.laborsButton.clicked.connect(self.laborsButtonClicked)
@@ -40,8 +40,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
             table.setEditTriggers(QAbstractItemView.NoEditTriggers)
             table.resizeColumnToContents(1)
 
-    def setup_beliefs_table(self, data: list[dict], row: int):
-        beliefs: dict = data[row].get('beliefs', {})
+    def setup_beliefs_table(self, data: list[dict]):
+        beliefs: dict = data.get('beliefs', {})
 
         self.beliefsTable.setRowCount(len(beliefs))
         self.beliefsTable.setColumnCount(2)
@@ -54,8 +54,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.beliefsTable.horizontalHeader()
         self.beliefsTable.resizeColumnToContents(1)
 
-    def setup_goals_table(self, data: list[dict], row: int):
-        goals: dict = data[row].get('goals', {})
+    def setup_goals_table(self, data: list[dict]):
+        goals: dict = data.get('goals', {})
 
         self.goalsTable.setRowCount(len(goals))
         self.goalsTable.setColumnCount(2)
@@ -65,9 +65,9 @@ class DwarfInfoTab(QtWidgets.QWidget):
             self.goalsTable.setItem(i, 0, QTableWidgetItem(name))
             self.goalsTable.setItem(i, 1, QTableWidgetItem(value))
 
-    def setup_attributes_table(self, data: list[dict], row: int):
+    def setup_attributes_table(self, data: list[dict]):
 
-        attributes: dict = data[row].get('attributes', {})
+        attributes: dict = data.get('attributes', {})
         attributes = sorted(attributes.items(), key=lambda item: item[1]["id"])
 
         self.attributesTable.setRowCount(len(attributes))
@@ -78,8 +78,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
             self.attributesTable.setItem(i, 0, QTableWidgetItem(name))
             self.attributesTable.setItem(i, 1, QTableWidgetItem(str(value)))
 
-    def setup_traits_table(self, data: list[dict], row: int):
-        traits: dict = data[row].get('traits', {})
+    def setup_traits_table(self, data: list[dict]):
+        traits: dict = data.get('traits', {})
 
         self.traitsTable.setRowCount(len(traits))
         self.traitsTable.setColumnCount(2)
@@ -89,9 +89,9 @@ class DwarfInfoTab(QtWidgets.QWidget):
             self.traitsTable.setItem(i, 0, QTableWidgetItem(name))
             self.traitsTable.setItem(i, 1, QTableWidgetItem(str(value)))
 
-    def setup_thoughts_table(self, data: list[dict], row: int):
+    def setup_thoughts_table(self, data: list[dict]):
 
-        thoughts: dict = data[row].get('thoughts', {})
+        thoughts: dict = data.get('thoughts', {})
 
         self.thoughtsTable.setRowCount(len(thoughts))
 
@@ -99,8 +99,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
             text = f"felt {thought['emotion_type'].lower()} {thought['thought']}"
             self.thoughtsTable.setItem(i, 0, QTableWidgetItem(text))
 
-    def setup_needs_table(self, game_data: dict, data: list[dict], row: int):
-        needs: dict = data[row].get('needs', {})
+    def setup_needs_table(self, game_data: dict, data: list[dict]):
+        needs: dict = data.get('needs', {})
 
         self.needsTable.setRowCount(len(needs))
 
@@ -110,8 +110,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
             name = need = game_data["needs"][id]["name"]
             self.needsTable.setItem(i, 0, QTableWidgetItem(name))
 
-    def setup_labors_table(self, data: list[dict], row: int):
-        labors: dict = data[row].get('labors', {})
+    def setup_labors_table(self, data: list[dict]):
+        labors: dict = data.get('labors', {})
 
         # sort the labors by enabled and then by id
         labors = sorted(labors.items(), key=lambda item: (not item[1]["enabled"], item[1]["id"]))
@@ -124,8 +124,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
             self.laborsTable.setItem(i, 0, QTableWidgetItem(labor[1]["name"]))
             self.laborsTable.setItem(i, 1, QTableWidgetItem(str(labor[1]["enabled"])))
 
-    def setup_skills_table(self, data: list[dict], row: int):
-        skills: dict = data[row].get('skills', {})
+    def setup_skills_table(self, data: list[dict]):
+        skills: dict = data.get('skills', {})
 
         # if the dwarf doesn't have 15 skills, fill the rest of the table with empty rows
         rows = len(skills) if len(skills) > 14 else 14

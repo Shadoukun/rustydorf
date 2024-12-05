@@ -1,11 +1,18 @@
-from PyQt5.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, QAbstractItemView, QSizePolicy, QGridLayout, QWidget, QMenu
+from PyQt5.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, QAbstractItemView, QSizePolicy, QGridLayout, QWidget, QMenu, QAction
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
+from PyQt5.QtCore import pyqtSignal
 
 class NameListWidget(QTableWidget):
+
+    refresh_panels = pyqtSignal()
+
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
         super(NameListWidget, self).__init__(parent)
         self.setObjectName("nameList")
+        self.game_data = game_data
+        self.dwarves = dwarves
+        self.order = []
 
         sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -38,30 +45,43 @@ class NameListWidget(QTableWidget):
                 color: black; \
             }""")
 
+
     def populate_list(self, data: list[dict]):
+        self.order = []
         self.setRowCount(len(data))
         for i, entry in enumerate(data):
             item = QTableWidgetItem(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
             self.setItem(i, 0, item)
+            self.order.append(entry["id"])
+
+        self.refresh_panels.emit()
 
         # select the first name in the list by default
         self.setCurrentCell(0, 0)
 
     def contextMenuEvent(self, event):
-            context_menu = QMenu(self)
+        context_menu = QMenu(self)
 
-            asc_sort = context_menu.addAction("Ascending")
-            desc_sort= context_menu.addAction("Descending")
+        # Create actions for sorting
+        sort_name_asc_action = QAction('Name: Ascending', self)
+        sort_name_desc_action = QAction('Name: Descending', self)
+        sort_age_asc_action = QAction('Age: Ascending', self)
+        sort_age_desc_action = QAction('Age: Descending', self)
 
-            # Execute the menu at the cursor position
-            action = context_menu.exec_(self.mapToGlobal(event.pos()))
+        sort_name_asc_action.triggered.connect(lambda: self.sort_data('first_name', True))
+        sort_name_desc_action.triggered.connect(lambda: self.sort_data('first_name', False))
+        sort_age_asc_action.triggered.connect(lambda: self.sort_data('age', True))
+        sort_age_desc_action.triggered.connect(lambda: self.sort_data('age', False))
 
-            # Handle the selected action
-            if action == asc_sort:
-                self.sort_table(ascending=True)
-            elif action == desc_sort:
-                self.sort_table(ascending=False)
+        context_menu.addAction(sort_name_asc_action)
+        context_menu.addAction(sort_name_desc_action)
+        context_menu.addAction(sort_age_asc_action)
+        context_menu.addAction(sort_age_desc_action)
 
-    def sort_table(self, ascending=True):
-        order = Qt.AscendingOrder if ascending else Qt.DescendingOrder
-        self.sortItems(0, order)
+        # Execute the menu at the cursor position
+        context_menu.exec_(self.mapToGlobal(event.pos()))
+
+    def sort_data(self, key: str, ascending=True):
+        """Sort the data based on the given key and order, then reload the table."""
+        sorted_data  = sorted(self.dwarves, key=lambda x: x.get(key, 0), reverse=not ascending)
+        self.populate_list(sorted_data)
