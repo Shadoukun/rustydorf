@@ -1,5 +1,4 @@
 import requests
-from PyQt5 import uic
 from PyQt5.QtGui import QFont
 from PyQt5 import QtWidgets
 
@@ -41,16 +40,16 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.mainPanel.setObjectName("mainPanel")
         self.mainPanel.setContentsMargins(0, 0, 0, 0)
 
-        self.gridLayout.addWidget(self.nameList, 0, 0, 1, 1)
-        self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 
-        self.nameList.populate_list(self.dwarf_data)
+        self.nameList.nameTable.populate_list(self.dwarf_data)
         self.setup_main_panel()
         self.connect_slots()
 
     def connect_slots(self):
-        self.nameList.itemSelectionChanged.connect(self.change_name_tab)
-        self.nameList.refresh_panels.connect(self.setup_main_panel)
+        self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
+        self.nameList.nameTable.refresh_panels.connect(self.setup_main_panel)
 
     def setup_main_panel(self):
         '''Create the main panel on the right side of the window.'''
@@ -62,14 +61,14 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             widget.deleteLater()
 
         # Create tabs for each dwarf from name list
-        for row in self.nameList.order:
+        for row in self.nameList.nameTable.order:
             dwarf = next(dwarf for dwarf in self.dwarf_data if dwarf["id"] == row)
             self.mainPanel.addWidget(DwarfInfoTab(self.game_data, dwarf, self.centralwidget))
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
 
-        selected_items = self.nameList.selectedItems()
+        selected_items = self.nameList.nameTable.selectedItems()
         if selected_items:
             selected_item = selected_items[0]
             row = selected_item.row()
