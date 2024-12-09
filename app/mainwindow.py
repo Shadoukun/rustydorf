@@ -1,10 +1,10 @@
 import requests
-from PyQt5.QtGui import QFont
-from PyQt5 import QtWidgets
+from PyQt6.QtGui import QFont
+from PyQt6 import QtWidgets, QtCore
 
 from .namelist import NameListWidget
-from .dwarfinfotab import DwarfInfoTab
-
+from .infopanel import DwarfInfoWidget
+from .infosidepanel import SidePanelWidget
 
 class DwarfAssistant(QtWidgets.QMainWindow):
     def __init__(self, data: list[dict]):
@@ -40,8 +40,12 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.mainPanel.setObjectName("mainPanel")
         self.mainPanel.setContentsMargins(0, 0, 0, 0)
 
-        self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
-        self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.nameList, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.mainPanel, 0, 1, 1, 1)
+
+        self.sidePanel = SidePanelWidget(self.centralwidget)
+        self.sidePanel.setObjectName("sidePanel")
+        self.gridLayout.addWidget(self.sidePanel, 0, 2, 1, 1)
 
         self.nameList.nameTable.populate_list(self.dwarf_data)
         self.setup_main_panel()
@@ -61,9 +65,9 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             widget.deleteLater()
 
         # Create tabs for each dwarf from name list
-        for row in self.nameList.nameTable.order:
-            dwarf = next(dwarf for dwarf in self.dwarf_data if dwarf["id"] == row)
-            self.mainPanel.addWidget(DwarfInfoTab(self.game_data, dwarf, self.centralwidget))
+        for dwarf in self.dwarf_data:
+            widget = DwarfInfoWidget(self.game_data, dwarf)
+            self.mainPanel.addWidget(widget)
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''

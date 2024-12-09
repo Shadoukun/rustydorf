@@ -1,12 +1,13 @@
-from PyQt5 import QtWidgets, uic
-from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
-from PyQt5.QtCore import Qt
+from PyQt6 import QtWidgets, uic
+from PyQt6.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
+from PyQt6.QtCore import Qt
 
+from .infosidepanel import SidePanelWidget
 
-class DwarfInfoTab(QtWidgets.QWidget):
+class DwarfInfoWidget(QtWidgets.QWidget):
     def __init__(self, game_data: dict, data: dict, parent=None):
         super().__init__(parent)
-        uic.loadUi('app/dwarfinfotab.ui', self)
+        uic.loadUi('app/infopanel.ui', self)
         self.infoLabel.setText(f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n" +
                                 f"Profession: {data.get('profession', 'Unknown')['name']}\n" +
                                 f"Age: {data.get('age', 'Unknown')}\n" +
@@ -18,26 +19,25 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.setup_traits_table(data)
         self.setup_thoughts_table(data)
         self.setup_needs_table(game_data, data)
-        self.setup_labors_table(data)
-        self.setup_skills_table(data)
+        # self.setup_labors_table(data)
+        # self.setup_skills_table(data)
         self.common_setup()
+        # self.laborsButton.clicked.connect(self.laborsButtonClicked)
+        # self.skillsButton.clicked.connect(self.skillsButtonClicked)
 
-        self.laborsButton.clicked.connect(self.laborsButtonClicked)
-        self.skillsButton.clicked.connect(self.skillsButtonClicked)
-
-        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #eee; border :2px solid gold;")
-        self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
+        # self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #eee; border :2px solid gold;")
+        # self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
 
     def common_setup(self):
         for table in [self.beliefsTable, self.goalsTable, self.attributesTable,
-                      self.traitsTable, self.thoughtsTable, self.needsTable, self.laborsTable]:
+                      self.traitsTable, self.thoughtsTable, self.needsTable]:
 
             header = table.horizontalHeader()
-            header.setSectionResizeMode(0, QHeaderView.Stretch)
-            header.setDefaultAlignment(Qt.AlignLeft)
+            header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+            header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
             table.verticalHeader().setVisible(False)
-            table.setSelectionMode(QAbstractItemView.NoSelection)
-            table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+            table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
             table.resizeColumnToContents(1)
 
     def setup_beliefs_table(self, data: list[dict]):
@@ -138,7 +138,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         # Adjust the column widths
         # TODO: the column widths still suck
-        self.skillsTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        self.skillsTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         header = self.skillsTable.horizontalHeader()
         header.resizeSection(1, 25)
 
