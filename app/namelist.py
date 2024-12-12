@@ -21,15 +21,18 @@ class NameListWidget(QWidget):
         self.setMaximumWidth(150)
 
         self.searchBar = QLineEdit(self)
-        self.searchBar.setObjectName("searchBar")
+        self.searchBar.setObjectName("nameListSearchBar")
         self.searchBar.setPlaceholderText("Search")
         layout.addWidget(self.searchBar)
-        self.nameTable = NameListTableWidget(self, self.game_data, self.dwarves)
+
+        self.nameTable = NameListTable(self, self.game_data, self.dwarves)
         self.nameTable.setObjectName("nameTable")
         layout.addWidget(self.nameTable)
 
+class NameListTable(QTableWidget):
 
-class NameListTableWidget(QTableWidget):
+    refresh_panels = pyqtSignal()
+
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
         super().__init__(parent)
         font = QFont("More Perfect DOS VGA")
@@ -61,6 +64,7 @@ class NameListTableWidget(QTableWidget):
     def populate_list(self, data: list[dict]):
         self.order = []
         self.setRowCount(len(data))
+        print("populate")
         for i, entry in enumerate(data):
             item = QTableWidgetItem(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
             self.setItem(i, 0, item)
@@ -68,3 +72,4 @@ class NameListTableWidget(QTableWidget):
 
         # select the first name in the list by default
         self.setCurrentCell(0, 0)
+        self.refresh_panels.emit()
