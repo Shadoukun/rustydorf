@@ -1,6 +1,6 @@
 import requests
-from PyQt5.QtGui import QFont
-from PyQt5 import QtWidgets
+from PyQt6.QtGui import QFont
+from PyQt6 import QtWidgets
 
 from .namelist import NameListWidget
 from .dwarfinfotab import DwarfInfoTab

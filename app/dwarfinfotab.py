@@ -1,6 +1,6 @@
-from PyQt5 import QtWidgets, uic
-from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
-from PyQt5.QtCore import Qt
+from PyQt6 import QtWidgets, uic
+from PyQt6.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
+from PyQt6.QtCore import Qt
 
 
 class DwarfInfoTab(QtWidgets.QWidget):
@@ -33,11 +33,11 @@ class DwarfInfoTab(QtWidgets.QWidget):
                       self.traitsTable, self.thoughtsTable, self.needsTable, self.laborsTable]:
 
             header = table.horizontalHeader()
-            header.setSectionResizeMode(0, QHeaderView.Stretch)
-            header.setDefaultAlignment(Qt.AlignLeft)
+            header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+            header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
             table.verticalHeader().setVisible(False)
-            table.setSelectionMode(QAbstractItemView.NoSelection)
-            table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+            table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+            table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
             table.resizeColumnToContents(1)
 
     def setup_beliefs_table(self, data: list[dict]):
@@ -138,7 +138,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         # Adjust the column widths
         # TODO: the column widths still suck
-        self.skillsTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        self.skillsTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         header = self.skillsTable.horizontalHeader()
         header.resizeSection(1, 25)
 

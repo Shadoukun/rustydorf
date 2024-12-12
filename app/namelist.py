@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, QAbstractItemView, QSizePolicy, QWidget, QVBoxLayout, QLineEdit
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import pyqtSignal
+from PyQt6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, QAbstractItemView, QSizePolicy, QWidget, QVBoxLayout, QLineEdit
+from PyQt6.QtGui import QFont
+from PyQt6.QtCore import pyqtSignal
 
 class NameListWidget(QWidget):
 
@@ -19,7 +19,7 @@ class NameListWidget(QWidget):
         self.searchBar = QLineEdit(self)
         self.searchBar.setObjectName("searchBar")
         self.searchBar.setPlaceholderText("Search")
-        self.searchBar.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.searchBar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         layout.addWidget(self.searchBar)
 
         self.nameTable = NameListTableWidget(self, self.game_data, self.dwarves)
@@ -32,13 +32,13 @@ class NameListTableWidget(QTableWidget):
 
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
         super().__init__(parent)
-        sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(1)
         font = QFont("More Perfect DOS VGA")
         self.setFont(font)
         self.setSizePolicy(sizePolicy)
-        self.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
+        self.setSizeAdjustPolicy(QAbstractItemView.SizeAdjustPolicy.AdjustToContents)
         self.setShowGrid(False)
 
         # for some reason the table font size is not
@@ -48,8 +48,8 @@ class NameListTableWidget(QTableWidget):
         self.setFont(font)
 
         self.setColumnCount(1)
-        self.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
 
         self.horizontalHeader().setVisible(False)
         self.horizontalHeader().setHighlightSections(False)
