@@ -51,7 +51,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
     def connect_slots(self):
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
         self.nameList.nameTable.refresh_panels.connect(self.setup_main_panel)
-        self.nameList.searchBar.returnPressed.connect(self.filter_list)
+        self.nameList.searchBar.lineEdit().returnPressed.connect(self.filter_list)
 
     def setup_main_panel(self):
         '''Create the main panel on the right side of the window.'''

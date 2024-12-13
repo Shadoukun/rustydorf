@@ -65,6 +65,7 @@ class DropdownComboBox(QComboBox):
             action.setData(data)
             menu.addAction(action)
 
+    # TODO: add a method to add new items to the menu_data
 
 class MainWindow(QMainWindow):
     def __init__(self):

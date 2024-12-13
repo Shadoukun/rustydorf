@@ -1,6 +1,8 @@
-from PyQt6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, QAbstractItemView, QSizePolicy, QWidget, QVBoxLayout, QLineEdit
+from PyQt6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, QAbstractItemView, QSizePolicy, QWidget, QVBoxLayout, QLineEdit, QComboBox
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import pyqtSignal
+
+from .dropdowncombobox import DropdownComboBox
 
 class NameListWidget(QWidget):
 
@@ -20,14 +22,21 @@ class NameListWidget(QWidget):
         self.setSizePolicy(sizePolicy)
         self.setMaximumWidth(150)
 
-        self.searchBar = QLineEdit(self)
+        self.searchBar = DropdownComboBox(self)
         self.searchBar.setObjectName("nameListSearchBar")
         self.searchBar.setPlaceholderText("Search")
+        self.populate_search_bar()
         layout.addWidget(self.searchBar)
 
         self.nameTable = NameListTable(self, self.game_data, self.dwarves)
         self.nameTable.setObjectName("nameTable")
         layout.addWidget(self.nameTable)
+
+    def populate_search_bar(self):
+        # TODO: finish this.
+        # I need to add logic to handle the different types of search vs using the search bar
+        self.searchBar.menu_data["Age"] = "Age"
+        self.searchBar.menu_data["Attributes"] = ["Strength"]
 
 class NameListTable(QTableWidget):
 
