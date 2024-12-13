@@ -79,7 +79,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
     def filter_list(self):
         '''Filter the name list based on the search bar text.'''
 
-        search_text = self.nameList.searchBar.text().lower()
+        search_text = self.nameList.searchBar.lineEdit().text().lower()
         keywords = [r"@attr:"] # etc
         pattern = rf"({"|".join(keywords)})(.*)\W?"
         print("reg")
