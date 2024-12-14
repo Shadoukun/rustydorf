@@ -2,6 +2,8 @@ from PyQt6 import QtWidgets, uic
 from PyQt6.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
 from PyQt6.QtCore import Qt
 
+buttonActiveStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt; border :2px solid gold;"
+buttonStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt;"
 
 class DwarfInfoTab(QtWidgets.QWidget):
     def __init__(self, game_data: dict, data: dict, parent=None):
@@ -22,11 +24,13 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.setup_skills_table(data)
         self.common_setup()
 
+        self.attributesButton.clicked.connect(self.attributesButtonClicked)
+        self.beliefsGoalsButton.clicked.connect(self.beliefsGoalsButtonClicked)
         self.laborsButton.clicked.connect(self.laborsButtonClicked)
         self.skillsButton.clicked.connect(self.skillsButtonClicked)
 
-        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #eee; border :2px solid gold;")
-        self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
+        self.skillsButton.setStyleSheet(buttonActiveStylesheet)
+        self.attributesButton.setStyleSheet(buttonActiveStylesheet)
 
     def common_setup(self):
         for table in [self.beliefsTable, self.goalsTable, self.attributesTable,
@@ -70,13 +74,26 @@ class DwarfInfoTab(QtWidgets.QWidget):
         attributes: dict = data.get('attributes', {})
         attributes = sorted(attributes.items(), key=lambda item: item[1]["id"])
 
-        self.attributesTable.setRowCount(len(attributes))
-        self.attributesTable.setColumnCount(2)
+        attributes = [
+            [a for a in attributes[0:9]],
+            [a for a in attributes[9:18]],
+        ]
+        self.attributesTable.setRowCount(9)
+        self.attributesTable.setColumnCount(4)
+        self.attributesTable.setColumnWidth(0, 75)
+        self.attributesTable.setColumnWidth(1, 25)
+        self.attributesTable.setColumnWidth(2, 75)
+        self.attributesTable.setColumnWidth(3, 25)
 
-        for i, attribute in enumerate(attributes):
+        for i, attribute in enumerate(attributes[0]):
             name, value = attribute[1]['name'], attribute[1]['value']
             self.attributesTable.setItem(i, 0, QTableWidgetItem(name))
             self.attributesTable.setItem(i, 1, QTableWidgetItem(str(value)))
+
+        for i, attribute in enumerate(attributes[1]):
+            name, value = attribute[1]['name'], attribute[1]['value']
+            self.attributesTable.setItem(i, 2, QTableWidgetItem(name))
+            self.attributesTable.setItem(i, 3, QTableWidgetItem(str(value)))
 
     def setup_traits_table(self, data: list[dict]):
         traits: dict = data.get('traits', {})
@@ -144,10 +161,20 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
     def laborsButtonClicked(self):
         self.skillStack.setCurrentIndex(0)
-        self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #eee; border :2px solid gold;")
-        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
+        self.skillsButton.setStyleSheet(buttonStylesheet)
+        self.laborsButton.setStyleSheet(buttonActiveStylesheet)
 
     def skillsButtonClicked(self):
         self.skillStack.setCurrentIndex(1)
-        self.skillsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt; background-color: #eee; border :2px solid gold;")
-        self.laborsButton.setStyleSheet("font-family: 'More Perfect DOS VGA'; font-size: 7pt;")
+        self.laborsButton.setStyleSheet(buttonStylesheet)
+        self.skillsButton.setStyleSheet(buttonActiveStylesheet)
+
+    def attributesButtonClicked(self):
+        self.attributeStack.setCurrentIndex(0)
+        self.beliefsGoalsButton.setStyleSheet(buttonStylesheet)
+        self.attributesButton.setStyleSheet(buttonActiveStylesheet)
+
+    def beliefsGoalsButtonClicked(self):
+        self.attributeStack.setCurrentIndex(1)
+        self.attributesButton.setStyleSheet(buttonStylesheet)
+        self.beliefsGoalsButton.setStyleSheet(buttonActiveStylesheet)
