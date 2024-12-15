@@ -1,6 +1,7 @@
 import sys
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHeaderView, QApplication, QMainWindow, QTableWidgetItem
+import requests
 from checkboxtable import CheckboxTable
 
 HEADERS = ["Woodworking", "Mining", "Fishing", "Your Mom"]
@@ -25,26 +26,32 @@ class RotatedHeaderView(QHeaderView):
         painter.restore()
 
 class LaborsTable(CheckboxTable):
-    def __init__(self):
+    def __init__(self, data: list[dict], dwarf_data: list[dict]):
+        self.labors = [labor['name'] for labor in data.get('labors', [])]
+
         super().__init__()
         self.table.setHorizontalHeader(RotatedHeaderView(Qt.Orientation.Horizontal, self.table))
         self.table.horizontalHeader().setDefaultSectionSize(20)
         self.table.horizontalHeader().setFixedHeight(75)
-        self.table.setRowCount(5)
-        self.table.setColumnCount(4)
+        self.table.setRowCount(len(dwarf_data))
+        self.table.setColumnCount(len(self.labors))
         self.populate_table()
 
     def populate_table(self):
         super().populate_table()
-        for col, header in enumerate(HEADERS):
+        for col, header in enumerate(self.labors):
             self.table.setHorizontalHeaderItem(col, QTableWidgetItem(header))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     main_window = QMainWindow()
-    labors_table = LaborsTable()
+
+    response: list[dict] = requests.get('http://127.0.0.1:3000/data').json()
+    dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
+
+    labors_table = LaborsTable(response, dwarf_data)
     main_window.setCentralWidget(labors_table)
-    main_window.setWindowTitle("QTableWidget with Rotated Headers")
+    main_window.setWindowTitle("Labors Table")
     main_window.resize(400, 300)
     main_window.show()
     sys.exit(app.exec())
