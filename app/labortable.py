@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QHeaderView, QApplication, QMainWindow, QTableWidgetItem
+from PyQt6.QtWidgets import QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QCheckBox
 import requests
 from checkboxtable import CheckboxTable
 
@@ -28,6 +28,7 @@ class RotatedHeaderView(QHeaderView):
 class LaborsTable(CheckboxTable):
     def __init__(self, data: list[dict], dwarf_data: list[dict]):
         self.labors = [labor['name'] for labor in data.get('labors', [])]
+        self.dwarves = dwarf_data
 
         super().__init__()
         self.table.setHorizontalHeader(RotatedHeaderView(Qt.Orientation.Horizontal, self.table))
@@ -41,6 +42,14 @@ class LaborsTable(CheckboxTable):
         super().populate_table()
         for col, header in enumerate(self.labors):
             self.table.setHorizontalHeaderItem(col, QTableWidgetItem(header))
+
+        for row, dwarf in enumerate(self.dwarves):
+            for column, labor in enumerate(self.labors):
+                if (widget := self.table.cellWidget(row, column)) and (checkbox := widget.findChild(QCheckBox)):
+                    if checked := any([l["enabled"] for l in dwarf["labors"].values() if l["id"] == column]):
+                        checkbox.setChecked(checked)
+                        widget.setStyleSheet("background-color: lightgreen;")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
