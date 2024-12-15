@@ -1,6 +1,6 @@
+import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QCheckBox, QWidget, QHBoxLayout
 from PyQt6.QtCore import Qt
-import sys
 
 class CheckboxTable(QWidget):
     def __init__(self):
