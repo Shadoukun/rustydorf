@@ -36,9 +36,17 @@ class CheckboxTable(QWidget):
                 self.table.setCellWidget(row, column, widget)
                 checkbox.stateChanged.connect(lambda state, r=row, c=column: self.checkbox_state_changed(state, r, c))
 
-    def toggle_checkbox(self, row, column) -> None:
-        if (widget := self.table.cellWidget(row, column)) and (checkbox := widget.findChild(QCheckBox)):
+    def toggle_checkbox(self, row: int, column: int) -> None:
+        if res := self.get_checkbox(row, column):
+            _, checkbox = res
             checkbox.setChecked(not checkbox.isChecked())
+
+    def get_checkbox(self, row: int, column: int) -> tuple[QWidget, QCheckBox]:
+        """Get the checkbox widget at the specified row and column."""
+        if (widget := self.table.cellWidget(row, column)) and (checkbox := widget.findChild(QCheckBox)):
+                return widget, checkbox
+        else:
+            return None, None
 
     def checkbox_state_changed(self, state, row, column) -> None:
         if state == Qt.CheckState.Checked.value:
