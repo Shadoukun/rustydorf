@@ -4,7 +4,8 @@ This application is designed for displaying and manipulating dwarfs in Dwarf For
 
 At this stage, it can only display serialized data from the game.
 
-![screenshot](https://raw.githubusercontent.com/shadoukun/rustydorf/main/screenshot.gif)
+![screenshot](https://raw.githubusercontent.com/shadoukun/rustydorf/main/share/screenshot.gif)
+![screenshot2](https://raw.githubusercontent.com/shadoukun/rustydorf/main/share/screenshot2.gif)
 
 ## Features
 
