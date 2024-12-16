@@ -46,11 +46,10 @@ class LaborsTable(CheckboxTable):
 
         for row, dwarf in enumerate(self.dwarves):
             for column, labor in enumerate(self.labors):
-                if res := self.get_checkbox(row, column):
-                    widget, checkbox = res
-                    if (checkbox) and (checked := any([l["enabled"] for l in dwarf["labors"].values() if l["id"] == column])):
-                            checkbox.setChecked(checked)
-                            widget.setStyleSheet("background-color: lightgreen;")
+                widget, checkbox = self.get_checkbox(row, column)
+                if (checkbox) and (checked := any([l["enabled"] for l in dwarf["labors"].values() if l["id"] == column])):
+                    checkbox.setChecked(checked)
+                    widget.setStyleSheet("background-color: lightgreen;")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
