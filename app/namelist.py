@@ -7,7 +7,7 @@ from PyQt6.QtCore import QPoint
 from PyQt6.QtGui import QFont
 from PyQt6.QtCore import pyqtSignal
 
-from .dropdowncombobox import DropdownComboBox
+from .components.dropdowncombobox import DropdownComboBox
 
 class NameListWidget(QWidget):
 

@@ -1,8 +1,9 @@
 import sys
+import requests
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QCheckBox
-import requests
-from checkboxtable import CheckboxTable
+
+from app.components.checkboxtable import CheckboxTable
 
 HEADERS = ["Woodworking", "Mining", "Fishing", "Your Mom"]
 
