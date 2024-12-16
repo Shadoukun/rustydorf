@@ -11,6 +11,9 @@ from .components.dropdowncombobox import DropdownComboBox
 
 class NameListWidget(QWidget):
 
+    refresh_panels = pyqtSignal()
+    sort_changed = pyqtSignal(str, bool)
+
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
         super().__init__(parent)
         self.setObjectName("nameList")
@@ -27,13 +30,13 @@ class NameListWidget(QWidget):
         self.setSizePolicy(sizePolicy)
         self.setMaximumWidth(150)
 
-        self.searchBar = NameListSearchBar(self)
+        self.searchBar = NameListSearchBar(self, self.sort_changed)
         self.searchBar.setObjectName("nameListSearchBar")
         self.searchBar.setPlaceholderText("Search")
         self.populate_search_bar()
         layout.addWidget(self.searchBar)
 
-        self.nameTable = NameListTable(self, self.game_data, self.dwarves)
+        self.nameTable = NameListTable(self, self.refresh_panels, self.game_data, self.dwarves)
         self.nameTable.setObjectName("nameTable")
         layout.addWidget(self.nameTable)
 
@@ -56,12 +59,10 @@ class NameListWidget(QWidget):
         self.nameTable.populate_list(sorted_data)
 
 class NameListSearchBar(DropdownComboBox):
-
     #TODO: add ascending/descending
-    sort_changed = pyqtSignal(str, bool)
-
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, sort_changed: pyqtSignal = None):
         super().__init__(parent)
+        self.sort_changed = sort_changed
         self.setPlaceholderText("Search")
         self.menu_data = {}
         self.sortkey = ""
@@ -81,14 +82,13 @@ class NameListSearchBar(DropdownComboBox):
             # TODO: transform keywords, @attr, etc based on menu_data selection
             #       Or remove keywords. I'm not sure I need them. if I use this
             self.sortkey = action.text()
-            self.sort_changed.emit(self.sortkey, False)
+            self.sort_changed.emit(self.sortkey, False) if self.sort_changed != None else None
 
 class NameListTable(QTableWidget):
 
-    refresh_panels = pyqtSignal()
-
-    def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
+    def __init__(self, parent=None, refresh_panels: pyqtSignal = None, game_data: dict = None, dwarves: list[dict] = None):
         super().__init__(parent)
+        self.refresh_panels = refresh_panels
         font = QFont("More Perfect DOS VGA")
         self.setFont(font)
         self.setShowGrid(False)
