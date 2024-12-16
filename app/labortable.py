@@ -48,8 +48,7 @@ class LaborsTable(CheckboxTable):
             for column, labor in enumerate(self.labors):
                 if res := self.get_checkbox(row, column):
                     widget, checkbox = res
-                    if checkbox:
-                        if checked := any([l["enabled"] for l in dwarf["labors"].values() if l["id"] == column]):
+                    if (checkbox) and (checked := any([l["enabled"] for l in dwarf["labors"].values() if l["id"] == column])):
                             checkbox.setChecked(checked)
                             widget.setStyleSheet("background-color: lightgreen;")
 
