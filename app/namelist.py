@@ -11,27 +11,22 @@ from .components.dropdowncombobox import DropdownComboBox
 from .signals import SignalsManager
 
 class NameListWidget(QWidget):
-
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
         super().__init__(parent)
         self.setObjectName("nameList")
-        self.game_data = game_data
-        self.dwarves = dwarves
-        self.order = []
-
-        self.initUI()
-
-    def initUI(self):
         layout = QVBoxLayout()
         self.setLayout(layout)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.setSizePolicy(sizePolicy)
         self.setMaximumWidth(150)
 
+        self.game_data = game_data
+        self.dwarves = dwarves
+
         self.searchBar = NameListSearchBar(self)
         self.searchBar.setObjectName("nameListSearchBar")
         self.searchBar.setPlaceholderText("Search")
-        self.populate_search_bar()
+        self.setup_search_bar()
         layout.addWidget(self.searchBar)
 
         self.nameTable = NameListTable(self, self.game_data, self.dwarves)
@@ -40,7 +35,7 @@ class NameListWidget(QWidget):
 
         SignalsManager.instance().sort_changed.connect(self.sort_data)
 
-    def populate_search_bar(self):
+    def setup_search_bar(self):
         # TODO: finish this.
         # I need to add logic to handle the different types of search vs using the search bar
         self.searchBar.menu_data["Age"] = "Age"
@@ -56,7 +51,9 @@ class NameListWidget(QWidget):
         sorted_data  = sorted(self.dwarves, key=lambda x: x.get(key, 0), reverse=not ascending)
         self.nameTable.populate_list(sorted_data)
 
+
 class NameListSearchBar(DropdownComboBox):
+    """Search bar for the name list widget that uses a custom QComboBox to display a menu of search options."""
     #TODO: add ascending/descending
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -81,14 +78,16 @@ class NameListSearchBar(DropdownComboBox):
             self.sortkey = action.text()
             SignalsManager.instance().sort_changed.emit(self.sortkey, False)
 
-class NameListTable(QTableWidget):
 
+class NameListTable(QTableWidget):
+    """Table widget for displaying the list of dwarves on the right side of the window."""
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
         super().__init__(parent)
         font = QFont("More Perfect DOS VGA")
         self.setFont(font)
         self.setShowGrid(False)
         self.setColumnCount(1)
+        self.setRowCount(len(dwarves))
         self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
 
@@ -122,4 +121,6 @@ class NameListTable(QTableWidget):
 
         # select the first name in the list by default
         self.setCurrentCell(0, 0)
+
+        # emit a signal to refresh the panels
         SignalsManager.instance().refresh_panels.emit()
