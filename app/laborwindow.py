@@ -61,8 +61,13 @@ class LaborTable(CheckboxTable):
     def populate_table(self):
         # list(map()) is nicer but its hard to read
         for row, dwarf in enumerate(self.dwarves):
+            # Set the vertical header to the dwarf's name
+            self.table.setVerticalHeaderItem(row, QTableWidgetItem(f"{dwarf['first_name']} {dwarf['last_name']}"))
             for column, labor in enumerate(self.labors):
+                # set the horizontal header to the labor name
                 self.table.setHorizontalHeaderItem(column, QTableWidgetItem(labor))
+
+                # Create a checkbox widget for each labor
                 checkbox = QCheckBox()
                 widget = QWidget()
                 layout = QVBoxLayout()
@@ -72,6 +77,7 @@ class LaborTable(CheckboxTable):
                 widget.setLayout(layout)
                 checkbox.hide()
 
+                # Check if the labor is enabled for the dwarf
                 if checkbox:
                     if checked := any([l["enabled"] for l in dwarf["labors"].values() if l["id"] == column]):
                         checkbox.setChecked(checked)
