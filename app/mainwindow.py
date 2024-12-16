@@ -7,7 +7,7 @@ from PyQt6 import QtWidgets
 from .namelist import NameListWidget
 from .dwarfinfotab import DwarfInfoTab
 from .signals import SignalsManager
-from .labortable import LaborsTable
+from .laborwindow import LaborWindow
 
 class DwarfAssistant(QtWidgets.QMainWindow):
     def __init__(self, data: list[dict]):
@@ -119,7 +119,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
     def show_labor_window(self):
         if self.labor_window is None:
-            self.labor_window = LaborsTable(self.game_data, self.dwarf_data)
+            self.labor_window = LaborWindow(self.game_data, self.dwarf_data)
         self.labor_window.show()
 
     def get_game_data(self) -> dict:

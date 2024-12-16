@@ -18,24 +18,6 @@ class CheckboxTable(QWidget):
         self.table.cellClicked.connect(self.toggle_checkbox)
         self.resize(400, 300)
 
-    def populate_table(self) -> None:
-        # list(map()) is nicer but its hard to read
-        for row in range(self.table.rowCount()):
-            for column in range(self.table.columnCount()):
-                # a hidden checkbox is used to track the state of the cell
-                # I couldn't get the color changing to work if this is a separate class
-                checkbox = QCheckBox()
-                widget = QWidget()
-                layout = QHBoxLayout()
-                layout.addWidget(checkbox)
-                layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                layout.setContentsMargins(0, 0, 0, 0)
-                widget.setLayout(layout)
-                checkbox.hide()
-
-                self.table.setCellWidget(row, column, widget)
-                checkbox.stateChanged.connect(lambda state, r=row, c=column: self.checkbox_state_changed(state, r, c))
-
     def toggle_checkbox(self, row: int, column: int) -> None:
         if res := self.get_checkbox(row, column):
             _, checkbox = res
@@ -51,10 +33,10 @@ class CheckboxTable(QWidget):
     def checkbox_state_changed(self, state, row, column) -> None:
         if state == Qt.CheckState.Checked.value:
             print(f"Checkbox at ({row}, {column}) is checked.")
-            self.table.cellWidget(row, column).setStyleSheet("background-color: lightgreen;")
+            self.table.cellWidget(row, column).setStyleSheet("background-color: #393;")
         else:
             print(f"Checkbox at ({row}, {column}) is unchecked.")
-            self.table.cellWidget(row, column).setStyleSheet("background-color: none;")
+            self.table.cellWidget(row, column).setStyleSheet("background-color: #933;")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

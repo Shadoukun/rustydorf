@@ -1,11 +1,29 @@
 import sys
 import requests
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QCheckBox
+from PyQt6.QtWidgets import QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QCheckBox, QWidget, QVBoxLayout
 
 from app.components.checkboxtable import CheckboxTable
 
-HEADERS = ["Woodworking", "Mining", "Fishing", "Your Mom"]
+
+class LaborWindow(QMainWindow):
+    def __init__(self, data: list[dict], dwarf_data: list[dict]):
+        super().__init__()
+        self.setWindowTitle("Dwarf Assistant: Labors")
+        self.resize(800, 600)
+        labors_table = LaborTable(data, dwarf_data)
+        self.setCentralWidget(labors_table)
+        menubar = self.menuBar()
+
+        file_menu = menubar.addMenu("File")
+        exit_action = file_menu.addAction("Exit")
+        exit_action.triggered.connect(self.close)
+
+        central_widget = QWidget()
+        layout = QVBoxLayout()
+        layout.addWidget(labors_table)
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
 
 class RotatedHeaderView(QHeaderView):
     """A Custom header view that rotates the table header text 45 degrees counter-clockwise."""
@@ -26,7 +44,8 @@ class RotatedHeaderView(QHeaderView):
         )
         painter.restore()
 
-class LaborsTable(CheckboxTable):
+
+class LaborTable(CheckboxTable):
     def __init__(self, data: list[dict], dwarf_data: list[dict]):
         self.labors = [labor['name'] for labor in data.get('labors', [])]
         self.dwarves = dwarf_data
@@ -40,16 +59,29 @@ class LaborsTable(CheckboxTable):
         self.populate_table()
 
     def populate_table(self):
-        super().populate_table()
-        for col, header in enumerate(self.labors):
-            self.table.setHorizontalHeaderItem(col, QTableWidgetItem(header))
-
+        # list(map()) is nicer but its hard to read
         for row, dwarf in enumerate(self.dwarves):
             for column, labor in enumerate(self.labors):
-                widget, checkbox = self.get_checkbox(row, column)
-                if (checkbox) and (checked := any([l["enabled"] for l in dwarf["labors"].values() if l["id"] == column])):
-                    checkbox.setChecked(checked)
-                    widget.setStyleSheet("background-color: lightgreen;")
+                self.table.setHorizontalHeaderItem(column, QTableWidgetItem(labor))
+                checkbox = QCheckBox()
+                widget = QWidget()
+                layout = QVBoxLayout()
+                layout.addWidget(checkbox)
+                layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                layout.setContentsMargins(0, 0, 0, 0)
+                widget.setLayout(layout)
+                checkbox.hide()
+
+                if checkbox:
+                    if checked := any([l["enabled"] for l in dwarf["labors"].values() if l["id"] == column]):
+                        checkbox.setChecked(checked)
+                        widget.setStyleSheet("background-color: #393;")
+                    else:
+                        widget.setStyleSheet("background-color: #933;")
+
+                self.table.setCellWidget(row, column, widget)
+                checkbox.stateChanged.connect(lambda state, r=row, c=column: self.checkbox_state_changed(state, r, c))
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -58,7 +90,7 @@ if __name__ == "__main__":
     response: list[dict] = requests.get('http://127.0.0.1:3000/data').json()
     dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
 
-    labors_table = LaborsTable(response, dwarf_data)
+    labors_table = LaborTable(response, dwarf_data)
     main_window.setCentralWidget(labors_table)
     main_window.setWindowTitle("Labors Table")
     main_window.resize(400, 300)
