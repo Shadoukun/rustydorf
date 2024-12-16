@@ -7,6 +7,7 @@ from PyQt6 import QtWidgets
 from .namelist import NameListWidget
 from .dwarfinfotab import DwarfInfoTab
 from .signals import SignalsManager
+from .labortable import LaborsTable
 
 class DwarfAssistant(QtWidgets.QMainWindow):
     def __init__(self, data: list[dict]):
@@ -35,6 +36,8 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.setMenuBar(self.menubar)
         self.setStatusBar(self.statusbar)
 
+        self.labor_window = None
+
         self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data)
         self.nameList.setObjectName("nameList")
 
@@ -45,8 +48,17 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
         self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 
+        self.create_menu()
         self.connect_slots()
         self.nameList.nameTable.populate_list(self.dwarf_data)
+
+    def create_menu(self):
+        menubar = self.menuBar()
+        file_menu = menubar.addMenu("File")
+
+        view_menu = menubar.addMenu("View")
+        labor_view = view_menu.addAction("Labors")
+        labor_view.triggered.connect(self.show_labor_window)
 
     def connect_slots(self):
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
@@ -104,6 +116,11 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
                 sorted_list = sorted(sorted_list, key=lambda d: d["_sort_value"], reverse=True)
                 self.nameList.nameTable.populate_list(sorted_list)
+
+    def show_labor_window(self):
+        if self.labor_window is None:
+            self.labor_window = LaborsTable(self.game_data, self.dwarf_data)
+        self.labor_window.show()
 
     def get_game_data(self) -> dict:
         response: list[dict] = requests.get('http://127.0.0.1:3000/data').json()
