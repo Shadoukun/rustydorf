@@ -6,7 +6,7 @@ from PyQt6 import QtWidgets
 
 from .namelist import NameListWidget
 from .dwarfinfotab import DwarfInfoTab
-
+from .signals import SignalsManager
 
 class DwarfAssistant(QtWidgets.QMainWindow):
     def __init__(self, data: list[dict]):
@@ -50,7 +50,9 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
     def connect_slots(self):
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
-        self.nameList.nameTable.refresh_panels.connect(self.setup_main_panel)
+
+        SignalsManager.instance().refresh_panels.connect(self.setup_main_panel)
+
         self.nameList.searchBar.lineEdit().returnPressed.connect(self.filter_list)
 
     def setup_main_panel(self):
