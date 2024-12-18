@@ -6,11 +6,52 @@ from PyQt6.QtGui import QFont
 from PyQt6 import QtWidgets
 from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 from PyQt6.QtCore import QTimer, QUrl
+from PyQt6.QtCore import QThread, pyqtSignal, QObject
 
 from .namelist import NameListWidget
 from .dwarfinfotab import DwarfInfoTab
 from .signals import SignalsManager
 from .laborwindow import LaborWindow
+
+API_URLS = [
+            "http://127.0.0.1:3000/data",
+            "http://127.0.0.1:3000/dwarves"
+        ]
+
+class NetworkWorker(QObject):
+
+    dataReady = pyqtSignal(str, dict)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.manager = QNetworkAccessManager(self)
+        self.manager.finished.connect(self.handleReply)
+
+    def startAPIRequest(self, *args):
+        for url in API_URLS:
+            url = QUrl(url)
+            request = QNetworkRequest(url)
+            self.manager.get(request)
+
+    def handleReply(self, reply: QNetworkReply):
+        if reply.error() == QNetworkReply.NetworkError.NoError:
+            try:
+                url = reply.url().toString()
+                data = reply.readAll().data().decode("utf-8")
+                json_data = json.loads(data)
+
+                if isinstance(json_data, list):
+                    # If the data is a list, we need to wrap it in a dictionary to be able to emit it
+                    dwarfdata = dict()
+                    dwarfdata["dwarves"] = json_data
+                    json_data = dwarfdata
+                self.dataReady.emit(url, json_data)
+            except json.JSONDecodeError:
+                print("Error decoding JSON")
+                return
+        else:
+            self.dataReady.emit("", f"Error: {reply.errorString()}")
+
 
 class DwarfAssistant(QtWidgets.QMainWindow):
     def __init__(self, data: list[dict]):
@@ -31,14 +72,11 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.setFont(font)
 
         # Create a QNetworkAccessManager for making supposedly asynchronous backend requests
-        self.api_urls = [
-            "http://127.0.0.1:3000/data",
-            "http://127.0.0.1:3000/dwarves"
-        ]
-
-        self.network_manager = QNetworkAccessManager()
-        self.network_manager.finished.connect(self.handle_response)
-
+        self.network_worker = NetworkWorker()
+        self.network_worker_thread = QThread()
+        self.network_worker.moveToThread(self.network_worker_thread)
+        self.network_worker_thread.start()
+        self.network_worker.dataReady.connect(self.update_data)
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
@@ -67,32 +105,17 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         # create a timer to update the data every 5 seconds
         self.timer = QTimer(self)
         self.timer.setInterval(5000)
-        self.timer.timeout.connect(self.make_api_request)
+        self.timer.timeout.connect(self.network_worker.startAPIRequest)
         self.timer.start()
 
-    def make_api_request(self):
-        for url in self.api_urls:
-            url = QUrl(url)
-            request = QNetworkRequest(url)
-            self.network_manager.get(request)
-
-    def handle_response(self, reply: QNetworkReply):
-        try:
-            r = reply.readAll().data().decode("utf-8")
-            data = json.loads(r)
-        except json.JSONDecodeError:
-            print("Error decoding JSON")
-            return
-
-        url = reply.url().toString()
-        print(url)
-        if "data" in url:
+    def update_data(self, url: str, data: str):
+        if url == API_URLS[0]:
             self.game_data = data
-        elif "dwarves" in url:
-            self.dwarf_data = data
-
-        SignalsManager.instance().refresh_panels.emit()
-        print(f"Data updated from {url}")
+        elif url == API_URLS[1]:
+            # unwrap the dwarf list from the dictionary
+            self.dwarf_data = data["dwarves"]
+            self.nameList.nameTable.populate_list(self.dwarf_data)
+            self.setup_main_panel
 
     def create_menu(self):
         menubar = self.menuBar()
