@@ -51,7 +51,6 @@ async fn main() {
             }
         });
 
-
         let update_task = tokio::task::spawn_blocking(move || {
             // process can't be sent between threads, so we need to create a new one here
             let process = win::process::Process::new_by_name(PROCESS_NAME);
@@ -62,7 +61,7 @@ async fn main() {
                     df.load_dwarves(&process);
                     println!("Updating...");
                 }
-                std::thread::sleep(Duration::from_secs(60));
+                std::thread::sleep(Duration::from_secs(30));
             }
         });
 

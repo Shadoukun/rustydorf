@@ -1,8 +1,11 @@
 import re
 import requests
+import json
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6 import QtWidgets
+from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
+from PyQt6.QtCore import QTimer, QUrl
 
 from .namelist import NameListWidget
 from .dwarfinfotab import DwarfInfoTab
@@ -26,6 +29,15 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         font = QFont()
         font.setPointSize(6)
         self.setFont(font)
+
+        # Create a QNetworkAccessManager for making supposedly asynchronous backend requests
+        self.api_urls = [
+            "http://127.0.0.1:3000/data",
+            "http://127.0.0.1:3000/dwarves"
+        ]
+
+        self.network_manager = QNetworkAccessManager()
+        self.network_manager.finished.connect(self.handle_response)
 
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setObjectName("menubar")
@@ -51,6 +63,36 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.create_menu()
         self.connect_slots()
         self.nameList.nameTable.populate_list(self.dwarf_data)
+
+        # create a timer to update the data every 5 seconds
+        self.timer = QTimer(self)
+        self.timer.setInterval(5000)
+        self.timer.timeout.connect(self.make_api_request)
+        self.timer.start()
+
+    def make_api_request(self):
+        for url in self.api_urls:
+            url = QUrl(url)
+            request = QNetworkRequest(url)
+            self.network_manager.get(request)
+
+    def handle_response(self, reply: QNetworkReply):
+        try:
+            r = reply.readAll().data().decode("utf-8")
+            data = json.loads(r)
+        except json.JSONDecodeError:
+            print("Error decoding JSON")
+            return
+
+        url = reply.url().toString()
+        print(url)
+        if "data" in url:
+            self.game_data = data
+        elif "dwarves" in url:
+            self.dwarf_data = data
+
+        SignalsManager.instance().refresh_panels.emit()
+        print(f"Data updated from {url}")
 
     def create_menu(self):
         menubar = self.menuBar()
