@@ -137,6 +137,7 @@ pub mod dwarf {
             d.read_preferences(df, proc);
             d.read_attributes(df, proc);
             d.read_skills(df, proc);
+            // loading the dwarves themselves is handled by the update_task
             Ok(d)
         }
 

@@ -19,18 +19,23 @@ mod data;
 mod race;
 mod util;
 
-use std::sync::Arc;
+use std::{sync::Arc, time::Duration};
 use axum::{routing::get, Router};
 use tokio::sync::Mutex;
 
-use dfinstance::{DFInstance, get_df_instance};
+use dfinstance::DFInstance;
 use api::{AppState, get_dwarves_handler, get_gamedata_handler};
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 2)]
+const PROCESS_NAME: &str = "Dwarf Fortress.exe";
+
+#[tokio::main]
 async fn main() {
     unsafe {
-        let state = AppState {
-            df: Arc::new(Mutex::new(get_df_instance())),
+        let state = {
+            let process = win::process::Process::new_by_name(PROCESS_NAME);
+            AppState {
+                df: Arc::new(Mutex::new(DFInstance::new(&process))),
+            }
         };
 
         let server = tokio::spawn({
@@ -39,23 +44,27 @@ async fn main() {
                 let rest = Router::new()
                     .route("/data", get(get_gamedata_handler))
                     .route("/dwarves", get(get_dwarves_handler))
-                    .with_state(state.clone());
+                    .with_state(state);
 
                 let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
                 axum::serve(listener, rest).await.unwrap();
             }
         });
 
-        let update_task = tokio::spawn(async move {
-                loop {
-                    // I think since I'm not using state after a move, I don't need to clone it
-                    // and it will update the original state correctly for the server to use. ::fingers_crossed::
-                    let mut df = state.df.lock().await;
-                    // df.update();
+
+        let update_task = tokio::task::spawn_blocking(move || {
+            // process can't be sent between threads, so we need to create a new one here
+            let process = win::process::Process::new_by_name(PROCESS_NAME);
+            loop {
+                // this is its own scope so that the mutex lock is dropped before the sleep
+                {
+                    let mut df = state.df.blocking_lock();
+                    df.load_dwarves(&process);
                     println!("Updating...");
-                    tokio::time::sleep(std::time::Duration::from_secs(60)).await;
                 }
-            });
+                std::thread::sleep(Duration::from_secs(60));
+            }
+        });
 
         tokio::select! {
             _ = server => {},

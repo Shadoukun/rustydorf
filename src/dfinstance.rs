@@ -81,8 +81,6 @@ impl DFInstance {
         df.load_historical_figures(&proc);
         df.load_historical_entities(&proc);
         df.load_beliefs(&proc);
-        df.load_dwarves(&proc);
-
         df
     }
 
@@ -312,10 +310,6 @@ impl DFInstance {
         }).collect();
 
         println!("Loaded {} dwarves", self.dwarves.len());
-
-        // for d in &dwarves {
-        //     print_dwarf(d);
-        // }
     }
 
     /// Returns the current time in the game
@@ -327,11 +321,4 @@ impl DFInstance {
 
         DfTime::from_seconds((year as u64 * 1200 * 28 * 12) + (curr_year_tick as u64))
     }
-}
-
-pub unsafe fn get_df_instance() -> DFInstance {
-    let proc = Process::new_by_name("Dwarf Fortress.exe");
-    let df = DFInstance::new(&proc);
-    println!("Dwarves: {}", df.dwarves.len());
-    df
 }
