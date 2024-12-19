@@ -9,33 +9,22 @@ class DwarfInfoTab(QtWidgets.QWidget):
     def __init__(self, game_data: dict, data: dict, parent=None):
         super().__init__(parent)
         uic.loadUi('app/dwarfinfotab.ui', self)
-        self.infoLabel.setText(f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n" +
-                                f"Profession: {data.get('profession', 'Unknown')['name']}\n" +
-                                f"Age: {data.get('age', 'Unknown')}\n" +
-                                f"Sex: {data.get('sex', 'Unknown')}")
 
-        self.setup_beliefs_table(data)
-        self.setup_goals_table(data)
-        self.setup_attributes_table(data)
-        self.setup_traits_table(data)
-        self.setup_thoughts_table(data)
-        self.setup_needs_table(game_data, data)
-        self.setup_labors_table(data)
-        self.setup_skills_table(data)
-        self.common_setup()
+        info_text = (
+            f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n"
+            f"Profession: {data.get('profession', {}).get('name', 'Unknown')}\n"
+            f"Age: {data.get('age', 'Unknown')}\n"
+            f"Sex: {data.get('sex', 'Unknown')}"
+        )
+        self.infoLabel.setText(info_text)
 
-        self.attributesButton.clicked.connect(self.attributesButtonClicked)
-        self.beliefsGoalsButton.clicked.connect(self.beliefsGoalsButtonClicked)
-        self.laborsButton.clicked.connect(self.laborsButtonClicked)
-        self.skillsButton.clicked.connect(self.skillsButtonClicked)
+        self.populate_data(game_data, data)
 
-        self.skillsButton.setStyleSheet(buttonActiveStylesheet)
-        self.attributesButton.setStyleSheet(buttonActiveStylesheet)
+        # common setup for all tables
+        tables = [self.beliefsTable, self.goalsTable, self.attributesTable,
+                  self.traitsTable, self.thoughtsTable, self.needsTable, self.laborsTable]
 
-    def common_setup(self):
-        for table in [self.beliefsTable, self.goalsTable, self.attributesTable,
-                      self.traitsTable, self.thoughtsTable, self.needsTable, self.laborsTable]:
-
+        for table in tables:
             header = table.horizontalHeader()
             header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
             header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
@@ -44,8 +33,33 @@ class DwarfInfoTab(QtWidgets.QWidget):
             table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
             table.resizeColumnToContents(1)
 
-    def setup_beliefs_table(self, data: list[dict]):
-        beliefs: dict = data.get('beliefs', {})
+        # setup the buttons
+        buttons = [
+            (self.attributesButton, self.attributesButtonClicked),
+            (self.beliefsGoalsButton, self.beliefsGoalsButtonClicked),
+            (self.laborsButton, self.laborsButtonClicked),
+            (self.skillsButton, self.skillsButtonClicked)
+        ]
+
+        for button, handler in buttons:
+            button.clicked.connect(handler)
+
+        # these are the active buttons at the start
+        self.skillsButton.setStyleSheet(buttonActiveStylesheet)
+        self.attributesButton.setStyleSheet(buttonActiveStylesheet)
+
+    def populate_data(self, game_data: dict, data: dict):
+        self.setup_beliefs_table(data)
+        self.setup_goals_table(data)
+        self.setup_attributes_table(data)
+        self.setup_traits_table(data)
+        self.setup_thoughts_table(data)
+        self.setup_needs_table(game_data, data)
+        self.setup_labors_table(data)
+        self.setup_skills_table(data)
+
+    def setup_beliefs_table(self, data: dict):
+        beliefs = data.get('beliefs', {})
 
         self.beliefsTable.setRowCount(len(beliefs))
         self.beliefsTable.setColumnCount(2)
