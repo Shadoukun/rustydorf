@@ -5,7 +5,7 @@ import sys
 import requests
 from pprint import pprint
 
-from app.mainwindow import DwarfAssistant
+from app.dwarfassistant.mainwindow import DwarfAssistant
 
 if __name__ == '__main__':
     response = requests.get('http://127.0.0.1:3000/dwarves')

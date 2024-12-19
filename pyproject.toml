@@ -1,0 +1,3 @@
+[tool.maturin]
+python-source = "app"
+module-name = "dwarfassistant.dwarfassistant"

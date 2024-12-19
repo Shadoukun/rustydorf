@@ -8,7 +8,7 @@ buttonStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt;"
 class DwarfInfoTab(QtWidgets.QWidget):
     def __init__(self, game_data: dict, data: dict, parent=None):
         super().__init__(parent)
-        uic.loadUi('app/dwarfinfotab.ui', self)
+        uic.loadUi('app/dwarfassistant/dwarfinfotab.ui', self)
 
         info_text = (
             f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n"
