@@ -54,11 +54,11 @@ class NetworkWorker(QObject):
 
 
 class DwarfAssistant(QtWidgets.QMainWindow):
-    def __init__(self, data: list[dict]):
+    def __init__(self):
         super(DwarfAssistant, self).__init__()
         # I guess do this here? clarity.
-        self.game_data = self.get_game_data()
-        self.dwarf_data = data
+        self.game_data =  requests.get('http://127.0.0.1:3000/data').json()
+        self.dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
 
         self.setWindowTitle("Dwarf Assistant")
         self.centralwidget = QtWidgets.QWidget(self)
