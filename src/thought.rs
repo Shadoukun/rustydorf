@@ -31,12 +31,19 @@ impl Thought {
             strength:        read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "strength")),
             subthought_id:   read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "sub_id")),
             optional_levels: read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "level")),
+            divider:         0,
             ..Default::default()
         };
 
         let year      = DfTime::from_years(read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year")) as u64);
         let year_tick = DfTime::from_seconds(read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "year_tick")) as u64);
         t.time        = year + year_tick;
+
+        // TODO: figure out why some thoughts have an id of 0
+        if t.id == 0 {
+            eprintln!("Warning: Thought with id {}", t.id);
+            return t;
+        }
 
         match df.game_data.unit_thoughts.get(t.id as usize - 1) {
             Some(data) => {
@@ -92,7 +99,6 @@ impl Thought {
         let mut base_effect = 1.0;
         let stress_vuln: i16 = dwarf.traits.get(8).unwrap().2;
 
-        self.divider = df.game_data.unit_emotions.get(self.emotion_type as usize).unwrap().divider;
         self.multiplier = match stress_vuln {
             s if s >= 91 => 5.0,
             s if s >= 76 => 3.0,
