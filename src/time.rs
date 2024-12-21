@@ -94,7 +94,7 @@ impl Add for DfTime {
     type Output = Self;
 
     fn add(self, other: Self) -> Self {
-        DfTime(self.0 + other.0)
+        DfTime(self.0.saturating_add(other.0))
     }
 }
 
