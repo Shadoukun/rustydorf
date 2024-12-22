@@ -18,16 +18,28 @@ mod preference;
 mod data;
 mod race;
 mod util;
+mod python;
 
-use std::{ffi::CString, fs, path::{self, Path}, sync::Arc, time::Duration};
+use std::{ffi::CString, fs, path::Path, sync::Arc, time::Duration};
 use axum::{routing::get, Router};
 use tokio::sync::Mutex;
 use pyo3::prelude::*;
+
+use python::rustworker::RustWorker;
 
 use dfinstance::DFInstance;
 use api::{AppState, get_dwarves_handler, get_gamedata_handler};
 
 const PROCESS_NAME: &str = "Dwarf Fortress.exe";
+
+pub fn create_lib_module(py: Python) -> PyResult<()> {
+    let rust_module = PyModule::new(py, "rustlib")?;
+    rust_module.add_class::<RustWorker>()?;
+    py.import("sys")?
+        .getattr("modules")?
+        .set_item("rustlib", rust_module)?;
+    Ok(())
+}
 
 #[tokio::main]
 async fn main() {
@@ -79,6 +91,10 @@ async fn main() {
                 let requests = PyModule::import(py, "requests");
                 let qt6 = PyModule::import(py, "PyQt6.QtWidgets");
                 let module = PyModule::import(py, "app");
+
+                // Create a new module and add the RustWorker class to it
+                create_lib_module(py).unwrap();
+
                 let script_path = Path::new("main.py");
                 if !script_path.exists() {
                     eprintln!("Error: script.py not found in the current directory");

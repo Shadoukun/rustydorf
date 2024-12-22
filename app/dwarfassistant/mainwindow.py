@@ -13,6 +13,8 @@ from .dwarfinfotab import DwarfInfoTab
 from .signals import SignalsManager
 from .laborwindow import LaborWindow
 
+from rustlib import RustWorker
+
 API_URLS = [
             "http://127.0.0.1:3000/data",
             "http://127.0.0.1:3000/dwarves"
