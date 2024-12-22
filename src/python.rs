@@ -19,7 +19,7 @@ pub mod rustworker {
         pub fn new() -> Self {
             RustWorker {
                 running: Arc::new(AtomicBool::new(false)),
-                sleep_time: Arc::new(AtomicU64::new(60)),
+                sleep_time: Arc::new(AtomicU64::new(10)),
             }
         }
 
@@ -33,16 +33,21 @@ pub mod rustworker {
             // Set the sleep time
             sleep_time.store(sleep, Ordering::SeqCst);
 
-            thread::spawn(move || {
+            tokio::task::spawn_blocking(move || {
                 // loop until the running flag is set to false
                 while running.load(Ordering::SeqCst) {
                     // Call the Python function
                     Python::with_gil(|py| {
-                        let _ = callable.call1(py, ());
+                        println!("Calling Python function");
+                        let res = callable.call1(py, ());
+                        match res {
+                            Ok(_) => println!("Python function called successfully"),
+                            Err(e) => println!("Error calling Python function: {:?}", e),
+                        }
                     });
-
                     // Sleep
                     thread::sleep(Duration::from_secs(sleep_time.load(Ordering::SeqCst)));
+
                 }
             });
             Ok(())
