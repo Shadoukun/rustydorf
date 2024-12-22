@@ -50,6 +50,12 @@ impl RustWorker {
         // Set the running flag to false
         self.running.store(false, Ordering::SeqCst);
     }
+
+    /// Set the sleep time for the worker thread
+    /// The sleep time is in seconds
+    pub fn set_sleep_time(&mut self, sleep_time: u64) {
+        self.sleep_time.store(sleep_time, Ordering::SeqCst);
+    }
 }
 
 #[pymodule]
