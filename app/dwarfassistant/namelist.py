@@ -110,7 +110,7 @@ class NameListTable(QTableWidget):
             }""")
 
 
-    def populate_list(self, data: list[dict]):
+    def populate_list(self, data: list[dict], emit=True):
         self.order = []
         self.setRowCount(len(data))
         print("populate")
@@ -119,5 +119,6 @@ class NameListTable(QTableWidget):
             self.setItem(i, 0, item)
             self.order.append(entry["id"])
 
-        # emit a signal to refresh the panels
-        SignalsManager.instance().refresh_panels.emit()
+        if emit:
+            # emit a signal to refresh the panels
+            SignalsManager.instance().refresh_panels.emit()

@@ -78,7 +78,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             if dwarf_data.status_code == 200:
                 self.dwarf_data = dwarf_data.json()
 
-            self.nameList.nameTable.populate_list(self.dwarf_data)
+            self.nameList.nameTable.populate_list(self.dwarf_data, False)
 
         return fn
 
