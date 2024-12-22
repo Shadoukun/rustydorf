@@ -23,12 +23,14 @@ impl RustWorker {
     }
 
     /// Start the worker thread
-    pub fn start(&mut self, _py: Python, callable: PyObject) -> PyResult<()> {
+    pub fn start(&mut self, _py: Python, callable: PyObject, sleep: u64) -> PyResult<()> {
         let running = self.running.clone();
         let sleep_time = self.sleep_time.clone();
 
         // Set the running flag to true
         running.store(true, Ordering::SeqCst);
+        // Set the sleep time
+        sleep_time.store(sleep, Ordering::SeqCst);
 
         thread::spawn(move || {
             // loop until the running flag is set to false
