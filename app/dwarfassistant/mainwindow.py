@@ -22,7 +22,6 @@ API_URLS = [
             "http://127.0.0.1:3000/dwarves"
         ]
 
-
 class DwarfAssistant(QtWidgets.QMainWindow):
     def __init__(self):
         super(DwarfAssistant, self).__init__()
@@ -70,11 +69,22 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.connect_slots()
         self.nameList.nameTable.populate_list(self.dwarf_data)
 
+        # select the first name in the list by default
+        self.nameList.nameTable.setCurrentCell(0, 0)
+
     def update_task(self):
+        # this is a func that will be called by the worker.
         def fn():
-            self.game_data =  requests.get('http://127.0.0.1:3000/data').json()
-            self.dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
-            print("Data updated")
+            # TODO: I can probably make Rust do this before calling populate_list or emitting a signal.
+            game_data =  requests.get('http://127.0.0.1:3000/data')
+            if game_data.status_code == 200:
+                self.game_data = game_data.json()
+            dwarf_data = requests.get('http://127.0.0.1:3000/dwarves')
+            if dwarf_data.status_code == 200:
+                self.dwarf_data = dwarf_data.json()
+
+            self.nameList.nameTable.populate_list(dwarf_data)
+
         return fn
 
     def create_menu(self):
@@ -87,10 +97,9 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
     def connect_slots(self):
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
-
+        self.nameList.searchBar.lineEdit().returnPressed.connect(self.filter_list)
         SignalsManager.instance().refresh_panels.connect(self.setup_main_panel)
 
-        self.nameList.searchBar.lineEdit().returnPressed.connect(self.filter_list)
 
     def setup_main_panel(self):
         '''Create the main panel on the right side of the window.'''

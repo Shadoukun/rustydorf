@@ -119,8 +119,5 @@ class NameListTable(QTableWidget):
             self.setItem(i, 0, item)
             self.order.append(entry["id"])
 
-        # select the first name in the list by default
-        self.setCurrentCell(0, 0)
-
         # emit a signal to refresh the panels
         SignalsManager.instance().refresh_panels.emit()
