@@ -1,12 +1,7 @@
 import re
 import requests
-import json
-from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6 import QtWidgets
-from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
-from PyQt6.QtCore import QTimer, QUrl
-from PyQt6.QtCore import QThread, pyqtSignal, QObject
 
 from .namelist import NameListWidget
 from .dwarfinfotab import DwarfInfoTab
@@ -83,7 +78,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             if dwarf_data.status_code == 200:
                 self.dwarf_data = dwarf_data.json()
 
-            self.nameList.nameTable.populate_list(dwarf_data)
+            self.nameList.nameTable.populate_list(self.dwarf_data)
 
         return fn
 
