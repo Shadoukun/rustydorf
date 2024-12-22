@@ -33,12 +33,12 @@ pub mod rustworker {
             // Set the sleep time
             sleep_time.store(sleep, Ordering::SeqCst);
 
+            // idk if I should be doing spawn_blocking, or tokio at all, but it works.
             tokio::task::spawn_blocking(move || {
                 // loop until the running flag is set to false
                 while running.load(Ordering::SeqCst) {
                     // Call the Python function
                     Python::with_gil(|py| {
-                        println!("Calling Python function");
                         let res = callable.call1(py, ());
                         match res {
                             Ok(_) => println!("Python function called successfully"),

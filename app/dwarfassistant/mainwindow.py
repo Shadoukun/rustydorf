@@ -13,46 +13,14 @@ from .dwarfinfotab import DwarfInfoTab
 from .signals import SignalsManager
 from .laborwindow import LaborWindow
 
+# vscode seemingly doesn't/won't recognize this
 from rustlib import RustWorker
+
 
 API_URLS = [
             "http://127.0.0.1:3000/data",
             "http://127.0.0.1:3000/dwarves"
         ]
-
-# class NetworkWorker(QObject):
-
-#     dataReady = pyqtSignal(str, dict)
-
-#     def __init__(self, parent=None):
-#         super().__init__(parent)
-#         self.manager = QNetworkAccessManager(self)
-#         self.manager.finished.connect(self.handleReply)
-
-#     def startAPIRequest(self, *args):
-#         for url in API_URLS:
-#             url = QUrl(url)
-#             request = QNetworkRequest(url)
-#             self.manager.get(request)
-
-#     def handleReply(self, reply: QNetworkReply):
-#         if reply.error() == QNetworkReply.NetworkError.NoError:
-#             try:
-#                 url = reply.url().toString()
-#                 data = reply.readAll().data().decode("utf-8")
-#                 json_data = json.loads(data)
-
-#                 if isinstance(json_data, list):
-#                     # If the data is a list, we need to wrap it in a dictionary to be able to emit it
-#                     dwarfdata = dict()
-#                     dwarfdata["dwarves"] = json_data
-#                     json_data = dwarfdata
-#                 self.dataReady.emit(url, json_data)
-#             except json.JSONDecodeError:
-#                 print("Error decoding JSON")
-#                 return
-#         else:
-#             self.dataReady.emit("", f"Error: {reply.errorString()}")
 
 
 class DwarfAssistant(QtWidgets.QMainWindow):
@@ -72,14 +40,11 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         font = QFont()
         font.setPointSize(6)
         self.setFont(font)
+
+        # create a worker to update the data.
         self.worker = RustWorker()
         self.worker.start(self.update_task(), 10)
 
-        # # Create a QNetworkAccessManager for making supposedly asynchronous backend requests
-        # self.network_worker = NetworkWorker()
-        # self.network_worker_thread = QThread()
-        # self.network_worker.moveToThread(self.network_worker_thread)
-        # self.network_worker_thread.start()
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
@@ -104,12 +69,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.create_menu()
         self.connect_slots()
         self.nameList.nameTable.populate_list(self.dwarf_data)
-
-        # # create a timer to update the data every 5 seconds
-        # self.timer = QTimer(self)
-        # self.timer.setInterval(5000)
-        # self.timer.timeout.connect(self.network_worker.startAPIRequest)
-        # self.timer.start()
 
     def update_task(self):
         def fn():
