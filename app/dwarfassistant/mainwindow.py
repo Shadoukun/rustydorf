@@ -53,16 +53,16 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data)
         self.nameList.setObjectName("nameList")
 
-        self.mainPanel = QtWidgets.QStackedWidget(self.centralwidget)
+        self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
+        self.nameList.nameTable.populate_list(self.dwarf_data)
+
+        self.mainPanel = DwarfInfoTab(self.game_data, self.dwarf_data[0], self.centralwidget)
         self.mainPanel.setObjectName("mainPanel")
         self.mainPanel.setContentsMargins(0, 0, 0, 0)
-
-        self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
         self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 
         self.create_menu()
         self.connect_slots()
-        self.nameList.nameTable.populate_list(self.dwarf_data)
 
         # select the first name in the list by default
         self.nameList.nameTable.setCurrentCell(0, 0)
@@ -93,31 +93,21 @@ class DwarfAssistant(QtWidgets.QMainWindow):
     def connect_slots(self):
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
         self.nameList.searchBar.lineEdit().returnPressed.connect(self.filter_list)
-        SignalsManager.instance().refresh_panels.connect(self.setup_main_panel)
-
-
-    def setup_main_panel(self):
-        '''Create the main panel on the right side of the window.'''
-
-        # Clear existing widgets
-        while self.mainPanel.count():
-            widget = self.mainPanel.currentWidget()
-            self.mainPanel.removeWidget(widget)
-            widget.deleteLater()
-
-        # Create tabs for each dwarf from name list
-        for row in self.nameList.nameTable.order:
-            dwarf = next(dwarf for dwarf in self.dwarf_data if dwarf["id"] == row)
-            self.mainPanel.addWidget(DwarfInfoTab(self.game_data, dwarf, self.centralwidget))
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
+        # remove the current main panel
+        if self.mainPanel is not None:
+            self.layout().removeWidget(self.mainPanel)
+            self.mainPanel.deleteLater()
+            self.mainPanel = None
 
         selected_items = self.nameList.nameTable.selectedItems()
-        if selected_items:
-            selected_item = selected_items[0]
-            row = selected_item.row()
-            self.mainPanel.setCurrentIndex(row)
+
+        if dwarf := next((d for d in self.dwarf_data if d["first_name"] == selected_items[0].text().split(" ")[0]), None):
+            self.mainPanel = DwarfInfoTab(self.game_data, dwarf, self.centralwidget)
+            self.mainPanel.setObjectName("mainPanel")
+            self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 
     def filter_list(self):
         '''Filter the name list based on the search bar text.'''
