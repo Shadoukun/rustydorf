@@ -100,7 +100,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
     def connect_slots(self):
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
-        self.nameList.searchBar.lineEdit().returnPressed.connect(self.filter_list)
+        self.nameList.searchBar.lineEdit().returnPressed.connect(self.sort_list)
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
@@ -119,38 +119,50 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             self.mainPanel.setObjectName("mainPanel")
             self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 
-    def filter_list(self):
+    def sort_list(self):
         '''Filter the name list based on the search bar text.'''
-
         search_text = self.nameList.searchBar.lineEdit().text().lower()
         keywords = [r"@attr:"] # etc
+        result = self.get_sort_key_value(search_text, keywords)
+
+        sorted_list = []
+
+        # only use the first key for now
+        sort_key, value = list(result.items())[0]
+        if not sort_key:
+            return
+
+        if sort_key == "@attr:":
+            sorted_list = self.sort_by_attribute(value)
+
+        sorted_list = sorted(sorted_list, key=lambda d: d["_sort_value"], reverse=True)
+        print(sorted_list)
+        self.nameList.nameTable.populate_list(sorted_list)
+        self.change_name_tab()
+
+    def get_sort_key_value(self, search_text: str, keywords: list):
+        '''Get the filter key from the search text.'''
+        result = {}
         pattern = rf"({"|".join(keywords)})(.*)\W?"
-        print("reg")
-        # filter using keywords
+
         if matches := re.findall(pattern, search_text):
-            print("match")
             result = {keyword: text for keyword, text in matches}
 
-            for key in result.keys():
-                sorted_list = []
-                if key == "@attr:":
-                    for d in self.dwarf_data:
-                        for a in d["attributes"].values():
-                            print(a)
-                            if a["name"] == result[key].capitalize():
-                                print(a["name"])
-                                d["_sort_value"] = a["value"]
-                                sorted_list.append(d)
-                                break
+        return result
 
-                sorted_list = sorted(sorted_list, key=lambda d: d["_sort_value"], reverse=True)
-                self.nameList.nameTable.populate_list(sorted_list)
+    def sort_by_attribute(self, text: str):
+        '''Filter the name list based on the search bar text.'''
+        sorted_list = []
+        for d in self.dwarf_data:
+            for a in d["attributes"].values():
+                if a["name"] == text.capitalize():
+                    print("TRUE")
+                    d["_sort_value"] = a["value"]
+                    sorted_list.append(d)
+
+        return sorted_list
 
     def show_labor_window(self):
         if self.labor_window is None:
             self.labor_window = LaborWindow(self.game_data, self.dwarf_data)
         self.labor_window.show()
-
-    def get_game_data(self) -> dict:
-        response: list[dict] = requests.get('http://127.0.0.1:3000/data').json()
-        return response
