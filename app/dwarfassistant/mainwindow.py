@@ -103,6 +103,8 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             self.mainPanel = None
 
         selected_items = self.nameList.nameTable.selectedItems()
+        if not selected_items:
+            return
 
         if dwarf := next((d for d in self.dwarf_data if d["first_name"] == selected_items[0].text().split(" ")[0]), None):
             self.mainPanel = DwarfInfoTab(self.game_data, dwarf, self.centralwidget)
