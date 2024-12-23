@@ -20,6 +20,8 @@ API_URLS = [
 class DwarfAssistant(QtWidgets.QMainWindow):
     def __init__(self):
         super(DwarfAssistant, self).__init__()
+        self.running = False
+
         # I guess do this here? clarity.
         self.game_data =  requests.get('http://127.0.0.1:3000/data').json()
         self.dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
@@ -67,9 +69,15 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         # select the first name in the list by default
         self.nameList.nameTable.setCurrentCell(0, 0)
 
+        # triggers the worker to start updating
+        self.running = True
+
     def update_task(self):
         # this is a func that will be called by the worker.
         def fn():
+            if not self.running:
+                return
+
             # TODO: I can probably make Rust do this before calling populate_list or emitting a signal.
             game_data =  requests.get('http://127.0.0.1:3000/data')
             if game_data.status_code == 200:
