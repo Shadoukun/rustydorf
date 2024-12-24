@@ -157,7 +157,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
     def setup_skills_table(self, data: list[dict]):
         skills: dict = data.get('skills', {})
-
         # if the dwarf doesn't have 15 skills, fill the rest of the table with empty rows
         rows = len(skills) if len(skills) > 14 else 14
         self.skillsTable.setRowCount(rows)

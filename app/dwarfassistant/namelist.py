@@ -39,6 +39,7 @@ class NameListWidget(QWidget):
         # TODO: finish this.
         # I need to add logic to handle the different types of search vs using the search bar
         self.menu_data = {
+            "Name": "Name",
             "Age": "Age",
             "Attributes": [a["name"] for a in game_data["attributes"]],
             "Traits": [t["name"] for t in game_data["traits"]],
@@ -46,32 +47,60 @@ class NameListWidget(QWidget):
         }
 
         self.searchBar.menu_data = self.menu_data
-        print(self.menu_data)
 
-    def sort_data(self, key: str, ascending=False):
+    def sort_data(self, key: str, reverse=False):
         """Sort the data based on the given key and order, then reload the table."""
-        if key == "Age":
-            sorted_data = sorted(self.dwarves, key=lambda x: x.get("age", 0), reverse=not ascending)
-
-        elif key := [a for a in self.game_data["attributes"] if a["name"] == key][0]:
-            sorted_data = self.sort_by_attribute(self, key)
-
-        #TODO: add sorting by traits, skills, etc
-
-        else:
-            sorted_data = []
 
         self.sort_key = key
+        self.sort_reverse = reverse
+
+        if key == "Name":
+            sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=reverse)
+
+        if key == "Age":
+            sorted_data = sorted(self.dwarves, key=lambda x: x.get("age", 0), reverse=reverse)
+
+        elif key := next((a for a in self.game_data["attributes"] if a["name"] == key), None):
+            sorted_data = self.sort_by_attribute(self, key)
+
+        elif key := next((t for t in self.game_data["traits"] if t["name"] == key), None):
+            sorted_data = self.sort_by_trait(self, key)
+
+        elif key := next((s for s in self.game_data["skills"] if s["name"] == key), None):
+            sorted_data = self.sort_by_skill(self, key)
+
+        else:
+            sorted_data = self.dwarves
+
         self.nameTable.populate_list(sorted_data)
 
-    def sort_by_attribute(self, text: str):
+    def sort_by_attribute(self, key: str):
         sorted_list = []
+        key = key.capitalize()
         for d in self.dwarves:
-            for a in d["attributes"].values():
-                if a["name"] == text.capitalize():
-                    print("TRUE")
-                    d["_sort_value"] = a["value"]
-                    sorted_list.append(d)
+            attr = next((a for a in d["attributes"] if a["name"] == key), None)
+            d["_sort_value"] = attr["value"]
+            sorted_list.append(d)
+
+        return sorted_list
+
+    def sort_by_trait(self, key: str):
+        sorted_list = []
+        key = key.capitalize()
+        for d in self.dwarves:
+            trait = next((t for t in d["traits"] if t["name"] == key), None)
+            d["_sort_value"] = trait["value"]
+            sorted_list.append(d)
+
+        return sorted_list
+
+    def sort_by_skill(self, key: str):
+        sorted_list = []
+        key = key.capitalize()
+        for d in self.dwarves:
+            skill = next((s for s in d["skills"] if s["name"] == key), None)
+            d["_sort_value"] = skill["value"]
+            sorted_list.append(d)
 
         return sorted_list
 
@@ -135,7 +164,6 @@ class NameListTable(QTableWidget):
     def populate_list(self, data: list[dict], emit=True):
         self.order = []
         self.setRowCount(len(data))
-        print("populate")
         for i, entry in enumerate(data):
             item = QTableWidgetItem(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
             self.setItem(i, 0, item)
