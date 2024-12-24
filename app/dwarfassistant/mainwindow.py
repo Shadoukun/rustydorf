@@ -87,7 +87,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
                 self.dwarf_data = dwarf_data.json()
 
             if self.nameList.sort_key:
-                self.nameList.sort_data(self.nameList.sort_key, self.nameList.sort_reverse)
+                self.nameList.sort_data(self.nameList.sort_key, self.nameList.ascending)
             else:
                 self.nameList.nameTable.populate_list(self.dwarf_data, False)
 

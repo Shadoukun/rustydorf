@@ -1,7 +1,6 @@
 from PyQt6.QtCore import QObject, pyqtSignal, QMutex, QMutexLocker
 
 class SignalsManager(QObject):
-    refresh_panels = pyqtSignal()
     sort_changed   = pyqtSignal(str, bool)
 
     _instance = None
