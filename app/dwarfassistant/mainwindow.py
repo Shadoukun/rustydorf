@@ -104,6 +104,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
     def connect_slots(self):
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
         self.nameList.searchBar.lineEdit().returnPressed.connect(self.sort_list)
+        SignalsManager.instance().sort_changed.connect(self.change_name_tab)
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
