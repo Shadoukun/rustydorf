@@ -23,10 +23,10 @@ class NameListWidget(QWidget):
         self.game_data = game_data
         self.dwarves = dwarves
 
-        self.searchBar = NameListSearchBar(self, game_data)
+        self.searchBar = NameListSearchBar(self)
         self.searchBar.setObjectName("nameListSearchBar")
         self.searchBar.setPlaceholderText("Search")
-        self.setup_search_bar()
+        self.setup_search_bar(game_data)
         layout.addWidget(self.searchBar)
 
         self.nameTable = NameListTable(self, self.game_data, self.dwarves)
@@ -35,35 +35,54 @@ class NameListWidget(QWidget):
 
         SignalsManager.instance().sort_changed.connect(self.sort_data)
 
-    def setup_search_bar(self):
+    def setup_search_bar(self, game_data: dict = None):
         # TODO: finish this.
         # I need to add logic to handle the different types of search vs using the search bar
-        pass
-
-    def sort_data(self, key: str, ascending=False):
-        """Sort the data based on the given key and order, then reload the table."""
-        print(key)
-        #TODO: lol not this
-        if key == "Age":
-            key = "age"
-
-        sorted_data  = sorted(self.dwarves, key=lambda x: x.get(key, 0), reverse=not ascending)
-        self.nameTable.populate_list(sorted_data)
-
-
-class NameListSearchBar(DropdownComboBox):
-    """Search bar for the name list widget that uses a custom QComboBox to display a menu of search options."""
-    #TODO: add ascending/descending
-    def __init__(self, parent=None, game_data: dict = None):
-        super().__init__(parent)
-        self.setPlaceholderText("Search")
         self.menu_data = {
             "Age": "Age",
             "Attributes": [a["name"] for a in game_data["attributes"]],
             "Traits": [t["name"] for t in game_data["traits"]],
             "Skills": [s["name"] for s in game_data["skills"]],
         }
+
+        self.searchBar.menu_data = self.menu_data
+        print(self.menu_data)
+
+    def sort_data(self, key: str, ascending=False):
+        """Sort the data based on the given key and order, then reload the table."""
+        if key == "Age":
+            sorted_data = sorted(self.dwarves, key=lambda x: x.get("age", 0), reverse=not ascending)
+
+        elif key := [a for a in self.game_data["attributes"] if a["name"] == key][0]:
+            sorted_data = self.sort_by_attribute(self, key)
+
+        #TODO: add sorting by traits, skills, etc
+
+        else:
+            sorted_data = []
+
+        self.sort_key = key
+        self.nameTable.populate_list(sorted_data)
+
+    def sort_by_attribute(self, text: str):
+        sorted_list = []
+        for d in self.dwarves:
+            for a in d["attributes"].values():
+                if a["name"] == text.capitalize():
+                    print("TRUE")
+                    d["_sort_value"] = a["value"]
+                    sorted_list.append(d)
+
+        return sorted_list
+
+class NameListSearchBar(DropdownComboBox):
+    """Search bar for the name list widget that uses a custom QComboBox to display a menu of search options."""
+    #TODO: add ascending/descending
+    def __init__(self, parent=None, menu_data: dict = None):
+        super().__init__(parent)
+        self.setPlaceholderText("Search")
         self.sortkey = ""
+        self.menu_data = menu_data
 
     def showPopup(self):
         # instead of the default popup show a custom QMenu
@@ -76,7 +95,6 @@ class NameListSearchBar(DropdownComboBox):
         action = menu.exec(pos)
         # if an action was triggered update the QComboBox text
         if action and action.data() is not None:
-            print(action.key)
             # TODO: transform keywords, @attr, etc based on menu_data selection
             #       Or remove keywords. I'm not sure I need them. if I use this
             self.sortkey = action.text()

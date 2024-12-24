@@ -86,7 +86,10 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             if dwarf_data.status_code == 200:
                 self.dwarf_data = dwarf_data.json()
 
-            self.nameList.nameTable.populate_list(self.dwarf_data, False)
+            if self.nameList.sort_key:
+                self.nameList.sort_data(self.nameList.sort_key)
+            else:
+                self.nameList.nameTable.populate_list(self.dwarf_data, False)
 
         return fn
 
@@ -149,18 +152,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             result = {keyword: text for keyword, text in matches}
 
         return result
-
-    def sort_by_attribute(self, text: str):
-        '''Filter the name list based on the search bar text.'''
-        sorted_list = []
-        for d in self.dwarf_data:
-            for a in d["attributes"].values():
-                if a["name"] == text.capitalize():
-                    print("TRUE")
-                    d["_sort_value"] = a["value"]
-                    sorted_list.append(d)
-
-        return sorted_list
 
     def show_labor_window(self):
         if self.labor_window is None:
