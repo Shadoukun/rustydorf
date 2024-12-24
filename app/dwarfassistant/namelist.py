@@ -23,7 +23,7 @@ class NameListWidget(QWidget):
         self.game_data = game_data
         self.dwarves = dwarves
 
-        self.searchBar = NameListSearchBar(self)
+        self.searchBar = NameListSearchBar(self, game_data)
         self.searchBar.setObjectName("nameListSearchBar")
         self.searchBar.setPlaceholderText("Search")
         self.setup_search_bar()
@@ -54,86 +54,14 @@ class NameListWidget(QWidget):
 class NameListSearchBar(DropdownComboBox):
     """Search bar for the name list widget that uses a custom QComboBox to display a menu of search options."""
     #TODO: add ascending/descending
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, game_data: dict = None):
         super().__init__(parent)
         self.setPlaceholderText("Search")
         self.menu_data = {
             "Age": "Age",
-            "Attributes": [
-                "Strength",
-                "Agility",
-                "Toughness",
-                "Endurance",
-                "Recuperation",
-                "Disease Resistance",
-                "Analytical Ability",
-                "Focus",
-                "Willpower",
-                "Creativity",
-                "Intuition",
-                "Patience",
-                "Memory",
-                "Linguistic Ability",
-                "Spatial Sense",
-                "Musicality",
-                "Kinesthetic Sense",
-                "Empathy",
-                "Social Awareness"
-            ],
-            "Traits": [
-                "Love Propensity",
-                "Hate Propensity",
-                "Envy Propensity",
-                "Cheer Propensity",
-                "Depression Propensity",
-                "Anger Propensity",
-                "Anxiety Propensity",
-                "Lust Propensity",
-                "Stress Vulnerability",
-                "Greed",
-                "Immoderation",
-                "Violent",
-                "Perseverance",
-                "Wastefulness",
-                "Discord",
-                "Friendliness",
-                "Politeness",
-                "Disdain Advice",
-                "Bravery",
-                "Confidence",
-                "Vanity",
-                "Ambition",
-                "Gtratitude",
-                "Immodesty",
-                "Humor",
-                "Vengeful",
-                "Pride",
-                "Cruelty",
-                "Singleminded",
-                "Hopeful",
-                "Curious",
-                "Bashful",
-                "Privacy",
-                "Perfectionist",
-                "Closeminded",
-                "Tolerant",
-                "Emotionally Obsessive",
-                "Swayed by Emotions",
-                "Altruism",
-                "Dutifulness",
-                "Thoughtlessness",
-                "Orderliness",
-                "Trust",
-                "Gregariousness",
-                "Assertiveness",
-                "Activity Level",
-                "Excitement Seeking",
-                "Imagination",
-                "Abstract Inclined",
-                "Art Inclined",
-                "Detachement",
-                "Cave Adaption",
-            ]
+            "Attributes": [a["name"] for a in game_data["attributes"]],
+            "Traits": [t["name"] for t in game_data["traits"]],
+            "Skills": [s["name"] for s in game_data["skills"]],
         }
         self.sortkey = ""
 
