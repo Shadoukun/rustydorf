@@ -38,12 +38,11 @@ class NameListWidget(QWidget):
     def setup_search_bar(self):
         # TODO: finish this.
         # I need to add logic to handle the different types of search vs using the search bar
-        self.searchBar.menu_data["Age"] = "Age"
-        self.searchBar.menu_data["Attributes"] = ["Strength"]
+        pass
 
     def sort_data(self, key: str, ascending=False):
         """Sort the data based on the given key and order, then reload the table."""
-
+        print(key)
         #TODO: lol not this
         if key == "Age":
             key = "age"
@@ -58,7 +57,84 @@ class NameListSearchBar(DropdownComboBox):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setPlaceholderText("Search")
-        self.menu_data = {}
+        self.menu_data = {
+            "Age": "Age",
+            "Attributes": [
+                "Strength",
+                "Agility",
+                "Toughness",
+                "Endurance",
+                "Recuperation",
+                "Disease Resistance",
+                "Analytical Ability",
+                "Focus",
+                "Willpower",
+                "Creativity",
+                "Intuition",
+                "Patience",
+                "Memory",
+                "Linguistic Ability",
+                "Spatial Sense",
+                "Musicality",
+                "Kinesthetic Sense",
+                "Empathy",
+                "Social Awareness"
+            ],
+            "Traits": [
+                "Love Propensity",
+                "Hate Propensity",
+                "Envy Propensity",
+                "Cheer Propensity",
+                "Depression Propensity",
+                "Anger Propensity",
+                "Anxiety Propensity",
+                "Lust Propensity",
+                "Stress Vulnerability",
+                "Greed",
+                "Immoderation",
+                "Violent",
+                "Perseverance",
+                "Wastefulness",
+                "Discord",
+                "Friendliness",
+                "Politeness",
+                "Disdain Advice",
+                "Bravery",
+                "Confidence",
+                "Vanity",
+                "Ambition",
+                "Gtratitude",
+                "Immodesty",
+                "Humor",
+                "Vengeful",
+                "Pride",
+                "Cruelty",
+                "Singleminded",
+                "Hopeful",
+                "Curious",
+                "Bashful",
+                "Privacy",
+                "Perfectionist",
+                "Closeminded",
+                "Tolerant",
+                "Emotionally Obsessive",
+                "Swayed by Emotions",
+                "Altruism",
+                "Dutifulness",
+                "Thoughtlessness",
+                "Orderliness",
+                "Trust",
+                "Gregariousness",
+                "Assertiveness",
+                "Activity Level",
+                "Excitement Seeking",
+                "Imagination",
+                "Abstract Inclined",
+                "Art Inclined",
+                "Detachement",
+                "Cave Adaption",
+            ]
+        }
         self.sortkey = ""
 
     def showPopup(self):
@@ -70,9 +146,9 @@ class NameListSearchBar(DropdownComboBox):
         # position the menu below the combo box
         pos = self.mapToGlobal(QPoint(0, self.height()))
         action = menu.exec(pos)
-
         # if an action was triggered update the QComboBox text
         if action and action.data() is not None:
+            print(action.key)
             # TODO: transform keywords, @attr, etc based on menu_data selection
             #       Or remove keywords. I'm not sure I need them. if I use this
             self.sortkey = action.text()
