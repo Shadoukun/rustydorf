@@ -9,6 +9,7 @@ from PyQt6.QtCore import pyqtSignal
 
 from .components.dropdowncombobox import DropdownComboBox
 from .signals import SignalsManager
+from pprint import pprint
 
 class NameListWidget(QWidget):
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
@@ -19,6 +20,8 @@ class NameListWidget(QWidget):
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.setSizePolicy(sizePolicy)
         self.setMaximumWidth(150)
+
+        self.sort_key = "Name"
 
         self.game_data = game_data
         self.dwarves = dwarves
@@ -49,7 +52,7 @@ class NameListWidget(QWidget):
         self.searchBar.menu_data = self.menu_data
 
     def sort_data(self, key: str, reverse=False):
-        """Sort the data based on the given key and order, then reload the table."""
+        """Sort the dwarves based on the given key and order, then reload the table."""
 
         self.sort_key = key
         self.sort_reverse = reverse
@@ -57,7 +60,7 @@ class NameListWidget(QWidget):
         if key == "Name":
             sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=reverse)
 
-        if key == "Age":
+        elif key == "Age":
             sorted_data = sorted(self.dwarves, key=lambda x: x.get("age", 0), reverse=reverse)
 
         elif key := next((a for a in self.game_data["attributes"] if a["name"] == key), None):
