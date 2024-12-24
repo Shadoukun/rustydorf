@@ -25,6 +25,7 @@ class LaborWindow(QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
+
 class RotatedHeaderView(QHeaderView):
     """A Custom header view that rotates the table header text 45 degrees counter-clockwise."""
     def __init__(self, orientation, parent=None):
@@ -79,7 +80,7 @@ class LaborTable(CheckboxTable):
 
                 # Check if the labor is enabled for the dwarf
                 if checkbox:
-                    if checked := any([l["enabled"] for l in dwarf["labors"].values() if l["id"] == column]):
+                    if checked := any([labor["enabled"] for labor in dwarf["labors"].values() if labor["id"] == column]):
                         checkbox.setChecked(checked)
                         widget.setStyleSheet("background-color: #393;")
                     else:

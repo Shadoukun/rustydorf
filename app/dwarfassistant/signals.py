@@ -1,5 +1,6 @@
 from PyQt6.QtCore import QObject, pyqtSignal, QMutex, QMutexLocker
 
+
 class SignalsManager(QObject):
     sort_changed   = pyqtSignal(str, bool)
 

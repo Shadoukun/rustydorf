@@ -140,7 +140,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             sorted_list = self.sort_by_attribute(value)
 
         sorted_list = sorted(sorted_list, key=lambda d: d["_sort_value"], reverse=True)
-        print(sorted_list)
         self.nameList.nameTable.populate_list(sorted_list)
         self.change_name_tab()
 

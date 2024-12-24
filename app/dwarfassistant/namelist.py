@@ -6,6 +6,7 @@ from PyQt6.QtGui import QFont
 from .components.dropdowncombobox import DropdownComboBox
 from .signals import SignalsManager
 
+
 class NameListWidget(QWidget):
     """ The Main widget for the list of name list on the right side of the window."""
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
@@ -17,8 +18,15 @@ class NameListWidget(QWidget):
         self.setSizePolicy(sizePolicy)
         self.setMaximumWidth(150)
 
+        # store the game data and the list of dwarves from the central widget for sorting
+        self.game_data = game_data
+        self.dwarves = dwarves
+
+        # default sort key and order
         self.sort_key = "Name"
         self.ascending = False
+
+        # the data for the search bar menu
         self.menu_data = {
             "Name": "Name",
             "Age": "Age",
@@ -26,9 +34,6 @@ class NameListWidget(QWidget):
             "Traits": [t["name"] for t in game_data["traits"]],
             "Skills": [s["name"] for s in game_data["skills"]],
         }
-
-        self.game_data = game_data
-        self.dwarves = dwarves
 
         self.searchBar = NameListSearchBar(self, self.menu_data)
         self.searchBar.setObjectName("nameListSearchBar")
@@ -101,6 +106,7 @@ class NameListWidget(QWidget):
 
         return sorted_list
 
+
 class NameListSearchBar(DropdownComboBox):
     """Search bar for the name list widget that uses a custom QComboBox to display a menu of search options."""
     #TODO: add ascending/descending
@@ -158,7 +164,6 @@ class NameListTable(QTableWidget):
                 background-color: transparent; \
                 color: black; \
             }""")
-
 
     def populate_list(self, data: list[dict], emit=True):
         """Populate the name table with the given names."""

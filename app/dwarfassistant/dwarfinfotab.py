@@ -5,6 +5,7 @@ from PyQt6.QtCore import Qt
 buttonActiveStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt; border :2px solid gold;"
 buttonStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt;"
 
+
 class DwarfInfoTab(QtWidgets.QWidget):
     def __init__(self, game_data: dict, data: dict, parent=None):
         super().__init__(parent)
@@ -18,7 +19,14 @@ class DwarfInfoTab(QtWidgets.QWidget):
         )
         self.infoLabel.setText(info_text)
 
-        self.populate_data(game_data, data)
+        self.setup_beliefs_table(data)
+        self.setup_goals_table(data)
+        self.setup_attributes_table(data)
+        self.setup_traits_table(data)
+        self.setup_thoughts_table(data)
+        self.setup_needs_table(game_data, data)
+        self.setup_labors_table(data)
+        self.setup_skills_table(data)
 
         # common setup for all tables
         tables = [self.beliefsTable, self.goalsTable, self.attributesTable,
@@ -47,16 +55,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
         # these are the active buttons at the start
         self.skillsButton.setStyleSheet(buttonActiveStylesheet)
         self.attributesButton.setStyleSheet(buttonActiveStylesheet)
-
-    def populate_data(self, game_data: dict, data: dict):
-        self.setup_beliefs_table(data)
-        self.setup_goals_table(data)
-        self.setup_attributes_table(data)
-        self.setup_traits_table(data)
-        self.setup_thoughts_table(data)
-        self.setup_needs_table(game_data, data)
-        self.setup_labors_table(data)
-        self.setup_skills_table(data)
 
     def setup_beliefs_table(self, data: dict):
         beliefs = data.get('beliefs', {})

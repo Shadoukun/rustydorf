@@ -20,29 +20,22 @@ mod race;
 mod util;
 mod python;
 
-use std::{ffi::CString, fs, path::Path, sync::Arc, time::Duration};
+use std::{sync::Arc, time::Duration};
 use axum::{routing::get, Router};
+use python::python::run_python_main;
 use tokio::sync::Mutex;
 use pyo3::prelude::*;
-
-use python::rustworker::RustWorker;
 
 use dfinstance::DFInstance;
 use api::{AppState, get_dwarves_handler, get_gamedata_handler};
 
 const PROCESS_NAME: &str = "Dwarf Fortress.exe";
 
-pub fn create_lib_module(py: Python) -> PyResult<()> {
-    let rust_module = PyModule::new(py, "rustlib")?;
-    rust_module.add_class::<RustWorker>()?;
-    py.import("sys")?
-        .getattr("modules")?
-        .set_item("rustlib", rust_module)?;
-    Ok(())
-}
-
 #[tokio::main]
 async fn main() {
+
+    pyo3::prepare_freethreaded_python();
+
     unsafe {
         let state = {
             let process = win::process::Process::new_by_name(PROCESS_NAME);
@@ -79,51 +72,16 @@ async fn main() {
             }
         });
 
-        let handle = tokio::task::spawn_blocking(move || {
-            let py_result = Python::with_gil(|py| {
-                let sys = PyModule::import(py, "sys").unwrap();
-                let path = sys.getattr("path").unwrap();
-                let binding = std::env::current_dir().unwrap();
-                let current_path = binding.to_str().unwrap();
-                path.call_method1("append", (current_path,)).unwrap();
-                path.call_method1("append", ("venv\\Lib\\site-packages",)).unwrap();
-
-                let requests = PyModule::import(py, "requests");
-                let qt6 = PyModule::import(py, "PyQt6.QtWidgets");
-                let module = PyModule::import(py, "app");
-
-                // Create a new module and add the RustWorker class to it
-                create_lib_module(py).unwrap();
-
-                let script_path = Path::new("main.py");
-                if !script_path.exists() {
-                    eprintln!("Error: script.py not found in the current directory");
-                    std::process::exit(1);
-                }
-
-                let script_content = fs::read_to_string(script_path)
-                    .expect("Failed to read the Python script");
-
-                let script_content_cstr = CString::new(script_content).expect("Failed to convert script content to CString");
-                let file_name = &CString::new("main.py").unwrap();
-                let module_name = &CString::new("app").unwrap();
-
-                let module = PyModule::from_code(py,
-                    script_content_cstr.as_c_str(),
-                    file_name,
-                    module_name
-                    ).expect("Failed to load the Python script as a module");
-
-                let result = module.getattr("main").expect("Failed to get the function");
-                let value = result.call0().expect("Failed to call the function");
-                Ok::<(), pyo3::PyErr>(())
+        let python = tokio::task::spawn_blocking(move || {
+            let _ = Python::with_gil(|py| {
+                run_python_main(py)
             });
         });
 
         tokio::select! {
             _ = server => {},
             _ = update_task => {},
-            _ = handle => {},
+            _ = python => {},
             _ = tokio::signal::ctrl_c() => {
                 println!("Shutting down...");
             },
