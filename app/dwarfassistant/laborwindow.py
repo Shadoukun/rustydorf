@@ -48,7 +48,9 @@ class RotatedHeaderView(QHeaderView):
 
 class LaborTable(CheckboxTable):
     def __init__(self, data: list[dict], dwarf_data: list[dict]):
-        self.labors = [labor['name'] for labor in data.get('labors', [])]
+        # TODO: if I want to do a custom sort order I have to sort self.labors and then sort the dwarves based on that (I think?)
+        # doing any kind of sorting would probably be better for the backend to do. OR a PyO3 module.
+        self.labors = sorted(data.get('labors', []), key=lambda x: x["id"])
         self.dwarves = dwarf_data
 
         super().__init__()
@@ -60,13 +62,15 @@ class LaborTable(CheckboxTable):
         self.populate_table()
 
     def populate_table(self):
+
         # list(map()) is nicer but its hard to read
         for row, dwarf in enumerate(self.dwarves):
+            sorted_labors = sorted(dwarf["labors"].items(), key=lambda x: x[1]["id"])
             # Set the vertical header to the dwarf's name
             self.table.setVerticalHeaderItem(row, QTableWidgetItem(f"{dwarf['first_name']} {dwarf['last_name']}"))
             for column, labor in enumerate(self.labors):
                 # set the horizontal header to the labor name
-                self.table.setHorizontalHeaderItem(column, QTableWidgetItem(labor))
+                self.table.setHorizontalHeaderItem(column, QTableWidgetItem(labor["name"]))
 
                 # Create a checkbox widget for each labor
                 checkbox = QCheckBox()
@@ -80,7 +84,7 @@ class LaborTable(CheckboxTable):
 
                 # Check if the labor is enabled for the dwarf
                 if checkbox:
-                    if checked := any([labor["enabled"] for labor in dwarf["labors"].values() if labor["id"] == column]):
+                    if checked := sorted_labors[column][1]["enabled"]:
                         checkbox.setChecked(checked)
                         widget.setStyleSheet("background-color: #393;")
                     else:
