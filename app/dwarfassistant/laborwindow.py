@@ -31,6 +31,11 @@ class RotatedHeaderView(QHeaderView):
     def __init__(self, orientation, parent=None):
         super().__init__(orientation, parent)
         self.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.setStyleSheet("""
+        QHeaderView::section:hover {
+            background-color: none;
+            }
+        """)
 
     def paintSection(self, painter, rect, logicalIndex):
         painter.save()
@@ -55,8 +60,9 @@ class LaborTable(CheckboxTable):
 
         super().__init__()
         self.table.setHorizontalHeader(RotatedHeaderView(Qt.Orientation.Horizontal, self.table))
-        self.table.horizontalHeader().setDefaultSectionSize(20)
-        self.table.horizontalHeader().setFixedHeight(75)
+        horizontal_header = self.table.horizontalHeader()
+        horizontal_header.setDefaultSectionSize(20)
+        horizontal_header.setFixedHeight(75)
         self.table.setRowCount(len(dwarf_data))
         self.table.setColumnCount(len(self.labors))
         self.populate_table()
