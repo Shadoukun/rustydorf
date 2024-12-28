@@ -36,13 +36,14 @@ class RightPanelWidget(QtWidgets.QWidget):
         self.skillsButton.setText("Skills")
         buttonlayout.addWidget(self.skillsButton)
 
-        ## Labors Button
+        ## Traits Button
 
-        self.laborsButton = QtWidgets.QPushButton(self) # Beliefs/Goals Button
-        self.laborsButton.setSizePolicy(btnSizePolicy)
-        self.laborsButton.setFont(QtGui.QFont("More Perfect DOS VGA", 6))
-        self.laborsButton.setText("Labors")
-        buttonlayout.addWidget(self.laborsButton)
+        self.traitsButton = QtWidgets.QPushButton(self) # Traits Button
+        self.traitsButton.setSizePolicy(btnSizePolicy)
+        self.traitsButton.setFont(QtGui.QFont("More Perfect DOS VGA", 6))
+        self.traitsButton.setText("Traits")
+        buttonlayout.addWidget(self.traitsButton)
+
 
         ## Button Spacer
 
@@ -84,32 +85,32 @@ class RightPanelWidget(QtWidgets.QWidget):
         self.skillsTable.setRowCount(0)
         layout.addWidget(self.skillsTable)
 
-        ## Labors Page
+        # Traits Page
 
-        self.laborsPage = QtWidgets.QWidget()
-        self.laborsPage.setObjectName("laborsPage")
-        layout = QtWidgets.QVBoxLayout(self.laborsPage)
+        self.traitsPage = QtWidgets.QWidget()
+        self.traitsPage.setObjectName("traitsPage")
+        layout = QtWidgets.QVBoxLayout(self.traitsPage)
         layout.setContentsMargins(0, 0, 0, 0)
-        self.laborsPage.setLayout(layout)
-        self.stackWidget.addWidget(self.laborsPage)
+        self.traitsPage.setLayout(layout)
+        self.stackWidget.addWidget(self.traitsPage)
 
-        ### Labors Table
+        ### Traits Table
 
-        self.laborsTable = QtWidgets.QTableWidget(parent=self.laborsPage)
-        self.laborsTable.setObjectName("laborsTable")
+        self.traitsTable = QtWidgets.QTableWidget(parent=self.traitsPage)
+        self.traitsTable.setObjectName("traitsTable")
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.laborsTable.sizePolicy().hasHeightForWidth())
-        self.laborsTable.setSizePolicy(sizePolicy)
-        self.laborsTable.setFont(font)
-        self.laborsTable.setColumnCount(0)
-        self.laborsTable.setRowCount(0)
-        layout.addWidget(self.laborsTable)
+        sizePolicy.setHeightForWidth(self.traitsTable.sizePolicy().hasHeightForWidth())
+        self.traitsTable.setSizePolicy(sizePolicy)
+        self.traitsTable.setFont(font)
+        self.traitsTable.setColumnCount(0)
+        self.traitsTable.setRowCount(0)
+        layout.addWidget(self.traitsTable)
 
         # Common Table Settings
 
-        for t in [self.skillsTable, self.laborsTable]:
+        for t in [self.skillsTable, self.traitsTable]:
             t.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
             t.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
             t.setShowGrid(False)

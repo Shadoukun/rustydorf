@@ -81,16 +81,14 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.setup_beliefs_table(data)
         self.setup_goals_table(data)
         self.setup_attributes_table(data)
-        # self.setup_traits_table(data)
+        self.setup_traits_table(data)
         self.setup_thoughts_table(data)
         self.setup_needs_table(game_data, data)
-        self.setup_labors_table(data)
         self.setup_skills_table(data)
 
         # # common setup for all tables
-        # tables = [self.ui.traitsTable, self.ui.thoughtsTable, self.ui.needsTable, self.ui.laborsTable]
         tables = [self.thoughtsTable, self.infoAttributesWidget.attributesTable, self.needsTable,
-                  self.rightPanelWidget.laborsTable, self.rightPanelWidget.skillsTable, self.infoAttributesWidget.beliefsTable, self.infoAttributesWidget.goalsTable]
+                  self.rightPanelWidget.traitsTable, self.rightPanelWidget.skillsTable, self.infoAttributesWidget.beliefsTable, self.infoAttributesWidget.goalsTable]
 
         for table in tables:
             header = table.horizontalHeader()
@@ -107,7 +105,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         # connect the buttons to their handlers
         buttons = [
-            (self.rightPanelWidget.laborsButton, self.laborsButtonClicked),
+            (self.rightPanelWidget.traitsButton, self.traitsButtonClicked),
             (self.rightPanelWidget.skillsButton, self.skillsButtonClicked),
             (self.infoAttributesWidget.attributesButton, self.attributesButtonClicked),
             (self.infoAttributesWidget.beliefsGoalsButton, self.beliefsGoalsButtonClicked),
@@ -179,17 +177,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
             self.infoAttributesWidget.attributesTable.setItem(i, 2, QTableWidgetItem(name))
             self.infoAttributesWidget.attributesTable.setItem(i, 3, QTableWidgetItem(str(value)))
 
-    def setup_traits_table(self, data: list[dict]):
-        traits: dict = data.get('traits', {})
-
-        self.ui.traitsTable.setRowCount(len(traits))
-        self.ui.traitsTable.setColumnCount(2)
-
-        for i, trait in enumerate(traits):
-            name, value = trait[1], trait[2]
-            self.ui.traitsTable.setItem(i, 0, QTableWidgetItem(name))
-            self.ui.traitsTable.setItem(i, 1, QTableWidgetItem(str(value)))
-
     def setup_thoughts_table(self, data: list[dict]):
 
         thoughts: dict = data.get('thoughts', {})
@@ -211,20 +198,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
             name = need = game_data["needs"][id]["name"]
             self.needsTable.setItem(i, 0, QTableWidgetItem(name))
 
-    def setup_labors_table(self, data: list[dict]):
-        labors: dict = data.get('labors', {})
-
-        # sort the labors by enabled and then by id
-        labors = sorted(labors.items(), key=lambda item: (not item[1]["enabled"], item[1]["id"]))
-
-
-        self.rightPanelWidget.laborsTable.setRowCount(len(labors))
-        self.rightPanelWidget.laborsTable.setColumnCount(2)
-
-        for i, labor in enumerate(labors):
-            self.rightPanelWidget.laborsTable.setItem(i, 0, QTableWidgetItem(labor[1]["name"]))
-            self.rightPanelWidget.laborsTable.setItem(i, 1, QTableWidgetItem(str(labor[1]["enabled"])))
-
     def setup_skills_table(self, data: list[dict]):
         skills: dict = data.get('skills', {})
         # if the dwarf doesn't have 15 skills, fill the rest of the table with empty rows
@@ -242,15 +215,26 @@ class DwarfInfoTab(QtWidgets.QWidget):
         header = self.rightPanelWidget.skillsTable.horizontalHeader()
         header.resizeSection(1, 25)
 
+    def setup_traits_table(self, data: list[dict]):
+        traits: dict = data.get('traits', {})
+
+        self.rightPanelWidget.traitsTable.setRowCount(len(traits))
+        self.rightPanelWidget.traitsTable.setColumnCount(2)
+
+        for i, trait in enumerate(traits):
+            name, value = trait[1], trait[2]
+            self.rightPanelWidget.traitsTable.setItem(i, 0, QTableWidgetItem(name))
+            self.rightPanelWidget.traitsTable.setItem(i, 1, QTableWidgetItem(str(value)))
+
     def skillsButtonClicked(self):
         self.rightPanelWidget.stackWidget.setCurrentIndex(0)
-        self.rightPanelWidget.laborsButton.setStyleSheet(buttonStylesheet)
+        self.rightPanelWidget.skillsButton.setStyleSheet(buttonStylesheet)
         self.rightPanelWidget.skillsButton.setStyleSheet(buttonActiveStylesheet)
 
-    def laborsButtonClicked(self):
+    def traitsButtonClicked(self):
         self.rightPanelWidget.stackWidget.setCurrentIndex(1)
         self.rightPanelWidget.skillsButton.setStyleSheet(buttonStylesheet)
-        self.rightPanelWidget.laborsButton.setStyleSheet(buttonActiveStylesheet)
+        self.rightPanelWidget.traitsButton.setStyleSheet(buttonActiveStylesheet)
 
     def attributesButtonClicked(self):
         self.infoAttributesWidget.attributeStack.setCurrentIndex(0)
