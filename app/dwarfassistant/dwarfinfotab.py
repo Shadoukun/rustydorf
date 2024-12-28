@@ -2,7 +2,6 @@ from PyQt6 import QtWidgets, uic, QtGui, QtCore
 from PyQt6.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
 from PyQt6.QtCore import Qt
 
-from .ui.dwarfinfotabui import DwarfInfoTabUI
 from .ui.infoattributeswidget import InfoAttributesWidget
 from .ui.rightpanel import RightPanelWidget
 
@@ -13,8 +12,6 @@ buttonStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt;"
 class DwarfInfoTab(QtWidgets.QWidget):
     def __init__(self, game_data: dict, data: dict, parent=None):
         super().__init__(parent)
-        self.ui = DwarfInfoTabUI()
-        self.ui.setupUi(self)
 
         font = QtGui.QFont()
         font.setFamily("More Perfect DOS VGA")

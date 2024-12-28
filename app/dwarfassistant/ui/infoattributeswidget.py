@@ -1,7 +1,10 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 class InfoAttributesWidget(QtWidgets.QWidget):
-    """This widget wraps the Dwarf Info label and the Attributes/Goals/Beliefs StackedWidget."""
+    """This widget wraps the Dwarf Info label and the Attributes/Goals/Beliefs StackedWidget.
+
+       I was having issues with the layout of the QLabel and the QStackedWidget, so I wrapped them in a QWidget
+    """
     def __init__(self, parent=None):
         super().__init__(parent)
         sizepolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
@@ -111,8 +114,6 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         layout.addWidget(self.goalsTable)
 
         self.attributeStack.addWidget(page_2)
-
-
 
 
 if __name__ == "__main__":
