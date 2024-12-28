@@ -14,6 +14,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.ui = DwarfInfoTabUI()
         self.ui.setupUi(self)
 
+        self.layout = QtWidgets.QVBoxLayout()
+        self.setLayout(self.layout)
         info_text = (
             f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n"
             f"Profession: {data.get('profession', {}).get('name', 'Unknown')}\n"
@@ -21,10 +23,11 @@ class DwarfInfoTab(QtWidgets.QWidget):
             f"Sex: {data.get('sex', 'Unknown')}"
         )
         self.ui.infoLabel.setText(info_text)
-
-        self.setup_beliefs_table(data)
-        self.setup_goals_table(data)
-        self.setup_attributes_table(data)
+        self.layout.addWidget(self.ui.infoLabel)
+        self.layout.addWidget(self.ui.attributesStack)
+        # self.setup_beliefs_table(data)
+        # self.setup_goals_table(data)
+        # self.setup_attributes_table(data)
         self.setup_traits_table(data)
         self.setup_thoughts_table(data)
         self.setup_needs_table(game_data, data)
@@ -32,8 +35,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.setup_skills_table(data)
 
         # common setup for all tables
-        tables = [self.ui.beliefsTable, self.ui.goalsTable, self.ui.attributesTable,
-                  self.ui.traitsTable, self.ui.thoughtsTable, self.ui.needsTable, self.ui.laborsTable]
+        tables = [self.ui.traitsTable, self.ui.thoughtsTable, self.ui.needsTable, self.ui.laborsTable]
 
         for table in tables:
             header = table.horizontalHeader()
@@ -46,8 +48,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         # setup the buttons
         buttons = [
-            (self.ui.attributesButton, self.attributesButtonClicked),
-            (self.ui.beliefsGoalsButton, self.beliefsGoalsButtonClicked),
             (self.ui.laborsButton, self.laborsButtonClicked),
             (self.ui.skillsButton, self.skillsButtonClicked)
         ]
@@ -57,7 +57,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         # these are the active buttons at the start
         self.ui.skillsButton.setStyleSheet(buttonActiveStylesheet)
-        self.ui.attributesButton.setStyleSheet(buttonActiveStylesheet)
 
     def setup_beliefs_table(self, data: dict):
         beliefs = data.get('beliefs', {})
