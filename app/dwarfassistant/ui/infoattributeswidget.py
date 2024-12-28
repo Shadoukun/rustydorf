@@ -83,6 +83,38 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         layout.addWidget(self.attributesTable)
         self.attributeStack.addWidget(page_1)
 
+        ## Beliefs/Goals Table (Page 2)
+        page_2 = QtWidgets.QWidget()
+        layout = QtWidgets.QHBoxLayout(page_2)
+        layout.setContentsMargins(0, 0, 0, 0)
+        page_2.setMinimumHeight(200)
+        page_2.setMaximumHeight(250)
+
+        self.beliefsTable = QtWidgets.QTableWidget()
+        self.beliefsTable.setObjectName("beliefsGoalsTable")
+        self.beliefsTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.beliefsTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
+        self.beliefsTable.setFont(font)
+
+        current_style = self.beliefsTable.styleSheet()
+        self.beliefsTable.setStyleSheet(current_style + "QTableWidget {background: black;}")
+        layout.addWidget(self.beliefsTable)
+
+        self.goalsTable = QtWidgets.QTableWidget()
+        self.goalsTable.setObjectName("goalsTable")
+        self.goalsTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.goalsTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
+        self.goalsTable.setFont(font)
+
+        current_style = self.goalsTable.styleSheet()
+        self.goalsTable.setStyleSheet(current_style + "QTableWidget {background: black;}")
+        layout.addWidget(self.goalsTable)
+
+        self.attributeStack.addWidget(page_2)
+
+
+
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)

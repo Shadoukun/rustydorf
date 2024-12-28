@@ -6,7 +6,7 @@ from .ui.dwarfinfotabui import DwarfInfoTabUI
 from .ui.infoattributeswidget import InfoAttributesWidget
 from .ui.rightpanel import RightPanelWidget
 
-buttonActiveStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt; border :2px solid gold;"
+buttonActiveStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt; border :2px solid gold; padding: 10px;"
 buttonStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt;"
 
 
@@ -78,64 +78,72 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.gridlayout.addWidget(self.thoughtsTable, 1, 0, 1, 2)
         self.gridlayout.addWidget(self.rightPanelWidget, 0, 2, 2, 2)
 
-        # self.setup_beliefs_table(data)
-        # self.setup_goals_table(data)
+        self.setup_beliefs_table(data)
+        self.setup_goals_table(data)
         self.setup_attributes_table(data)
         # self.setup_traits_table(data)
         self.setup_thoughts_table(data)
         self.setup_needs_table(game_data, data)
-        # self.setup_labors_table(data)
-        # self.setup_skills_table(data)
+        self.setup_labors_table(data)
+        self.setup_skills_table(data)
 
         # # common setup for all tables
         # tables = [self.ui.traitsTable, self.ui.thoughtsTable, self.ui.needsTable, self.ui.laborsTable]
-        tables = [self.thoughtsTable, self.infoAttributesWidget.attributesTable, self.needsTable]
+        tables = [self.thoughtsTable, self.infoAttributesWidget.attributesTable, self.needsTable,
+                  self.rightPanelWidget.laborsTable, self.rightPanelWidget.skillsTable, self.infoAttributesWidget.beliefsTable, self.infoAttributesWidget.goalsTable]
 
         for table in tables:
             header = table.horizontalHeader()
             header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
             header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
+            header.setVisible(False)
+            header = table.verticalHeader()
+            header.setVisible(False)
             table.verticalHeader().setVisible(False)
             table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
             table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
             table.resizeColumnToContents(1)
 
-        # # setup the buttons
-        # buttons = [
-        #     (self.ui.laborsButton, self.laborsButtonClicked),
-        #     (self.ui.skillsButton, self.skillsButtonClicked)
-        # ]
 
-        # for button, handler in buttons:
-        #     button.clicked.connect(handler)
+        # connect the buttons to their handlers
+        buttons = [
+            (self.rightPanelWidget.laborsButton, self.laborsButtonClicked),
+            (self.rightPanelWidget.skillsButton, self.skillsButtonClicked),
+            (self.infoAttributesWidget.attributesButton, self.attributesButtonClicked),
+            (self.infoAttributesWidget.beliefsGoalsButton, self.beliefsGoalsButtonClicked),
+        ]
 
-        # # these are the active buttons at the start
-        # self.ui.skillsButton.setStyleSheet(buttonActiveStylesheet)
+        for button, handler in buttons:
+            button.clicked.connect(handler)
+
+        # these are the active buttons at the start
+        self.infoAttributesWidget.attributesButton.setStyleSheet(buttonActiveStylesheet)
+        self.rightPanelWidget.skillsButton.setStyleSheet(buttonActiveStylesheet)
 
     def setup_beliefs_table(self, data: dict):
         beliefs = data.get('beliefs', {})
 
-        self.ui.beliefsTable.setRowCount(len(beliefs))
-        self.ui.beliefsTable.setColumnCount(2)
+        self.infoAttributesWidget.beliefsTable.setRowCount(len(beliefs))
+        self.infoAttributesWidget.beliefsTable.setColumnCount(2)
 
         for i, belief in enumerate(beliefs):
             name, value = belief[1], str(belief[2])
-            self.ui.beliefsTable.setItem(i, 0, QTableWidgetItem(name))
-            self.ui.beliefsTable.setItem(i, 1, QTableWidgetItem(value))
+            self.infoAttributesWidget.beliefsTable.setItem(i, 0, QTableWidgetItem(name))
+            self.infoAttributesWidget.beliefsTable.setItem(i, 1, QTableWidgetItem(value))
 
-        self.ui.beliefsTable.horizontalHeader()
-        self.ui.beliefsTable.resizeColumnToContents(1)
+        self.infoAttributesWidget.beliefsTable.horizontalHeader()
+        self.infoAttributesWidget.beliefsTable.resizeColumnToContents(1)
 
     def setup_goals_table(self, data: list[dict]):
         goals: dict = data.get('goals', {})
 
-        self.ui.goalsTable.setRowCount(len(goals))
-        self.ui.goalsTable.setColumnCount(2)
+        self.infoAttributesWidget.goalsTable.setRowCount(len(goals))
+        self.infoAttributesWidget.goalsTable.setColumnCount(2)
 
         for i, goal in enumerate(goals):
             name, value = goal[0]['name'], str(goal[1])
-            self.ui.goalsTable.setItem(i, 0, QTableWidgetItem(name))
-            self.ui.goalsTable.setItem(i, 1, QTableWidgetItem(value))
+            self.infoAttributesWidget.goalsTable.setItem(i, 0, QTableWidgetItem(name))
+            self.infoAttributesWidget.goalsTable.setItem(i, 1, QTableWidgetItem(value))
 
     def setup_attributes_table(self, data: list[dict]):
 
@@ -210,47 +218,47 @@ class DwarfInfoTab(QtWidgets.QWidget):
         labors = sorted(labors.items(), key=lambda item: (not item[1]["enabled"], item[1]["id"]))
 
 
-        self.ui.laborsTable.setRowCount(len(labors))
-        self.ui.laborsTable.setColumnCount(2)
+        self.rightPanelWidget.laborsTable.setRowCount(len(labors))
+        self.rightPanelWidget.laborsTable.setColumnCount(2)
 
         for i, labor in enumerate(labors):
-            self.ui.laborsTable.setItem(i, 0, QTableWidgetItem(labor[1]["name"]))
-            self.ui.laborsTable.setItem(i, 1, QTableWidgetItem(str(labor[1]["enabled"])))
+            self.rightPanelWidget.laborsTable.setItem(i, 0, QTableWidgetItem(labor[1]["name"]))
+            self.rightPanelWidget.laborsTable.setItem(i, 1, QTableWidgetItem(str(labor[1]["enabled"])))
 
     def setup_skills_table(self, data: list[dict]):
         skills: dict = data.get('skills', {})
         # if the dwarf doesn't have 15 skills, fill the rest of the table with empty rows
         rows = len(skills) if len(skills) > 14 else 14
-        self.ui.skillsTable.setRowCount(rows)
-        self.ui.skillsTable.setColumnCount(2)
+        self.rightPanelWidget.skillsTable.setRowCount(rows)
+        self.rightPanelWidget.skillsTable.setColumnCount(2)
 
         for i, skill in enumerate(skills):
-            self.ui.skillsTable.setItem(i, 0, QTableWidgetItem(skill["name"]))
-            self.ui.skillsTable.setItem(i, 1, QTableWidgetItem(str(skill["raw_level"])))
+            self.rightPanelWidget.skillsTable.setItem(i, 0, QTableWidgetItem(skill["name"]))
+            self.rightPanelWidget.skillsTable.setItem(i, 1, QTableWidgetItem(str(skill["raw_level"])))
 
         # Adjust the column widths
         # TODO: the column widths still suck
-        self.ui.skillsTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        header = self.ui.skillsTable.horizontalHeader()
+        self.rightPanelWidget.skillsTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header = self.rightPanelWidget.skillsTable.horizontalHeader()
         header.resizeSection(1, 25)
 
-    def laborsButtonClicked(self):
-        self.ui.skillStack.setCurrentIndex(0)
-        self.ui.skillsButton.setStyleSheet(buttonStylesheet)
-        self.ui.laborsButton.setStyleSheet(buttonActiveStylesheet)
-
     def skillsButtonClicked(self):
-        self.ui.skillStack.setCurrentIndex(1)
-        self.ui.laborsButton.setStyleSheet(buttonStylesheet)
-        self.ui.skillsButton.setStyleSheet(buttonActiveStylesheet)
+        self.rightPanelWidget.stackWidget.setCurrentIndex(0)
+        self.rightPanelWidget.laborsButton.setStyleSheet(buttonStylesheet)
+        self.rightPanelWidget.skillsButton.setStyleSheet(buttonActiveStylesheet)
+
+    def laborsButtonClicked(self):
+        self.rightPanelWidget.stackWidget.setCurrentIndex(1)
+        self.rightPanelWidget.skillsButton.setStyleSheet(buttonStylesheet)
+        self.rightPanelWidget.laborsButton.setStyleSheet(buttonActiveStylesheet)
 
     def attributesButtonClicked(self):
         self.infoAttributesWidget.attributeStack.setCurrentIndex(0)
         self.infoAttributesWidget.beliefsGoalsButton.setStyleSheet(buttonStylesheet)
-        self.attributesButton.setStyleSheet(buttonActiveStylesheet)
+        self.infoAttributesWidget.attributesButton.setStyleSheet(buttonActiveStylesheet)
 
     def beliefsGoalsButtonClicked(self):
-        self.ui.attributeStack.setCurrentIndex(1)
-        self.ui.attributesButton.setStyleSheet(buttonStylesheet)
-        self.ui.beliefsGoalsButton.setStyleSheet(buttonActiveStylesheet)
+        self.infoAttributesWidget.attributeStack.setCurrentIndex(1)
+        self.infoAttributesWidget.attributesButton.setStyleSheet(buttonStylesheet)
+        self.infoAttributesWidget.beliefsGoalsButton.setStyleSheet(buttonActiveStylesheet)
 
