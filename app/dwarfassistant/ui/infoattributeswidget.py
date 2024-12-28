@@ -59,7 +59,6 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.gridLayout.addItem(spacerItem, 1, 2, 1, 1)
 
-
         # Stacked Widget
         self.attributeStack = QtWidgets.QStackedWidget(self)
         self.attributeStack.setObjectName("attributeStack")
