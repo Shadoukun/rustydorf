@@ -45,7 +45,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.needsTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.needsTable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.needsTable.setSizePolicy(sizePolicy)
-        self.needsTable.setMaximumWidth(100)
+        self.needsTable.setMaximumWidth(150)
         self.needsTable.setFont(font)
         self.needsTable.setColumnCount(1)
         self.needsTable.setRowCount(0)
@@ -80,24 +80,25 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         # self.setup_beliefs_table(data)
         # self.setup_goals_table(data)
-        # self.setup_attributes_table(data)
+        self.setup_attributes_table(data)
         # self.setup_traits_table(data)
-        # self.setup_thoughts_table(data)
+        self.setup_thoughts_table(data)
         # self.setup_needs_table(game_data, data)
         # self.setup_labors_table(data)
         # self.setup_skills_table(data)
 
         # # common setup for all tables
         # tables = [self.ui.traitsTable, self.ui.thoughtsTable, self.ui.needsTable, self.ui.laborsTable]
+        tables = [self.thoughtsTable, self.infoAttributesWidget.attributeStack.attributesTable]
 
-        # for table in tables:
-        #     header = table.horizontalHeader()
-        #     header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        #     header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
-        #     table.verticalHeader().setVisible(False)
-        #     table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
-        #     table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        #     table.resizeColumnToContents(1)
+        for table in tables:
+            header = table.horizontalHeader()
+            header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+            header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
+            table.verticalHeader().setVisible(False)
+            table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+            table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+            table.resizeColumnToContents(1)
 
         # # setup the buttons
         # buttons = [
@@ -145,22 +146,30 @@ class DwarfInfoTab(QtWidgets.QWidget):
             [a for a in attributes[0:9]],
             [a for a in attributes[9:18]],
         ]
-        self.ui.attributesTable.setRowCount(9)
-        self.ui.attributesTable.setColumnCount(4)
-        self.ui.attributesTable.setColumnWidth(0, 75)
-        self.ui.attributesTable.setColumnWidth(1, 25)
-        self.ui.attributesTable.setColumnWidth(2, 75)
-        self.ui.attributesTable.setColumnWidth(3, 25)
+
+        table = self.infoAttributesWidget.attributeStack.attributesTable
+        table.setRowCount(9)
+        table.setColumnCount(4)
+        table.setColumnWidth(0, 75)
+        table.setColumnWidth(1, 25)
+        table.setColumnWidth(2, 75)
+        table.setColumnWidth(3, 25)
+
+        header = self.infoAttributesWidget.attributeStack.attributesTable.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        header.setVisible(False)
+        table.verticalHeader().setDefaultSectionSize(20)
 
         for i, attribute in enumerate(attributes[0]):
             name, value = attribute[1]['name'], attribute[1]['value']
-            self.ui.attributesTable.setItem(i, 0, QTableWidgetItem(name))
-            self.ui.attributesTable.setItem(i, 1, QTableWidgetItem(str(value)))
+            self.infoAttributesWidget.attributeStack.attributesTable.setItem(i, 0, QTableWidgetItem(name))
+            self.infoAttributesWidget.attributeStack.attributesTable.setItem(i, 1, QTableWidgetItem(str(value)))
 
         for i, attribute in enumerate(attributes[1]):
             name, value = attribute[1]['name'], attribute[1]['value']
-            self.ui.attributesTable.setItem(i, 2, QTableWidgetItem(name))
-            self.ui.attributesTable.setItem(i, 3, QTableWidgetItem(str(value)))
+            self.infoAttributesWidget.attributeStack.attributesTable.setItem(i, 2, QTableWidgetItem(name))
+            self.infoAttributesWidget.attributeStack.attributesTable.setItem(i, 3, QTableWidgetItem(str(value)))
 
     def setup_traits_table(self, data: list[dict]):
         traits: dict = data.get('traits', {})
@@ -177,11 +186,11 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         thoughts: dict = data.get('thoughts', {})
 
-        self.ui.thoughtsTable.setRowCount(len(thoughts))
+        self.thoughtsTable.setRowCount(len(thoughts))
 
         for i, thought in enumerate(thoughts):
             text = f"felt {thought['emotion_type'].lower()} {thought['thought']}"
-            self.ui.thoughtsTable.setItem(i, 0, QTableWidgetItem(text))
+            self.thoughtsTable.setItem(i, 0, QTableWidgetItem(text))
 
     def setup_needs_table(self, game_data: dict, data: list[dict]):
         needs: dict = data.get('needs', {})

@@ -44,7 +44,7 @@ class AttributesGoalsStack(QtWidgets.QWidget):
 
         font = QtGui.QFont()
         font.setFamily("More Perfect DOS VGA")
-        font.setPointSize(5)
+        font.setPointSize(6)
 
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
@@ -66,10 +66,21 @@ class AttributesGoalsStack(QtWidgets.QWidget):
 
         # Stacked Widget
         self.attributeStack = QtWidgets.QStackedWidget(self)
+
         page_1 = QtWidgets.QWidget()
         layout = QtWidgets.QVBoxLayout(page_1)
-        table = QtWidgets.QTableWidget()
-        layout.addWidget(table)
+        self.attributesTable = QtWidgets.QTableWidget()
+        self.attributesTable.setObjectName("attributesTable")
+        self.attributesTable.setMinimumHeight(200)
+        self.attributesTable.setMaximumHeight(250)
+        current_style = self.attributesTable.styleSheet()
+        # TODO: figure out why when using setStyleSheet, it negates changing the height of the rows with SetDefaultSectionSize
+        self.attributesTable.setStyleSheet(current_style + "QTableWidget {background: black;}")
+
+        self.attributesTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.attributesTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
+        self.attributesTable.setFont(font)
+        layout.addWidget(self.attributesTable)
         self.attributeStack.addWidget(page_1)
         self.gridLayout.addWidget(self.attributeStack, 1, 0, 1, 3)
 
