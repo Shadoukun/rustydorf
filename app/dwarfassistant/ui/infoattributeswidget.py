@@ -4,12 +4,14 @@ class InfoAttributesWidget(QtWidgets.QWidget):
     """This widget wraps the Dwarf Info label and the Attributes/Goals/Beliefs StackedWidget."""
     def __init__(self, parent=None):
         super().__init__(parent)
-        sizepolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizepolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         self.setSizePolicy(sizepolicy)
 
         layout = QtWidgets.QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+
         font = QtGui.QFont()
         font.setFamily("More Perfect DOS VGA")
         font.setPointSize(6)
@@ -37,8 +39,7 @@ class AttributesGoalsStack(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setObjectName("AttributesGoalsStack")
-        self.setGeometry(QtCore.QRect(0, 0, 201, 201))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         self.setSizePolicy(sizePolicy)
 
         font = QtGui.QFont()

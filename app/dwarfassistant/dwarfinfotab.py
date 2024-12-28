@@ -3,6 +3,8 @@ from PyQt6.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
 from PyQt6.QtCore import Qt
 
 from .ui.dwarfinfotabui import DwarfInfoTabUI
+from .ui.infoattributeswidget import InfoAttributesWidget
+from .ui.rightpanel import RightPanelWidget
 
 buttonActiveStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt; border :2px solid gold;"
 buttonStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt;"
@@ -14,49 +16,100 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.ui = DwarfInfoTabUI()
         self.ui.setupUi(self)
 
-        self.layout = QtWidgets.QVBoxLayout()
-        self.setLayout(self.layout)
+        font = QtGui.QFont()
+        font.setFamily("More Perfect DOS VGA")
+
+        self.gridlayout = QtWidgets.QGridLayout()
+        self.setLayout(self.gridlayout)
+
+        # Info / Attributes Widget
+
         info_text = (
             f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n"
             f"Profession: {data.get('profession', {}).get('name', 'Unknown')}\n"
             f"Age: {data.get('age', 'Unknown')}\n"
             f"Sex: {data.get('sex', 'Unknown')}"
         )
-        self.ui.infoLabel.setText(info_text)
-        self.layout.addWidget(self.ui.infoLabel)
-        self.layout.addWidget(self.ui.attributesStack)
+        self.infoAttributesWidget = InfoAttributesWidget()
+        self.infoAttributesWidget.setObjectName("infoWidget")
+        self.infoAttributesWidget.setMaximumWidth(300)
+        self.infoAttributesWidget.infoLabel.setText(info_text)
+        self.gridlayout.addWidget(self.infoAttributesWidget, 0, 0, 1, 1)
+
+        # Needs Table
+
+        self.needsTable = QtWidgets.QTableWidget(parent=self)
+        self.needsTable.setObjectName("needsTable")
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.needsTable.setSizePolicy(sizePolicy)
+        self.needsTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.needsTable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.needsTable.setSizePolicy(sizePolicy)
+        self.needsTable.setMaximumWidth(100)
+        self.needsTable.setFont(font)
+        self.needsTable.setColumnCount(1)
+        self.needsTable.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.needsTable.setHorizontalHeaderItem(0, item)
+        self.needsTable.horizontalHeader().setStretchLastSection(True)
+        self.gridlayout.addWidget(self.needsTable, 0, 1, 1, 1)
+
+        # Thoughts Table
+
+        self.thoughtsTable = QtWidgets.QTableWidget(parent=self)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.thoughtsTable.sizePolicy().hasHeightForWidth())
+        self.thoughtsTable.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setFamily("More Perfect DOS VGA")
+        self.thoughtsTable.setFont(font)
+        self.thoughtsTable.setObjectName("thoughtsTable")
+        self.thoughtsTable.setColumnCount(1)
+        self.thoughtsTable.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.thoughtsTable.setHorizontalHeaderItem(0, item)
+        self.thoughtsTable.horizontalHeader().setStretchLastSection(True)
+
+        # Right Panel Widget
+
+        self.rightPanelWidget = RightPanelWidget(self)
+        self.gridlayout.addWidget(self.thoughtsTable, 1, 0, 1, 2)
+        self.gridlayout.addWidget(self.rightPanelWidget, 0, 2, 2, 2)
+
         # self.setup_beliefs_table(data)
         # self.setup_goals_table(data)
         # self.setup_attributes_table(data)
-        self.setup_traits_table(data)
-        self.setup_thoughts_table(data)
-        self.setup_needs_table(game_data, data)
-        self.setup_labors_table(data)
-        self.setup_skills_table(data)
+        # self.setup_traits_table(data)
+        # self.setup_thoughts_table(data)
+        # self.setup_needs_table(game_data, data)
+        # self.setup_labors_table(data)
+        # self.setup_skills_table(data)
 
-        # common setup for all tables
-        tables = [self.ui.traitsTable, self.ui.thoughtsTable, self.ui.needsTable, self.ui.laborsTable]
+        # # common setup for all tables
+        # tables = [self.ui.traitsTable, self.ui.thoughtsTable, self.ui.needsTable, self.ui.laborsTable]
 
-        for table in tables:
-            header = table.horizontalHeader()
-            header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-            header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
-            table.verticalHeader().setVisible(False)
-            table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
-            table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-            table.resizeColumnToContents(1)
+        # for table in tables:
+        #     header = table.horizontalHeader()
+        #     header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        #     header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft)
+        #     table.verticalHeader().setVisible(False)
+        #     table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        #     table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        #     table.resizeColumnToContents(1)
 
-        # setup the buttons
-        buttons = [
-            (self.ui.laborsButton, self.laborsButtonClicked),
-            (self.ui.skillsButton, self.skillsButtonClicked)
-        ]
+        # # setup the buttons
+        # buttons = [
+        #     (self.ui.laborsButton, self.laborsButtonClicked),
+        #     (self.ui.skillsButton, self.skillsButtonClicked)
+        # ]
 
-        for button, handler in buttons:
-            button.clicked.connect(handler)
+        # for button, handler in buttons:
+        #     button.clicked.connect(handler)
 
-        # these are the active buttons at the start
-        self.ui.skillsButton.setStyleSheet(buttonActiveStylesheet)
+        # # these are the active buttons at the start
+        # self.ui.skillsButton.setStyleSheet(buttonActiveStylesheet)
 
     def setup_beliefs_table(self, data: dict):
         beliefs = data.get('beliefs', {})
@@ -191,3 +244,4 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.ui.attributeStack.setCurrentIndex(1)
         self.ui.attributesButton.setStyleSheet(buttonStylesheet)
         self.ui.beliefsGoalsButton.setStyleSheet(buttonActiveStylesheet)
+
