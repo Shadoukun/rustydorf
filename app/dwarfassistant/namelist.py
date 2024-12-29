@@ -60,7 +60,6 @@ class NameListWidget(QWidget):
         elif key == "Age":
             sorted_data = sorted(self.dwarves, key=lambda x: x.get("age", 0), reverse=not self.descending)
 
-
         elif key := next((a for a in self.game_data["attributes"] if a["name"] == self.sort_key), None):
             sorted_data = self.sort_by_attribute(self.dwarves, self.sort_key, not self.descending)
 
@@ -72,7 +71,6 @@ class NameListWidget(QWidget):
 
         else:
             # default to sorting by name
-            print("default")
             sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=self.descending)
 
         self.nameTable.populate_list(sorted_data)

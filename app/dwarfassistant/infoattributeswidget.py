@@ -11,6 +11,7 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         self.setSizePolicy(sizepolicy)
+        self.setMinimumHeight(50)
 
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setObjectName("gridLayout")
@@ -65,17 +66,15 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         # Stacked Widget
         self.attributeStack = QtWidgets.QStackedWidget(self)
         self.attributeStack.setObjectName("attributeStack")
+        self.attributeStack.setMaximumHeight(250)
         self.gridLayout.addWidget(self.attributeStack, 2, 0, 1, 3)
 
         ## Attributes Table (Page 1)
         page_1 = QtWidgets.QWidget()
         layout = QtWidgets.QVBoxLayout(page_1)
         layout.setContentsMargins(0, 0, 0, 0)
-
         self.attributesTable = QtWidgets.QTableWidget()
         self.attributesTable.setObjectName("attributesTable")
-        self.attributesTable.setMinimumHeight(200)
-        self.attributesTable.setMaximumHeight(250)
         self.attributesTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.attributesTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
         self.attributesTable.setFont(font)
@@ -90,9 +89,6 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         page_2 = QtWidgets.QWidget()
         layout = QtWidgets.QHBoxLayout(page_2)
         layout.setContentsMargins(0, 0, 0, 0)
-        page_2.setMinimumHeight(200)
-        page_2.setMaximumHeight(250)
-
         self.beliefsTable = QtWidgets.QTableWidget()
         self.beliefsTable.setObjectName("beliefsGoalsTable")
         self.beliefsTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
