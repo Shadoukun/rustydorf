@@ -37,10 +37,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         font.setPointSize(6)
         self.setFont(font)
 
-        # create a worker to update the data.
-        self.worker = RustWorker()
-        self.worker.start(self.update_task(), 10)
-
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
@@ -69,6 +65,10 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         # select the first name in the list by default
         self.nameList.nameTable.setCurrentCell(0, 0)
 
+        # create a worker to update the data.
+        self.worker = RustWorker()
+        self.worker.start(self.update_task(), 10)
+
         # triggers the worker to start updating
         self.running = True
 
@@ -86,10 +86,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             if dwarf_data.status_code == 200:
                 self.dwarf_data = dwarf_data.json()
 
-            if self.nameList.sort_key:
-                self.nameList.sort_data(self.nameList.sort_key, self.nameList.ascending)
-            else:
-                self.nameList.nameTable.populate_list(self.dwarf_data, False)
+            self.nameList.sort_data(self.nameList.sort_key, self.nameList.ascending)
 
         return fn
 

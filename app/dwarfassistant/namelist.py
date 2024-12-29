@@ -53,7 +53,7 @@ class NameListWidget(QWidget):
         self.descending = descending
 
         if key == "Name":
-            sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=not self.descending)
+            sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=self.descending)
 
         elif key == "Age":
             sorted_data = sorted(self.dwarves, key=lambda x: x.get("age", 0), reverse=not self.descending)
@@ -71,7 +71,7 @@ class NameListWidget(QWidget):
         else:
             # default to sorting by name
             print("default")
-            sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=not self.descending)
+            sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=self.descending)
 
         self.nameTable.populate_list(sorted_data)
 
