@@ -2,8 +2,8 @@ from PyQt6 import QtWidgets, uic, QtGui, QtCore
 from PyQt6.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
 from PyQt6.QtCore import Qt
 
-from .ui.infoattributeswidget import InfoAttributesWidget
-from .ui.rightpanel import RightPanelWidget
+from .infoattributeswidget import InfoAttributesWidget
+from .rightpanel import RightPanelWidget
 
 buttonActiveStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt; border :2px solid gold; padding: 10px;"
 buttonStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt;"
