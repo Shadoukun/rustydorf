@@ -38,6 +38,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.needsTable = QtWidgets.QTableWidget(parent=self)
         self.needsTable.setObjectName("needsTable")
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Expanding)
+        self.needsTable.setMinimumWidth(100)
         self.needsTable.setSizePolicy(sizePolicy)
         self.needsTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.needsTable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)

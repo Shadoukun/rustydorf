@@ -67,6 +67,7 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         self.attributeStack = QtWidgets.QStackedWidget(self)
         self.attributeStack.setObjectName("attributeStack")
         self.attributeStack.setMaximumHeight(250)
+        self.setMinimumWidth(200)
         self.gridLayout.addWidget(self.attributeStack, 2, 0, 1, 3)
 
         ## Attributes Table (Page 1)
