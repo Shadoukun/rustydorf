@@ -5,7 +5,7 @@ from PyQt6.QtGui import QFont
 
 from .components.dropdowncombobox import DropdownComboBox
 from .signals import SignalsManager
-
+from pprint import pprint
 
 class NameListWidget(QWidget):
     """ The Main widget for the list of name list on the right side of the window."""
@@ -46,66 +46,60 @@ class NameListWidget(QWidget):
 
         SignalsManager.instance().sort_changed.connect(self.sort_data)
 
-    def sort_data(self, key: str, ascending=False):
+    def sort_data(self, key: str, descending=True):
         """Sort the dwarves based on the given key and order, then reload the table."""
 
         self.sort_key = key
-        self.ascending = ascending
+        self.descending = descending
 
         if key == "Name":
-            sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=not ascending)
+            sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=not self.descending)
 
         elif key == "Age":
-            sorted_data = sorted(self.dwarves, key=lambda x: x.get("age", 0), reverse=not ascending)
+            sorted_data = sorted(self.dwarves, key=lambda x: x.get("age", 0), reverse=not self.descending)
 
-        elif key := next((a for a in self.game_data["attributes"] if a["name"] == key), None):
-            sorted_data = self.sort_by_attribute(key, self.dwarves)
 
-        elif key := next((t for t in self.game_data["traits"] if t["name"] == key), None):
-            sorted_data = self.sort_by_trait(key, self.dwarves)
+        elif key := next((a for a in self.game_data["attributes"] if a["name"] == self.sort_key), None):
+            sorted_data = self.sort_by_attribute(self.dwarves, self.sort_key, not self.descending)
 
-        elif key := next((s for s in self.game_data["skills"] if s["name"] == key), None):
-            sorted_data = self.sort_by_skill(key, self.dwarves)
+        elif key := next((t for t in self.game_data["traits"] if t["name"] == self.sort_key), None):
+            sorted_data = self.sort_by_trait(self.dwarves, self.sort_key, not self.descending)
+
+        elif key := next((s for s in self.game_data["skills"] if s["name"] == self.sort_key), None):
+            sorted_data = self.sort_by_skill(self.dwarves, self.sort_key, not self.descending)
 
         else:
             # default to sorting by name
-            sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=not ascending)
+            print("default")
+            sorted_data = sorted(self.dwarves, key=lambda x: x.get("first_name", "Unknown"), reverse=not self.descending)
 
         self.nameTable.populate_list(sorted_data)
 
     @staticmethod
-    def sort_by_attribute(dwarves: dict[list], key: str):
-        sorted_list = []
-        key = key.capitalize()
+    def sort_by_attribute(dwarves, key: str, descending: bool):
         for d in dwarves:
-            attr = next((a for a in d["attributes"] if a["name"] == key), None)
+            attr = next((a for a in d["attributes"].values() if a["name"].lower() == key.lower()), None)
             d["_sort_value"] = attr["value"]
-            sorted_list.append(d)
 
-        return sorted_list
-
-    @staticmethod
-    def sort_by_trait(dwarves: dict[list], key: str):
-        sorted_list = []
-        key = key.capitalize()
-        for d in dwarves:
-            trait = next((t for t in d["traits"] if t["name"] == key), None)
-            d["_sort_value"] = trait["value"]
-            sorted_list.append(d)
-
-        return sorted_list
+        return sorted(dwarves, key=lambda x: x["_sort_value"], reverse=descending)
 
     @staticmethod
-    def sort_by_skill(dwarves: dict[list], key: str):
-        sorted_list = []
-        key = key.capitalize()
+    def sort_by_trait(dwarves: dict[list], key: str, descending: bool):
+        # traits are [id, name, value]
         for d in dwarves:
-            skill = next((s for s in d["skills"] if s["name"] == key), None)
-            d["_sort_value"] = skill["value"]
-            sorted_list.append(d)
+            trait = next((t for t in d["traits"] if t[1] == key), None)
+            d["_sort_value"] = trait[2]
 
-        return sorted_list
+        return sorted(dwarves, key=lambda x: x["_sort_value"], reverse=descending)
 
+    @staticmethod
+    def sort_by_skill(dwarves: dict[list], key: str, descending: bool):
+
+        for d in dwarves:
+            skill = next((a for a in d["skills"] if a["name"] == key), None)
+            d["_sort_value"] = skill["experience"] if skill else 0
+
+        return sorted(dwarves, key=lambda x: x["_sort_value"], reverse=descending)
 
 class NameListSearchBar(DropdownComboBox):
     """Search bar for the name list widget that uses a custom QComboBox to display a menu of search options."""
