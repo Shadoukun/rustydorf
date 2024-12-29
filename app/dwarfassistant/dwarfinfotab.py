@@ -29,7 +29,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         )
         self.infoAttributesWidget = InfoAttributesWidget()
         self.infoAttributesWidget.setObjectName("infoWidget")
-        self.infoAttributesWidget.setMaximumWidth(300)
+        # self.infoAttributesWidget.setMaximumWidth(300)
         self.infoAttributesWidget.infoLabel.setText(info_text)
         self.gridlayout.addWidget(self.infoAttributesWidget, 0, 0, 1, 1)
 

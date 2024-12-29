@@ -54,7 +54,6 @@ class RightPanelWidget(QtWidgets.QWidget):
 
         self.stackWidget = QtWidgets.QStackedWidget(parent=self)
         self.stackWidget.setObjectName("stackWidget")
-        self.stackWidget.setMaximumWidth(150)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
