@@ -5,7 +5,6 @@ from PyQt6.QtGui import QFont
 
 from .components.dropdowncombobox import DropdownComboBox
 from .signals import SignalsManager
-from pprint import pprint
 
 class NameListWidget(QWidget):
     """ The Main widget for the list of name list on the right side of the window."""
@@ -43,6 +42,9 @@ class NameListWidget(QWidget):
         self.nameTable = NameListTable(self, self.game_data, self.dwarves)
         self.nameTable.setObjectName("nameTable")
         layout.addWidget(self.nameTable)
+
+        # This fixes an issue where styles/border colors would persist when the table cell selection changed. This forces the table to repaint when the current cell changes.
+        self.nameTable.currentCellChanged.connect(lambda x: self.nameTable.viewport().update())
 
         SignalsManager.instance().sort_changed.connect(self.sort_data)
 

@@ -43,7 +43,6 @@ async fn main() {
                 df: Arc::new(Mutex::new(DFInstance::new(&process))),
             }
         };
-        pyo3::prepare_freethreaded_python();
 
         let server = tokio::spawn({
             let state = state.clone();
