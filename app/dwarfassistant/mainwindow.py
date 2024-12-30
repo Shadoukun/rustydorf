@@ -2,6 +2,7 @@ import re
 import requests
 from PyQt6.QtGui import QFont
 from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import QTableWidgetItem
 
 from .namelist import NameListWidget
 from .dwarfinfotab import DwarfInfoTab
@@ -52,7 +53,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.nameList.setObjectName("nameList")
 
         self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
-        self.nameList.nameTable.populate_list(self.dwarf_data)
+        self.populate_name_list(self.dwarf_data)
 
         self.mainPanel = DwarfInfoTab(self.game_data, self.dwarf_data[0], self.centralwidget)
         self.mainPanel.setObjectName("mainPanel")
@@ -64,6 +65,9 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         # select the first name in the list by default
         self.nameList.nameTable.setCurrentCell(0, 0)
+
+        # default sort key
+        self.sort_key = "Name"
 
         # create a worker to update the data.
         self.worker = RustWorker()
@@ -86,7 +90,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             if dwarf_data.status_code == 200:
                 self.dwarf_data = dwarf_data.json()
 
-            self.nameList.sort_data(self.nameList.sort_key, self.nameList.ascending)
+            self.sort_and_populate(self.sort_key, self.nameList.ascending)
 
         return fn
 
@@ -99,9 +103,15 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         labor_view.triggered.connect(self.show_labor_window)
 
     def connect_slots(self):
+        """Connect the signals to the slots."""
+        signal_manager = SignalsManager.instance()
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
         self.nameList.searchBar.lineEdit().returnPressed.connect(self.sort_list)
-        SignalsManager.instance().sort_changed.connect(self.change_name_tab)
+
+        # signals
+        signal_manager.sort_changed.connect(self.change_name_tab)
+        signal_manager.sort_changed.connect(self.sort_and_populate)
+        signal_manager.populate_table.connect(self.populate_name_list)
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
@@ -137,8 +147,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             sorted_list = self.sort_by_attribute(value)
 
         sorted_list = sorted(sorted_list, key=lambda d: d["_sort_value"], reverse=True)
-        self.nameList.nameTable.populate_list(sorted_list)
-        self.change_name_tab()
+        SignalsManager.instance().populate_table.emit(sorted_list)
 
     def get_sort_key_value(self, search_text: str, keywords: list):
         '''Get the filter key from the search text.'''
@@ -154,3 +163,67 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         if self.labor_window is None:
             self.labor_window = LaborWindow(self.game_data, self.dwarf_data)
         self.labor_window.show()
+
+    def sort_and_populate(self, key: str, descending=True):
+        """Sort the dwarves based on the given key and order, then reload the table."""
+        print(f"Sorting by {key} in descending order: {descending}")
+        self.sort_key = key
+        self.descending = descending
+
+        if key == "Name":
+            sorted_data = sorted(self.dwarf_data, key=lambda x: x.get("first_name", "Unknown"), reverse=self.descending)
+
+        elif key == "Age":
+            sorted_data = sorted(self.dwarf_data, key=lambda x: x.get("age", 0), reverse=not self.descending)
+
+        elif key := next((a for a in self.game_data["attributes"] if a["name"] == self.sort_key), None):
+            sorted_data = self.sort_by_attribute(self.dwarf_data, self.sort_key, not self.descending)
+
+        elif key := next((t for t in self.game_data["traits"] if t["name"] == self.sort_key), None):
+            sorted_data = self.sort_by_trait(self.dwarf_data, self.sort_key, not self.descending)
+
+        elif key := next((s for s in self.game_data["skills"] if s["name"] == self.sort_key), None):
+            sorted_data = self.sort_by_skill(self.dwarf_data, self.sort_key, not self.descending)
+
+        else:
+            # default to sorting by name
+            sorted_data = sorted(self.dwarf_data, key=lambda x: x.get("first_name", "Unknown"), reverse=self.descending)
+
+        SignalsManager.instance().populate_table.emit(sorted_data)
+
+    @staticmethod
+    def sort_by_attribute(dwarves, key: str, descending: bool):
+        for d in dwarves:
+            attr = next((a for a in d["attributes"].values() if a["name"].lower() == key.lower()), None)
+            d["_sort_value"] = attr["value"]
+
+        return sorted(dwarves, key=lambda x: x["_sort_value"], reverse=descending)
+
+    @staticmethod
+    def sort_by_trait(dwarves: dict[list], key: str, descending: bool):
+        # traits are [id, name, value]
+        for d in dwarves:
+            trait = next((t for t in d["traits"] if t[1] == key), None)
+            d["_sort_value"] = trait[2]
+
+        return sorted(dwarves, key=lambda x: x["_sort_value"], reverse=descending)
+
+    @staticmethod
+    def sort_by_skill(dwarves: dict[list], key: str, descending: bool):
+        for d in dwarves:
+            skill = next((a for a in d["skills"] if a["name"] == key), None)
+            d["_sort_value"] = skill["experience"] if skill else 0
+
+        return sorted(dwarves, key=lambda x: x["_sort_value"], reverse=descending)
+
+
+    def populate_name_list(self, data: list[dict], emit=True):
+        """Populate the name table with the given names."""
+        self.name_order = []
+        self.nameList.nameTable.setRowCount(len(data))
+        for i, entry in enumerate(data):
+            item = QTableWidgetItem(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}" + "\n" +
+                                    f"{entry.get('profession', '').get('name', '')}")
+            self.nameList.nameTable.setItem(i, 0, item)
+            self.name_order.append(entry["id"])
+
