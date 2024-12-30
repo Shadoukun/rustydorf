@@ -32,7 +32,11 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         ))
 
         self.infoLabel.setObjectName("infoLabel")
-        self.infoLabel.setMaximumHeight(100)
+        self.infoLabel.setMaximumHeight(300)
+        sizepolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizepolicy.setHorizontalStretch(0)
+        sizepolicy.setVerticalStretch(0)
+        self.infoLabel.setSizePolicy(sizepolicy)
         self.gridLayout.addWidget(self.infoLabel, 0, 0, 1, 1)
 
         # I hate Qt
@@ -40,8 +44,9 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         # can I scope this? Rust i miss you
         buttonWidget = QtWidgets.QWidget(self)
         buttonlayout = QtWidgets.QHBoxLayout(buttonWidget)
-        buttonlayout.setContentsMargins(0, 0, 0, 0)
         buttonWidget.setLayout(buttonlayout)
+        buttonlayout.setContentsMargins(0, 10, 0, 5)
+
         self.gridLayout.addWidget(buttonWidget, 1, 0, 1, 2)
 
         # Attributes Button
@@ -67,6 +72,7 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         self.attributeStack = QtWidgets.QStackedWidget(self)
         self.attributeStack.setObjectName("attributeStack")
         self.attributeStack.setMaximumHeight(250)
+        self.attributeStack.setMaximumWidth(400)
         self.setMinimumWidth(200)
         self.gridLayout.addWidget(self.attributeStack, 2, 0, 1, 3)
 

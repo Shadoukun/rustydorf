@@ -7,10 +7,17 @@ class RightPanelWidget(QtWidgets.QWidget):
     def __init__(self, parent):
         super().__init__(parent)
         self.setObjectName("rightPanel")
-        self.setMaximumWidth(151)
+        self.setMinimumWidth(151)
+        self.setMaximumWidth(200)
         font = QtGui.QFont()
         font.setFamily("More Perfect DOS VGA")
         font.setPointSize(6)
+
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.setSizePolicy(sizePolicy)
 
         # Grid Layout
 

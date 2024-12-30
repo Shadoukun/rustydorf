@@ -19,7 +19,17 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.gridlayout = QtWidgets.QGridLayout()
         self.setLayout(self.gridlayout)
 
-        # Info / Attributes Widget
+        self.mainPanel = QtWidgets.QWidget(self)
+        self.mainPanel.setObjectName("mainPanel")
+        self.gridlayout.addWidget(self.mainPanel, 0, 0, 1, 1)
+
+        # Main Panel
+
+        mainPanelLayout = QtWidgets.QGridLayout(self.mainPanel)
+        mainPanelLayout.setObjectName("mainpanelLayout")
+        self.mainPanel.setLayout(mainPanelLayout)
+
+        ## Info / Attributes Widget
 
         info_text = (
             f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n"
@@ -31,28 +41,28 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.infoAttributesWidget.setObjectName("infoWidget")
         # self.infoAttributesWidget.setMaximumWidth(300)
         self.infoAttributesWidget.infoLabel.setText(info_text)
-        self.gridlayout.addWidget(self.infoAttributesWidget, 0, 0, 1, 1)
+        mainPanelLayout.addWidget(self.infoAttributesWidget, 0, 0, 1, 1)
 
-        # Needs Table
+        ## Needs Table
 
         self.needsTable = QtWidgets.QTableWidget(parent=self)
         self.needsTable.setObjectName("needsTable")
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Expanding)
         self.needsTable.setMinimumWidth(100)
+        self.needsTable.setMaximumWidth(500)
         self.needsTable.setSizePolicy(sizePolicy)
         self.needsTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.needsTable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.needsTable.setSizePolicy(sizePolicy)
-        self.needsTable.setMaximumWidth(150)
         self.needsTable.setFont(font)
         self.needsTable.setColumnCount(1)
         self.needsTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.needsTable.setHorizontalHeaderItem(0, item)
         self.needsTable.horizontalHeader().setStretchLastSection(True)
-        self.gridlayout.addWidget(self.needsTable, 0, 1, 1, 1)
+        mainPanelLayout.addWidget(self.needsTable, 0, 1, 1, 1)
 
-        # Thoughts Table
+        ## Thoughts Table
 
         self.thoughtsTable = QtWidgets.QTableWidget(parent=self)
         self.thoughtsTable.setObjectName("thoughtsTable")
@@ -69,13 +79,13 @@ class DwarfInfoTab(QtWidgets.QWidget):
         item = QtWidgets.QTableWidgetItem()
         self.thoughtsTable.setHorizontalHeaderItem(0, item)
         self.thoughtsTable.horizontalHeader().setStretchLastSection(True)
+        mainPanelLayout.addWidget(self.thoughtsTable, 1, 0, 1, 2)
 
         # Right Panel Widget
 
         self.rightPanelWidget = RightPanelWidget(self)
-        self.gridlayout.addWidget(self.thoughtsTable, 1, 0, 1, 2)
-        self.gridlayout.addWidget(self.rightPanelWidget, 0, 2, 2, 2)
-
+        self.rightPanelWidget.setObjectName("rightPanelWidget")
+        self.gridlayout.addWidget(self.rightPanelWidget, 0, 1, 1, 1)
         self.setup_beliefs_table(data)
         self.setup_goals_table(data)
         self.setup_attributes_table(data)
