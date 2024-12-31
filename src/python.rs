@@ -91,7 +91,7 @@ pub mod rustworker {
             sleep_time.store(sleep, Ordering::SeqCst);
 
             // idk if I should be doing spawn_blocking, or tokio at all, but it works.
-            thread::spawn(move || {
+            tokio::task::spawn_blocking(move || {
                 // loop until the running flag is set to false
                 while running.load(Ordering::SeqCst) {
                     // Call the Python function

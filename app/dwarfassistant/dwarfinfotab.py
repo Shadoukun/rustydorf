@@ -236,7 +236,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
     def skillsButtonClicked(self):
         self.rightPanelWidget.stackWidget.setCurrentIndex(0)
-        self.rightPanelWidget.skillsButton.setStyleSheet(buttonStylesheet)
+        self.rightPanelWidget.traitsButton.setStyleSheet(buttonStylesheet)
         self.rightPanelWidget.skillsButton.setStyleSheet(buttonActiveStylesheet)
 
     def traitsButtonClicked(self):
