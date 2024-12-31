@@ -27,6 +27,10 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.game_data =  requests.get('http://127.0.0.1:3000/data').json()
         self.dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
 
+         # create a worker to update the data.
+        self.worker = RustWorker()
+        self.worker.start(self.update_task(), 10)
+
         self.setWindowTitle("Dwarf Assistant")
         self.centralwidget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.centralwidget)
@@ -53,7 +57,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.nameList.setObjectName("nameList")
 
         self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
-        self.populate_name_list(self.dwarf_data)
 
         self.mainPanel = DwarfInfoTab(self.game_data, self.dwarf_data[0], self.centralwidget)
         self.mainPanel.setObjectName("mainPanel")
@@ -63,15 +66,14 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.create_menu()
         self.connect_slots()
 
+        # populate the name list by name by default
+        self.sort_key = "Name"
+        SignalsManager.instance().sort_changed.emit(self.sort_key, False)
+
         # select the first name in the list by default
         self.nameList.nameTable.setCurrentCell(0, 0)
 
         # default sort key
-        self.sort_key = "Name"
-
-        # create a worker to update the data.
-        self.worker = RustWorker()
-        self.worker.start(self.update_task(), 10)
 
         # triggers the worker to start updating
         self.running = True
@@ -164,7 +166,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             self.labor_window = LaborWindow(self.game_data, self.dwarf_data)
         self.labor_window.show()
 
-    def sort_and_populate(self, key: str, descending=True):
+    def sort_and_populate(self, key: str, descending=False):
         """Sort the dwarves based on the given key and order, then reload the table."""
         print(f"Sorting by {key} in descending order: {descending}")
         self.sort_key = key
