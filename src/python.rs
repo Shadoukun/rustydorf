@@ -1,10 +1,11 @@
+#![allow(unused_variables)]
 pub mod python {
     use std::{ffi::CString, fs, path::Path};
-
     use pyo3::prelude::*;
+
     use super::rustworker::RustWorker;
 
-/// This is the python "script" that is run by the Rust program
+    /// This is the python "script" that is run by the Rust program
     pub fn run_python_main(py: Python<'_>) -> Result<(), pyo3::PyErr> {
         let sys = PyModule::import(py, "sys").unwrap();
         let path = sys.getattr("path").unwrap();
@@ -15,37 +16,18 @@ pub mod python {
 
         let requests = PyModule::import(py, "requests");
         let qt6 = PyModule::import(py, "PyQt6.QtWidgets");
-        let module = PyModule::import(py, "app");
+        let app = PyModule::import(py, "app");
 
-        // Create a new module and add the RustWorker class to it
         create_lib_module(py).unwrap();
 
-        // Load the Python script as a module
-        let script_path = Path::new("main.py");
-        if !script_path.exists() {
-            eprintln!("Error: script.py not found in the current directory");
-            std::process::exit(1);
-        }
+        let script = read_script(py).unwrap();
+        let _ = script.getattr("main").unwrap().call0()
+            .expect("Failed to call the function");
 
-        let script_content = fs::read_to_string(script_path)
-            .expect("Failed to read the Python script");
-
-        let script_content_cstr = CString::new(script_content).expect("Failed to convert script content to CString");
-        let file_name = &CString::new("main.py").unwrap();
-        let module_name = &CString::new("app").unwrap();
-
-        let module = PyModule::from_code(py,
-            script_content_cstr.as_c_str(),
-            file_name,
-            module_name
-            ).expect("Failed to load the Python script as a module");
-
-        // Call the main function in the Python script
-        let _ = module.getattr("main").unwrap().call0().expect("Failed to call the function");
         Ok::<(), pyo3::PyErr>(())
     }
 
-    pub fn create_lib_module(py: Python) -> PyResult<()> {
+    fn create_lib_module(py: Python) -> PyResult<()> {
         let rust_module = PyModule::new(py, "rustlib")?;
         rust_module.add_class::<RustWorker>()?;
         py.import("sys")?
@@ -53,7 +35,32 @@ pub mod python {
             .set_item("rustlib", rust_module)?;
         Ok(())
     }
+
+    /// Read the Python main.py and return it as a module
+    fn read_script(py: Python) -> PyResult<Bound<'_, PyModule>> {
+        // Check if the script exists
+        let path = Path::new("main.py");
+        match path.exists() {
+            true => (),
+            false => {
+                eprintln!("Error: script.py not found in the current directory");
+                std::process::exit(1);
+            }
+        }
+
+        let script_module = {
+            let content = fs::read_to_string(path).expect("Failed to read the Python script");
+            let content_cstr = CString::new(content).expect("Failed to convert script content to CString");
+            let file_name = &CString::new("main.py").unwrap();
+            let module_name = &CString::new("app").unwrap();
+            PyModule::from_code(py, content_cstr.as_c_str(), file_name, module_name)
+                .expect("Failed to load the Python script as a module")
+        };
+
+        Ok(script_module)
+    }
 }
+
 
 pub mod rustworker {
     use pyo3::prelude::*;
