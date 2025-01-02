@@ -83,16 +83,18 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         def fn():
             if not self.running:
                 return
+            dwarf_len = len(self.dwarf_data)
+            dwarf_data = None
 
             # TODO: I can probably make Rust do this before calling populate_list or emitting a signal.
             game_data =  requests.get('http://127.0.0.1:3000/data')
             if game_data.status_code == 200:
                 self.game_data = game_data.json()
+
             dwarf_data = requests.get('http://127.0.0.1:3000/dwarves')
             if dwarf_data.status_code == 200:
-                self.dwarf_data = dwarf_data.json()
-
-            self.sort_and_populate(self.sort_key, self.nameList.ascending)
+                if len(self.dwarf_data) != dwarf_len:
+                    self.sort_and_populate(self.sort_key, self.nameList.ascending)
 
         return fn
 
