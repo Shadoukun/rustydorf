@@ -1,3 +1,5 @@
+#![allow(unused_imports)]
+#![allow(unused_variables)]
 mod api;
 mod attribute;
 mod dfinstance;
@@ -22,8 +24,9 @@ mod python;
 
 use std::{sync::Arc, time::Duration};
 use axum::{routing::get, Router};
-use python::python::run_python_main;
+use python::main::{add_cwd_to_path, read_script, create_lib_module};
 use tokio::sync::Mutex;
+
 use pyo3::prelude::*;
 
 use dfinstance::DFInstance;
@@ -37,6 +40,7 @@ async fn main() {
     pyo3::prepare_freethreaded_python();
 
     unsafe {
+        // create the AppState for the REST API
         let state = {
             let process = win::process::Process::new_by_name(PROCESS_NAME);
             AppState {
@@ -44,7 +48,7 @@ async fn main() {
             }
         };
 
-        let server = tokio::spawn({
+        let api_server = tokio::spawn({
             let state = state.clone();
             async move {
                 let rest = Router::new()
@@ -57,6 +61,7 @@ async fn main() {
             }
         });
 
+        // start the update task
         let update_task = tokio::task::spawn_blocking(move || {
             // process can't be sent between threads, so we need to create a new one here
             let process = win::process::Process::new_by_name(PROCESS_NAME);
@@ -71,16 +76,37 @@ async fn main() {
             }
         });
 
-        let python = tokio::task::spawn_blocking(move || {
-            let _ = Python::with_gil(|py| {
-                run_python_main(py)
+        // start the python GUI thread
+        let gui_thread = tokio::task::spawn_blocking(move || {
+            Python::with_gil(|py| {
+                match add_cwd_to_path(py) {
+                    Ok(_) => (),
+                    Err(e) => {
+                        eprintln!("Failed to add the current directory to the Python path:\n{}", e);
+                        std::process::exit(1);
+                    }
+                }
+
+                match create_lib_module(py) {
+                    Ok(_) => (),
+                    Err(e) => {
+                        eprintln!("Failed to create the Rust module in Python:\n{}", e);
+                        std::process::exit(1);
+                    }
+                }
+
+                let requests = PyModule::import(py, "requests");
+                let qt6 = PyModule::import(py, "PyQt6.QtWidgets");
+                let app = PyModule::import(py, "app");
+                let script = read_script(py).unwrap();
+                script.getattr("main").unwrap().call0().expect("Failed to call the python script");
             });
         });
 
         tokio::select! {
-            _ = server => {},
+            _ = api_server => {},
             _ = update_task => {},
-            _ = python => {},
+            _ = gui_thread => {},
             _ = tokio::signal::ctrl_c() => {
                 println!("Shutting down...");
             },

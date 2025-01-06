@@ -1,33 +1,26 @@
 #![allow(unused_variables)]
-pub mod python {
+pub mod main {
     use std::{ffi::CString, fs, path::Path};
     use pyo3::prelude::*;
 
     use super::rustworker::RustWorker;
 
-    /// This is the python "script" that is run by the Rust program
-    pub fn run_python_main(py: Python<'_>) -> Result<(), pyo3::PyErr> {
-        let sys = PyModule::import(py, "sys").unwrap();
-        let path = sys.getattr("path").unwrap();
-        let binding = std::env::current_dir().unwrap();
-        let current_path = binding.to_str().unwrap();
-        path.call_method1("append", (current_path,)).unwrap();
-        path.call_method1("append", ("venv\\Lib\\site-packages",)).unwrap();
+    const VENV_PATH: &str = "venv\\Lib\\site-packages";
 
-        let requests = PyModule::import(py, "requests");
-        let qt6 = PyModule::import(py, "PyQt6.QtWidgets");
-        let app = PyModule::import(py, "app");
+    /// Add the current working directory to the Python path
+    pub fn add_cwd_to_path(py: Python<'_>) -> PyResult<()> {
+        let sys = PyModule::import(py, "sys")?;
+        let path = sys.getattr("path")?;
+        let cwd = std::env::current_dir()?;
+        let cwd_str= cwd.to_str().unwrap();
 
-        create_lib_module(py).unwrap();
-
-        let script = read_script(py).unwrap();
-        let _ = script.getattr("main").unwrap().call0()
-            .expect("Failed to call the function");
-
-        Ok::<(), pyo3::PyErr>(())
+        path.call_method1("append", (cwd_str,))?;
+        path.call_method1("append", (VENV_PATH,))?;
+        Ok(())
     }
 
-    fn create_lib_module(py: Python) -> PyResult<()> {
+    /// Create a Python module that contains the RustWorker class
+    pub fn create_lib_module(py: Python) -> PyResult<()> {
         let rust_module = PyModule::new(py, "rustlib")?;
         rust_module.add_class::<RustWorker>()?;
         py.import("sys")?
@@ -37,7 +30,7 @@ pub mod python {
     }
 
     /// Read the Python main.py and return it as a module
-    fn read_script(py: Python) -> PyResult<Bound<'_, PyModule>> {
+    pub fn read_script(py: Python) -> PyResult<Bound<'_, PyModule>> {
         // Check if the script exists
         let path = Path::new("main.py");
         match path.exists() {
@@ -48,7 +41,7 @@ pub mod python {
             }
         }
 
-        let script_module = {
+        let script = {
             let content = fs::read_to_string(path).expect("Failed to read the Python script");
             let content_cstr = CString::new(content).expect("Failed to convert script content to CString");
             let file_name = &CString::new("main.py").unwrap();
@@ -57,7 +50,7 @@ pub mod python {
                 .expect("Failed to load the Python script as a module")
         };
 
-        Ok(script_module)
+        Ok(script)
     }
 }
 
