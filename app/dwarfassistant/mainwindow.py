@@ -130,27 +130,12 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             self.mainPanel.deleteLater()
             self.mainPanel = None
 
-        # use selectedIndexes() to get the selected row because selectedItems AND currentRow are jank
-        # - selectedItems returns None because we are using setCellWidget and not setItem
-        # - currentRow() does not return to 0 when the user clicks and drags their selection,
-        #   even if the selection returns to the first row
-
-        # in this case, selectedIndexes always returns a list of 1 index (the selected row)
-        selection_model = self.nameList.nameTable.selectionModel()
-        selected_indexes = selection_model.selectedIndexes()  # Returns QModelIndex objects
-        selected_id = None
-
-        for index in selected_indexes:
-            row = index.row()
-            selected_id = self.nameList.nameTable.item(row, 1)
-
-        if selected_id is None:
-            return
-
-        if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selected_id.text())), None):
-            self.mainPanel = DwarfInfoTab(self.game_data, dwarf, self.centralwidget)
-            self.mainPanel.setObjectName("mainPanel")
-            self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
+        # get the selected dwarf from the name list by id
+        if selection := self.nameList.get_selection():
+            if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selection.text())), None):
+                self.mainPanel = DwarfInfoTab(self.game_data, dwarf, self.centralwidget)
+                self.mainPanel.setObjectName("mainPanel")
+                self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 
     def sort_list(self):
         '''Filter the name list based on the search bar text.'''

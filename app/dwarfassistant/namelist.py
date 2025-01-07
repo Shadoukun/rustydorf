@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QSizePolicy, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QSizePolicy, QVBoxLayout, QLabel, QTableWidgetItem
 from PyQt6.QtWidgets import QMenu
 from PyQt6.QtCore import QPoint
 from PyQt6.QtGui import QFont
@@ -47,6 +47,26 @@ class NameListWidget(QWidget):
 
         # This fixes an issue where styles/border colors would persist when the table cell selection changed. This forces the table to repaint when the current cell changes.
         self.nameTable.currentCellChanged.connect(lambda x: self.nameTable.viewport().update())
+
+    def get_selection(self) -> QTableWidgetItem:
+        """Get the selected row from the namelist table and return the QTableWidgetItem object for the dwarf id"""
+        # use selectedIndexes() to get the selected row because selectedItems AND currentRow are jank
+        # - selectedItems returns None because we are using setCellWidget and not setItem
+        # - currentRow() does not return to 0 when the user clicks and drags their selection,
+        #   even if the selection returns to the first row
+
+        # in this case, selectedIndexes always returns a list of 1 index (the selected row)
+        selected_indexes = self.nameTable.selectionModel().selectedIndexes()
+        selected_id = None
+
+        for index in selected_indexes:
+            row = index.row()
+            selected_id = self.nameTable.item(row, 1)
+
+        if selected_id is None:
+            return None
+
+        return selected_id
 
 class NameListSearchBar(DropdownComboBox):
     """Search bar for the name list widget that uses a custom QComboBox to display a menu of search options."""
