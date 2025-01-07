@@ -30,13 +30,13 @@ pub mod main {
     }
 
     /// Read the Python main.py and return it as a module
-    pub fn read_script(py: Python) -> PyResult<Bound<'_, PyModule>> {
-        // Check if the script exists
-        let path = Path::new("main.py");
+    pub fn read_python_main(py: Python) -> PyResult<Bound<'_, PyModule>> {
+        // Check if the python entrypoint exists
+        let path = Path::new("app\\main.py");
         match path.exists() {
             true => (),
             false => {
-                eprintln!("Error: script.py not found in the current directory");
+                eprintln!("Error: main.py not found.");
                 std::process::exit(1);
             }
         }

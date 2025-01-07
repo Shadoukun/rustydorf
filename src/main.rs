@@ -24,7 +24,7 @@ mod python;
 
 use std::{sync::Arc, time::Duration};
 use axum::{routing::get, Router};
-use python::main::{add_cwd_to_path, read_script, create_lib_module};
+use python::main::{add_cwd_to_path, read_python_main, create_lib_module};
 use tokio::sync::Mutex;
 
 use pyo3::prelude::*;
@@ -98,7 +98,7 @@ async fn main() {
                 let requests = PyModule::import(py, "requests");
                 let qt6 = PyModule::import(py, "PyQt6.QtWidgets");
                 let app = PyModule::import(py, "app");
-                let script = read_script(py).unwrap();
+                let script = read_python_main(py).unwrap();
                 script.getattr("main").unwrap().call0().expect("Failed to call the python script");
             });
         });
