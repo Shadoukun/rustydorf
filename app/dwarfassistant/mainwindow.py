@@ -14,10 +14,10 @@ from .settingsmenu import SettingsMenuDialog
 # vscode seemingly doesn't/won't recognize this
 from rustlib import RustWorker
 
-API_URLS = [
-            "http://127.0.0.1:3000/data",
-            "http://127.0.0.1:3000/dwarves"
-        ]
+API_URLS = {
+    "data": "http://127.0.0.1:3000/data",
+    "dwarves": "http://127.0.0.1:3000/dwarves"
+}
 
 
 class DwarfAssistant(QtWidgets.QMainWindow):
@@ -26,8 +26,8 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.running = False
 
         self.settings = QSettings("DwarfAssistant", "DwarfAssistant")
-        self.game_data =  requests.get('http://127.0.0.1:3000/data').json()
-        self.dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
+        self.game_data =  requests.get(API_URLS["data"]).json()
+        self.dwarf_data = requests.get(API_URLS["dwarves"]).json()
 
         # create a worker to update the data.
         self.worker = RustWorker()
@@ -81,11 +81,11 @@ class DwarfAssistant(QtWidgets.QMainWindow):
                 return
 
             dwarf_data = None
-            game_data =  requests.get('http://127.0.0.1:3000/data')
+            game_data =  requests.get(API_URLS["data"])
             if game_data.status_code == 200:
                 self.game_data = game_data.json()
 
-            dwarf_data = requests.get('http://127.0.0.1:3000/dwarves')
+            dwarf_data = requests.get(API_URLS["dwarves"])
             if dwarf_data.status_code == 200:
                 dwarf_data = dwarf_data.json()
                 # don't update the list if there are no changes
@@ -200,7 +200,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
     @staticmethod
     def sort_by_attribute(dwarves, key: str, descending: bool):
         for d in dwarves:
-            attr = next((a for a in d["attributes"].values() if a["name"].lower() == key.lower()), None)
+            attr = next((a for a in d["attributes"].values() if a["name"] == key), None)
             d["_sort_value"] = attr["value"]
 
         return sorted(dwarves, key=lambda x: x["_sort_value"], reverse=descending)
