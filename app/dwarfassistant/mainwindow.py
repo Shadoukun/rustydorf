@@ -3,11 +3,13 @@ import requests
 from PyQt6.QtGui import QFont
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QTableWidgetItem
+from PyQt6.QtCore import QSettings
 
 from .namelist import NameListWidget
 from .dwarfinfotab import DwarfInfoTab
 from .signals import SignalsManager
 from .laborwindow import LaborWindow
+from .settingsmenu import SettingsMenuDialog
 
 # vscode seemingly doesn't/won't recognize this
 from rustlib import RustWorker
@@ -23,6 +25,8 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         super(DwarfAssistant, self).__init__()
         self.running = False
 
+        self.settings = QSettings("DwarfAssistant", "DwarfAssistant")
+
         # I guess do this here? clarity.
         self.game_data =  requests.get('http://127.0.0.1:3000/data').json()
         self.dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
@@ -31,6 +35,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.worker = RustWorker()
         self.worker.start(self.update_task(), 10)
 
+        # Initialize the main window
         self.setWindowTitle("Dwarf Assistant")
         self.centralwidget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.centralwidget)
@@ -39,7 +44,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         # Set font on central widget
         font = QFont()
-        font.setPointSize(6)
+        font.setPointSize(self.settings.value("font_size", 6, type=int))
         self.setFont(font)
 
         self.menubar = QtWidgets.QMenuBar(self)
@@ -73,8 +78,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         # select the first name in the list by default
         self.nameList.nameTable.setCurrentCell(0, 0)
 
-        # default sort key
-
         # triggers the worker to start updating
         self.running = True
 
@@ -101,6 +104,8 @@ class DwarfAssistant(QtWidgets.QMainWindow):
     def create_menu(self):
         menubar = self.menuBar()
         file_menu = menubar.addMenu("File")
+        settings_action = file_menu.addAction("Settings")
+        settings_action.triggered.connect(self.show_settings_window)
 
         view_menu = menubar.addMenu("View")
         labor_view = view_menu.addAction("Labors")
@@ -167,6 +172,10 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         if self.labor_window is None:
             self.labor_window = LaborWindow(self.game_data, self.dwarf_data)
         self.labor_window.show()
+
+    def show_settings_window(self):
+        settings_window = SettingsMenuDialog(settings=self.settings)
+        settings_window.exec()
 
     def sort_and_populate(self, key: str, descending=False):
         """Sort the dwarves based on the given key and order, then reload the table."""

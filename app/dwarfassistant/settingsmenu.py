@@ -2,8 +2,10 @@ from PyQt6.QtWidgets import (QDialog, QWidget, QHBoxLayout, QSpinBox,
     QVBoxLayout, QLabel, QCheckBox, QPushButton
 )
 
+from PyQt6.QtCore import QSettings
+
 class SettingsMenuDialog(QDialog):
-    def __init__(self):
+    def __init__(self, settings: QSettings):
         super().__init__()
         self.setWindowTitle("Settings")
 
@@ -23,6 +25,7 @@ class SettingsMenuDialog(QDialog):
         self.font_size_num = QSpinBox()
         self.font_size_num.setRange(4, 24)
         self.font_size_num.setButtonSymbols(QSpinBox.ButtonSymbols.NoButtons)
+        self.font_size_num.setValue(settings.value("font_size", 6, type=int))
         font_size_layout.addWidget(self.font_size_num)
         column1_layout.addLayout(font_size_layout)
 
