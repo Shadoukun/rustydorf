@@ -1,6 +1,6 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtWidgets import QWidget
+
 
 class RightPanelWidget(QtWidgets.QWidget):
     """This is the the right panel widget that contains the Skills and Labors tables."""

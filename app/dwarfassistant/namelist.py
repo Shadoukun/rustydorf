@@ -49,9 +49,14 @@ class NameListWidget(QWidget):
         self.nameTable.currentCellChanged.connect(lambda x: self.nameTable.viewport().update())
 
     def get_selection(self) -> QTableWidgetItem:
-        """Get the selected row from the namelist table and return the QTableWidgetItem object for the dwarf id"""
-        # use selectedIndexes() to get the selected row because selectedItems AND currentRow are jank
-        # - selectedItems returns None because we are using setCellWidget and not setItem
+        """Get the selected row from the namelist table and return the QTableWidgetItem object for the dwarf id
+
+           This takes the selected cell from the table and returns the QTableWidgetItem that contains
+           the dwarf id from the hidden adjacent column.
+        """
+
+        # use selectedIndexes() to get the selected row because selectedItems() AND currentRow() are jank
+        # - selectedItems() returns None because we are using setCellWidget() and not a QTableWidgetItem with setItem()
         # - currentRow() does not return to 0 when the user clicks and drags their selection,
         #   even if the selection returns to the first row
 
