@@ -138,9 +138,14 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         # in this case, selectedIndexes always returns a list of 1 index (the selected row)
         selection_model = self.nameList.nameTable.selectionModel()
         selected_indexes = selection_model.selectedIndexes()  # Returns QModelIndex objects
+        selected_id = None
+
         for index in selected_indexes:
             row = index.row()
             selected_id = self.nameList.nameTable.item(row, 1)
+
+        if selected_id is None:
+            return
 
         if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selected_id.text())), None):
             self.mainPanel = DwarfInfoTab(self.game_data, dwarf, self.centralwidget)
