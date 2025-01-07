@@ -130,10 +130,17 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             self.mainPanel.deleteLater()
             self.mainPanel = None
 
-        current_row = self.nameList.nameTable.currentRow()
-        selected_id = self.nameList.nameTable.item(current_row, 1)
-        if not selected_id:
-            return
+        # use selectedIndexes() to get the selected row because selectedItems AND currentRow are jank
+        # - selectedItems returns None because we are using setCellWidget and not setItem
+        # - currentRow() does not return to 0 when the user clicks and drags their selection,
+        #   even if the selection returns to the first row
+
+        # in this case, selectedIndexes always returns a list of 1 index (the selected row)
+        selection_model = self.nameList.nameTable.selectionModel()
+        selected_indexes = selection_model.selectedIndexes()  # Returns QModelIndex objects
+        for index in selected_indexes:
+            row = index.row()
+            selected_id = self.nameList.nameTable.item(row, 1)
 
         if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selected_id.text())), None):
             self.mainPanel = DwarfInfoTab(self.game_data, dwarf, self.centralwidget)
