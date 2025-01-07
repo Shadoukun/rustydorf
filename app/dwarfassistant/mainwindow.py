@@ -87,7 +87,13 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
             dwarf_data = requests.get('http://127.0.0.1:3000/dwarves')
             if dwarf_data.status_code == 200:
-                if len(self.dwarf_data) != len(self.dwarf_data):
+                dwarf_data = dwarf_data.json()
+                # don't update the list if there are no changes
+                # TODO: This is a simple check right now.
+                # If a dwarf leaves and then another one arrives immediately after,
+                # it won't update the list
+                if len(dwarf_data) != len(self.dwarf_data):
+                    self.dwarf_data = dwarf_data
                     self.sort_and_populate(self.sort_key, self.nameList.ascending)
 
         # start the worker

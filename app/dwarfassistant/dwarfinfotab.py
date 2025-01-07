@@ -208,6 +208,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
     def setup_skills_table(self, data: list[dict]):
         skills: dict = data.get('skills', {})
+        skills = sorted(skills, key=lambda item: item["raw_level"], reverse=True)
+
         # if the dwarf doesn't have 15 skills, fill the rest of the table with empty rows
         rows = len(skills) if len(skills) > 14 else 14
         self.rightPanelWidget.skillsTable.setRowCount(rows)
@@ -217,8 +219,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
             self.rightPanelWidget.skillsTable.setItem(i, 0, QTableWidgetItem(skill["name"]))
             self.rightPanelWidget.skillsTable.setItem(i, 1, QTableWidgetItem(str(skill["raw_level"])))
 
-        # Adjust the column widths
-        # TODO: the column widths still suck
         self.rightPanelWidget.skillsTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         header = self.rightPanelWidget.skillsTable.horizontalHeader()
         header.resizeSection(1, 25)
