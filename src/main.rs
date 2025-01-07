@@ -95,10 +95,17 @@ async fn main() {
                     }
                 }
 
+                // have to import the modules for the python script here to use them
                 let requests = PyModule::import(py, "requests");
                 let qt6 = PyModule::import(py, "PyQt6.QtWidgets");
                 let app = PyModule::import(py, "app");
-                let script = read_python_main(py).unwrap();
+                let script = match read_python_main(py) {
+                    Ok(script) => script,
+                    Err(e) => {
+                        eprintln!("Failed to read the python script:\n{}", e);
+                        std::process::exit(1);
+                    }
+                };
                 script.getattr("main").unwrap().call0().expect("Failed to call the python script");
             });
         });
