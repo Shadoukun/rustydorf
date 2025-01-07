@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets, uic, QtGui, QtCore
+from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
 from PyQt6.QtCore import Qt
 
@@ -19,28 +19,19 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.gridlayout = QtWidgets.QGridLayout()
         self.setLayout(self.gridlayout)
 
+        # Main Panel
+
         self.mainPanel = QtWidgets.QWidget(self)
         self.mainPanel.setObjectName("mainPanel")
         self.gridlayout.addWidget(self.mainPanel, 0, 0, 1, 1)
-
-        # Main Panel
-
         mainPanelLayout = QtWidgets.QGridLayout(self.mainPanel)
         mainPanelLayout.setObjectName("mainpanelLayout")
         self.mainPanel.setLayout(mainPanelLayout)
 
         ## Info / Attributes Widget
 
-        info_text = (
-            f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n"
-            f"Profession: {data.get('profession', {}).get('name', 'Unknown')}\n"
-            f"Age: {data.get('age', 'Unknown')}\n"
-            f"Sex: {data.get('sex', 'Unknown')}"
-        )
-        self.infoAttributesWidget = InfoAttributesWidget()
+        self.infoAttributesWidget = InfoAttributesWidget(self, data)
         self.infoAttributesWidget.setObjectName("infoWidget")
-        # self.infoAttributesWidget.setMaximumWidth(300)
-        self.infoAttributesWidget.infoLabel.setText(info_text)
         mainPanelLayout.addWidget(self.infoAttributesWidget, 0, 0, 1, 1)
 
         ## Needs Table
@@ -95,8 +86,12 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.setup_skills_table(data)
 
         # # common setup for all tables
-        tables = [self.thoughtsTable, self.infoAttributesWidget.attributesTable, self.needsTable,
-                  self.rightPanelWidget.traitsTable, self.rightPanelWidget.skillsTable, self.infoAttributesWidget.beliefsTable, self.infoAttributesWidget.goalsTable]
+        tables = [
+            self.thoughtsTable, self.infoAttributesWidget.attributesTable,
+            self.needsTable, self.rightPanelWidget.traitsTable,
+            self.rightPanelWidget.skillsTable, self.infoAttributesWidget.beliefsTable,
+            self.infoAttributesWidget.goalsTable
+        ]
 
         for table in tables:
             header = table.horizontalHeader()

@@ -1,11 +1,11 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtGui, QtWidgets
 
 class InfoAttributesWidget(QtWidgets.QWidget):
     """This widget wraps the Dwarf Info label and the Attributes/Goals/Beliefs StackedWidget.
 
        I was having issues with the layout of the QLabel and the QStackedWidget, so I wrapped them in a QWidget
     """
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, data: dict = None):
         super().__init__(parent)
         sizepolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizepolicy.setHorizontalStretch(0)
@@ -23,25 +23,24 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         font.setPointSize(6)
         self.setFont(font)
 
+        # Info Label
         self.infoLabel = QtWidgets.QLabel("Info", self)
-        self.infoLabel.setText((
-            "Name: Test\n"
-            "Profession: Miner\n"
-            "Age: 88\n"
-            "Sex: Male\n"
-        ))
-
         self.infoLabel.setObjectName("infoLabel")
         self.infoLabel.setMaximumHeight(300)
         sizepolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Fixed)
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         self.infoLabel.setSizePolicy(sizepolicy)
+        self.infoLabel.setText((
+            f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n"
+            f"Profession: {data.get('profession', {}).get('name', 'Unknown')}\n"
+            f"Age: {data.get('age', 'Unknown')}\n"
+            f"Sex: {data.get('sex', 'Unknown')}"
+        ))
         self.gridLayout.addWidget(self.infoLabel, 0, 0, 1, 1)
 
         # I hate Qt
         # create a horizontal layout for the buttons
-        # can I scope this? Rust i miss you
         buttonWidget = QtWidgets.QWidget(self)
         buttonlayout = QtWidgets.QHBoxLayout(buttonWidget)
         buttonWidget.setLayout(buttonlayout)

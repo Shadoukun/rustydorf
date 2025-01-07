@@ -12,7 +12,7 @@ from .laborwindow import LaborWindow
 from .settingsmenu import SettingsMenuDialog
 
 # vscode seemingly doesn't/won't recognize this
-from rustlib import RustWorker
+from rustlib import RustWorker # type: ignore
 
 API_URLS = {
     "data": "http://127.0.0.1:3000/data",
