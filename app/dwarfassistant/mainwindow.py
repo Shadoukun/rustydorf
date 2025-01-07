@@ -130,11 +130,12 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             self.mainPanel.deleteLater()
             self.mainPanel = None
 
-        selected_items = self.nameList.nameTable.selectedItems()
-        if not selected_items:
+        current_row = self.nameList.nameTable.currentRow()
+        selected_id = self.nameList.nameTable.item(current_row, 1)
+        if not selected_id:
             return
 
-        if dwarf := next((d for d in self.dwarf_data if d["first_name"] == selected_items[0].text().split(" ")[0]), None):
+        if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selected_id.text())), None):
             self.mainPanel = DwarfInfoTab(self.game_data, dwarf, self.centralwidget)
             self.mainPanel.setObjectName("mainPanel")
             self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
@@ -232,11 +233,24 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
     def populate_name_list(self, data: list[dict], emit=True):
         """Populate the name table with the given names."""
-        self.name_order = []
         self.nameList.nameTable.setRowCount(len(data))
         for i, entry in enumerate(data):
-            item = QTableWidgetItem(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}" + "\n" +
-                                    f"{entry.get('profession', '').get('name', '')}")
-            self.nameList.nameTable.setItem(i, 0, item)
-            self.name_order.append(entry["id"])
+            widget = self.get_name_label_widget(entry)
+            self.nameList.nameTable.setCellWidget(i, 0, widget)
+            id_item = QTableWidgetItem(str(entry["id"]))
+            self.nameList.nameTable.setItem(i, 1, id_item)
 
+    def get_name_label_widget(self, entry: dict) -> QtWidgets.QWidget:
+        widget = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        widget.setLayout(layout)
+
+        name_label = QtWidgets.QLabel(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
+        layout.addWidget(name_label)
+
+        profession_label = QtWidgets.QLabel(f"{entry.get('profession', '').get('name', '')}")
+        layout.addWidget(profession_label)
+
+        return widget

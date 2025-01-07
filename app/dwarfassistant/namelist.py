@@ -39,8 +39,10 @@ class NameListWidget(QWidget):
         self.searchBar.setPlaceholderText("Search")
         layout.addWidget(self.searchBar)
 
-        self.nameTable = NameListTable(self, self.game_data, self.dwarves)
+        self.nameTable = NameListTable(self)
         self.nameTable.setObjectName("nameTable")
+        self.nameTable.setColumnCount(2)
+        self.nameTable.setColumnHidden(1, True)
         layout.addWidget(self.nameTable)
 
         # This fixes an issue where styles/border colors would persist when the table cell selection changed. This forces the table to repaint when the current cell changes.
@@ -76,13 +78,11 @@ class NameListSearchBar(DropdownComboBox):
 
 class NameListTable(QTableWidget):
     """The inner table widget for the name list"""
-    def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         font = QFont("More Perfect DOS VGA")
         self.setFont(font)
         self.setShowGrid(False)
-        self.setColumnCount(1)
-        self.setRowCount(len(dwarves))
         self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
 
