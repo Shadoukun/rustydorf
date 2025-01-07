@@ -14,11 +14,11 @@ from .settingsmenu import SettingsMenuDialog
 # vscode seemingly doesn't/won't recognize this
 from rustlib import RustWorker
 
-
 API_URLS = [
             "http://127.0.0.1:3000/data",
             "http://127.0.0.1:3000/dwarves"
         ]
+
 
 class DwarfAssistant(QtWidgets.QMainWindow):
     def __init__(self):
@@ -26,14 +26,12 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.running = False
 
         self.settings = QSettings("DwarfAssistant", "DwarfAssistant")
-
-        # I guess do this here? clarity.
         self.game_data =  requests.get('http://127.0.0.1:3000/data').json()
         self.dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
 
-         # create a worker to update the data.
+        # create a worker to update the data.
         self.worker = RustWorker()
-        self.worker.start(self.update_task(), 10)
+        self.start_update_worker()
 
         # Initialize the main window
         self.setWindowTitle("Dwarf Assistant")
@@ -42,7 +40,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
 
-        # Set font on central widget
         font = QFont()
         font.setPointSize(self.settings.value("font_size", 6, type=int))
         self.setFont(font)
@@ -60,7 +57,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data)
         self.nameList.setObjectName("nameList")
-
         self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
 
         self.mainPanel = DwarfInfoTab(self.game_data, self.dwarf_data[0], self.centralwidget)
@@ -71,35 +67,31 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.create_menu()
         self.connect_slots()
 
-        # populate the name list by name by default
+        # default sort key and order
         self.sort_key = "Name"
         SignalsManager.instance().sort_changed.emit(self.sort_key, False)
+        self.nameList.nameTable.setCurrentCell(0, 0) # select the first cell in the name list
 
-        # select the first name in the list by default
-        self.nameList.nameTable.setCurrentCell(0, 0)
-
-        # triggers the worker to start updating
         self.running = True
 
-    def update_task(self):
-        # this is a func that will be called by the worker.
+    def start_update_worker(self):
+        # the callback that will be run by the worker
         def fn():
             if not self.running:
                 return
-            dwarf_len = len(self.dwarf_data)
-            dwarf_data = None
 
-            # TODO: I can probably make Rust do this before calling populate_list or emitting a signal.
+            dwarf_data = None
             game_data =  requests.get('http://127.0.0.1:3000/data')
             if game_data.status_code == 200:
                 self.game_data = game_data.json()
 
             dwarf_data = requests.get('http://127.0.0.1:3000/dwarves')
             if dwarf_data.status_code == 200:
-                if len(self.dwarf_data) != dwarf_len:
+                if len(self.dwarf_data) != len(self.dwarf_data):
                     self.sort_and_populate(self.sort_key, self.nameList.ascending)
 
-        return fn
+        # start the worker
+        self.worker.start(fn, 10)
 
     def create_menu(self):
         menubar = self.menuBar()
@@ -118,13 +110,12 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.nameList.searchBar.lineEdit().returnPressed.connect(self.sort_list)
 
         # signals
-        signal_manager.sort_changed.connect(self.change_name_tab)
         signal_manager.sort_changed.connect(self.sort_and_populate)
         signal_manager.populate_table.connect(self.populate_name_list)
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
-        # remove the current main panel
+        # remove the current main panel otherwise it will stack behind the new one
         if self.mainPanel is not None:
             self.layout().removeWidget(self.mainPanel)
             self.mainPanel.deleteLater()
@@ -136,6 +127,13 @@ class DwarfAssistant(QtWidgets.QMainWindow):
                 self.mainPanel = DwarfInfoTab(self.game_data, dwarf, self.centralwidget)
                 self.mainPanel.setObjectName("mainPanel")
                 self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
+
+    def populate_name_list(self, data: list[dict]):
+        """Populate the name table with the given names."""
+        self.nameList.nameTable.setRowCount(len(data))
+        for i, entry in enumerate(data):
+            self.nameList.nameTable.setCellWidget(i, 0, NameListLabel(entry))
+            self.nameList.nameTable.setItem(i, 1, QTableWidgetItem(str(entry["id"])))
 
     def sort_list(self):
         '''Filter the name list based on the search bar text.'''
@@ -165,15 +163,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             result = {keyword: text for keyword, text in matches}
 
         return result
-
-    def show_labor_window(self):
-        if self.labor_window is None:
-            self.labor_window = LaborWindow(self.game_data, self.dwarf_data)
-        self.labor_window.show()
-
-    def show_settings_window(self):
-        settings_window = SettingsMenuDialog(settings=self.settings)
-        settings_window.exec()
 
     def sort_and_populate(self, key: str, descending=False):
         """Sort the dwarves based on the given key and order, then reload the table."""
@@ -227,12 +216,11 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         return sorted(dwarves, key=lambda x: x["_sort_value"], reverse=descending)
 
+    def show_labor_window(self):
+        if self.labor_window is None:
+            self.labor_window = LaborWindow(self.game_data, self.dwarf_data)
+        self.labor_window.show()
 
-    def populate_name_list(self, data: list[dict], emit=True):
-        """Populate the name table with the given names."""
-        self.nameList.nameTable.setRowCount(len(data))
-        for i, entry in enumerate(data):
-            widget = NameListLabel(entry)
-            self.nameList.nameTable.setCellWidget(i, 0, widget)
-            id_item = QTableWidgetItem(str(entry["id"]))
-            self.nameList.nameTable.setItem(i, 1, id_item)
+    def show_settings_window(self):
+        settings_window = SettingsMenuDialog(settings=self.settings)
+        settings_window.exec()
