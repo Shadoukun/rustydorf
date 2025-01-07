@@ -5,7 +5,7 @@ from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QTableWidgetItem
 from PyQt6.QtCore import QSettings
 
-from .namelist import NameListWidget
+from .namelist import NameListWidget, NameListLabel
 from .dwarfinfotab import DwarfInfoTab
 from .signals import SignalsManager
 from .laborwindow import LaborWindow
@@ -247,22 +247,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         """Populate the name table with the given names."""
         self.nameList.nameTable.setRowCount(len(data))
         for i, entry in enumerate(data):
-            widget = self.get_name_label_widget(entry)
+            widget = NameListLabel(entry)
             self.nameList.nameTable.setCellWidget(i, 0, widget)
             id_item = QTableWidgetItem(str(entry["id"]))
             self.nameList.nameTable.setItem(i, 1, id_item)
-
-    def get_name_label_widget(self, entry: dict) -> QtWidgets.QWidget:
-        widget = QtWidgets.QWidget()
-        layout = QtWidgets.QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-        widget.setLayout(layout)
-
-        name_label = QtWidgets.QLabel(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
-        layout.addWidget(name_label)
-
-        profession_label = QtWidgets.QLabel(f"{entry.get('profession', '').get('name', '')}")
-        layout.addWidget(profession_label)
-
-        return widget

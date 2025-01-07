@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QTableWidget, QTableWidgetItem, QAbstractItemView, QSizePolicy, QVBoxLayout
+from PyQt6.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QSizePolicy, QVBoxLayout, QLabel
 from PyQt6.QtWidgets import QMenu
 from PyQt6.QtCore import QPoint
 from PyQt6.QtGui import QFont
@@ -103,3 +103,18 @@ class NameListTable(QTableWidget):
                 background-color: transparent; \
                 color: black; \
             }""")
+
+class NameListLabel(QWidget):
+    def __init__(self, entry: dict, parent=None):
+        super().__init__(parent)
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        self.setLayout(layout)
+
+        name_label = QLabel(f"{entry.get('first_name', 'Unknown')} {entry.get('last_name', '')}")
+        layout.addWidget(name_label)
+
+        profession = entry.get('profession', {}).get('name', 'Unknown')
+        profession_label = QLabel(profession)
+        layout.addWidget(profession_label)
