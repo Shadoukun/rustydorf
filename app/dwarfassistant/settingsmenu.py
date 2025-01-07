@@ -1,14 +1,19 @@
 from PyQt6.QtWidgets import (QDialog, QWidget, QHBoxLayout, QSpinBox,
-    QVBoxLayout, QLabel, QCheckBox, QPushButton
+    QVBoxLayout, QLabel, QCheckBox, QPushButton, QFontDialog
 )
-
 from PyQt6.QtCore import QSettings
+from PyQt6.QtGui import QFont
+
+from PyQt6.QtWidgets import QApplication
+
+DEFAULT_FONT_NAME = "More Perfect DOS VGA"
+DEFAULT_FONT_SIZE = 6
 
 class SettingsMenuDialog(QDialog):
     def __init__(self, settings: QSettings):
         super().__init__()
         self.setWindowTitle("Settings")
-
+        self.settings = settings
         layout = QVBoxLayout()
         layout2 = QHBoxLayout()
         layout.addLayout(layout2)
@@ -18,16 +23,10 @@ class SettingsMenuDialog(QDialog):
         column1.setLayout(column1_layout)
         layout2.addWidget(column1)
 
-        # Font Size
-        font_size_layout = QHBoxLayout()
-        font_size_label = QLabel("Font Size:")
-        font_size_layout.addWidget(font_size_label)
-        self.font_size_num = QSpinBox()
-        self.font_size_num.setRange(4, 24)
-        self.font_size_num.setButtonSymbols(QSpinBox.ButtonSymbols.NoButtons)
-        self.font_size_num.setValue(settings.value("font_size", 6, type=int))
-        font_size_layout.addWidget(self.font_size_num)
-        column1_layout.addLayout(font_size_layout)
+        # font selector widget
+        self.font_selector = FontSelectorWidget(self, settings)
+        self.font_selector.setObjectName("fontSelector")
+        column1_layout.addWidget(self.font_selector)
 
         column2 = QWidget()
         column2_layout = QVBoxLayout()
@@ -49,6 +48,37 @@ class SettingsMenuDialog(QDialog):
         self.setLayout(layout)
 
     def save_settings(self):
-        print("Font Size:", self.font_size_num.value())
+        print("Font Size:", self.font_selector.current_font.pointSize())
         print("Right Tabs Enabled:", self.enable_rightpanel_tabs.isChecked())
         self.accept()
+
+class FontSelectorWidget(QWidget):
+    def __init__(self, parent=None, settings: QSettings = None):
+        super().__init__(parent)
+        font_name = settings.value("font_name", DEFAULT_FONT_NAME, type=str)
+        font_size = settings.value("font_size", DEFAULT_FONT_SIZE, type=int)
+
+        self.current_font = QFont(font_name, font_size)
+        self.font_label = QLabel(f"Font:  {self.current_font.family()}, {self.current_font.pointSize()}")
+        self.edit_button = QPushButton("Change Font")
+
+        layout = QHBoxLayout()
+        layout.addWidget(self.font_label)
+        layout.addWidget(self.edit_button)
+        self.setLayout(layout)
+
+        self.edit_button.clicked.connect(self.edit_font)
+
+    def edit_font(self):
+        font, ok = QFontDialog.getFont(self.current_font, self, "Select Font")
+        if ok:
+            self.current_font = font
+            self.font_label.setText(f"Font:  {self.current_font.family()}, {self.current_font.pointSize()}")
+
+if __name__ == "__main__":
+    import sys
+    app = QApplication(sys.argv)
+    settings = QSettings("dwarfassistant", "dwarfassistant")
+    window = SettingsMenuDialog(settings)
+    window.show()
+    sys.exit(app.exec())
