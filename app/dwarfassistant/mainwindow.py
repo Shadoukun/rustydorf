@@ -71,6 +71,8 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         SignalsManager.instance().sort_changed.emit(self.sort_key, False)
         self.nameList.nameTable.setCurrentCell(0, 0) # select the first cell in the name list
+        first_column_width = self.nameList.nameTable.columnWidth(0)
+        self.nameList.nameTable.setMinimumWidth(first_column_width + self.nameList.nameTable.verticalHeader().width() + 2)
 
         self.running = True
 

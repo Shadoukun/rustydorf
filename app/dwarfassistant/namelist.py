@@ -16,7 +16,11 @@ class NameListWidget(QWidget):
         self.setLayout(layout)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.setSizePolicy(sizePolicy)
-        self.setMaximumWidth(150)
+
+        # TODO: variable width based on font size
+        # do sizing with nameTable instead?
+        self.setMinimumWidth(200)
+
 
         # for some reason the font size is not being set by the parent font
         font_name = settings.value("font_name", "More Perfect DOS VGA", type=str)
@@ -55,6 +59,9 @@ class NameListWidget(QWidget):
         # This fixes an issue where styles/border colors would persist when the table cell selection changed.
         # This forces the table to repaint when the current cell changes.
         self.nameTable.currentCellChanged.connect(lambda x: self.nameTable.viewport().update())
+
+        #
+        self.nameTable.setColumnWidth(0, 150)
 
     def get_selection(self) -> Tuple[int, QTableWidgetItem]:
         """Get the selected row from the namelist table and return the QTableWidgetItem object for the dwarf id
