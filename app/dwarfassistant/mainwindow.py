@@ -120,14 +120,17 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.nameList.searchBar.lineEdit().returnPressed.connect(self.sort_list)
 
         # signals
-        signal_manager.refresh_ui.connect(self.refresh_ui_from_settings)
+        signal_manager.refresh_ui.connect(self.refresh_ui)
         signal_manager.sort_changed.connect(self.sort_and_populate)
         signal_manager.populate_table.connect(self.populate_name_list)
 
-    def refresh_ui_from_settings(self):
+    def refresh_ui(self):
         '''This is called when the settings are changed to update the UI.'''
         row, _ = self.nameList.get_selection()
-        self.read_settings_font()
+
+        font = self.get_font()
+        for widget in [self, self.nameList, self.mainPanel]:
+            widget.setFont(font)
 
         # recreate the name list with the new font
         self.sort_and_populate(self.sort_key, self.descending)
@@ -137,12 +140,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         # reselect the row that was selected before the settings change
         self.nameList.nameTable.setCurrentCell(row, 0)
-
-    def read_settings_font(self):
-        """Read the font settings from the QSettings object."""
-        font = self.get_font()
-        for widget in [self, self.nameList, self.mainPanel]:
-            widget.setFont(font)
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
@@ -167,7 +164,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.nameList.nameTable.setRowCount(len(data))
         for i, entry in enumerate(data):
             font = self.get_font()
-            label = NameListLabel(entry)
+            label = NameListLabel(entry, None, font)
             label.setFont(font)
             self.nameList.nameTable.setCellWidget(i, 0, label)
             self.nameList.nameTable.setItem(i, 1, QTableWidgetItem(str(entry["id"])))

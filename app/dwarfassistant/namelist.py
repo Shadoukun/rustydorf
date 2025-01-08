@@ -1,7 +1,7 @@
 from typing import Tuple
 from PyQt6.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QSizePolicy, QVBoxLayout, QLabel, QTableWidgetItem
 from PyQt6.QtWidgets import QMenu
-from PyQt6.QtCore import QPoint, QSettings
+from PyQt6.QtCore import Qt, QPoint, QSettings
 from PyQt6.QtGui import QFont
 
 from .components.dropdowncombobox import DropdownComboBox
@@ -110,23 +110,31 @@ class NameListTable(QTableWidget):
         self.setShowGrid(False)
         self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.horizontalHeader().setVisible(False)
         self.horizontalHeader().setHighlightSections(False)
         self.verticalHeader().setVisible(False)
         self.verticalHeader().setHighlightSections(False)
+        self.verticalHeader().setDefaultSectionSize(40)
 
-        self.setStyleSheet(
-            """QTableView::item:selected { \
-                border: 3px solid gold; \
+        existing = self.styleSheet()
+        self.setStyleSheet(existing +
+            """
+            QTableView::item { \
+                padding: 5px; \
                 background-color: transparent; \
-                color: black; \
+                border: 0px; \
+            } \
+
+            QTableView::item:selected { \
+                border: 3px solid gold; \
             }""")
 
 class NameListLabel(QWidget):
-    def __init__(self, entry: dict, parent=None):
+    def __init__(self, entry: dict, parent=None, font: QFont = None):
         super().__init__(parent)
         layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(10, 0, 0, 0)
         layout.setSpacing(0)
         self.setLayout(layout)
 
@@ -135,4 +143,8 @@ class NameListLabel(QWidget):
 
         profession = entry.get('profession', {}).get('name', 'Unknown')
         profession_label = QLabel(profession)
+        profession_label.setObjectName("professionLabel")
+        profession_label.setStyleSheet("color: rgb(150, 150, 150);")
+        self.setFont(font)
+        profession_label.setFont(font)
         layout.addWidget(profession_label)

@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (QDialog, QWidget, QHBoxLayout, QSpinBox,
-    QVBoxLayout, QLabel, QCheckBox, QPushButton, QFontDialog
+    QVBoxLayout, QLabel, QCheckBox, QPushButton, QFontDialog, QTabWidget
 )
 from PyQt6.QtCore import QSettings
 from PyQt6.QtGui import QFont
@@ -16,26 +16,23 @@ class SettingsMenuDialog(QDialog):
         self.setWindowTitle("Settings")
         self.settings = settings
         layout = QVBoxLayout()
-        layout2 = QHBoxLayout()
-        layout.addLayout(layout2)
+        self.setLayout(layout)
 
-        column1 = QWidget()
-        column1_layout = QVBoxLayout()
-        column1.setLayout(column1_layout)
-        layout2.addWidget(column1)
+        self.tab_widget = QTabWidget()
+        layout.addWidget(self.tab_widget)
 
-        # font selector widget
+        general_tab = QWidget()
+        general_tab_layout = QVBoxLayout()
+        general_tab.setLayout(general_tab_layout)
         self.font_selector = FontSelectorWidget(self, settings)
         self.font_selector.setObjectName("fontSelector")
-        column1_layout.addWidget(self.font_selector)
+        general_tab_layout.addWidget(self.font_selector)
+        self.tab_widget.addTab(general_tab, "General")
 
-        column2 = QWidget()
-        column2_layout = QVBoxLayout()
-        column2.setLayout(column2_layout)
-        layout2.addWidget(column2)
-
-        self.enable_rightpanel_tabs = QCheckBox("Enable Right Panel Tabs")
-        column2_layout.addWidget(self.enable_rightpanel_tabs)
+        namelist_tab = QWidget()
+        namelist_tab_layout = QVBoxLayout()
+        namelist_tab.setLayout(namelist_tab_layout)
+        self.tab_widget.addTab(namelist_tab, "Name List")
 
         button_layout = QHBoxLayout()
         button_layout.addStretch()
@@ -46,14 +43,12 @@ class SettingsMenuDialog(QDialog):
         save_button.clicked.connect(self.save_settings)
         button_layout.addWidget(save_button)
         layout.addWidget(button_wrapper)
-        self.setLayout(layout)
 
     def save_settings(self):
         print("Saving Settings")
         print(f"Font: {self.font_selector.current_font.family()}, Size: {self.font_selector.current_font.pointSize()}")
         self.settings.setValue("font_name", self.font_selector.current_font.family())
         self.settings.setValue("font_size", self.font_selector.current_font.pointSize())
-        print("Right Tabs Enabled:", self.enable_rightpanel_tabs.isChecked())
         SignalsManager.instance().refresh_ui.emit()
         self.accept()
 
