@@ -66,10 +66,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.mainPanel.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 
-        # the widgets need to be created before reading the settings
-        font = self.get_font()
-        self.setFont(font)
-
         self.create_menu()
         self.connect_slots()
 
@@ -129,7 +125,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         row, _ = self.nameList.get_selection()
 
         font = self.get_font()
-        for widget in [self, self.nameList, self.mainPanel]:
+        for widget in [self.nameList, self.mainPanel]:
             widget.setFont(font)
 
         # recreate the name list with the new font

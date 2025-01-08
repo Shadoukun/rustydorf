@@ -13,6 +13,13 @@ class DwarfInfoTab(QtWidgets.QWidget):
     def __init__(self, parent, game_data: dict, data: dict, settings: QSettings):
         super().__init__(parent)
         self.settings = settings
+        self.setObjectName("mainPanel")
+
+        # for some reason the font size is not being set by the parent widget
+        font_name = settings.value("font_name", "More Perfect DOS VGA", type=str)
+        font_size = settings.value("font_size", 6, type=int)
+        font = QtGui.QFont(font_name, font_size)
+        self.setFont(font)
 
         self.gridlayout = QtWidgets.QGridLayout()
         self.setLayout(self.gridlayout)
