@@ -35,9 +35,11 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         ## Info / Attributes Widget
 
-        self.infoAttributesWidget = InfoAttributesWidget(self, data)
+        self.infoAttributesWidget = InfoAttributesWidget(self, data, settings)
         self.infoAttributesWidget.setObjectName("infoWidget")
+        self.infoAttributesWidget.setFont(font)
         mainPanelLayout.addWidget(self.infoAttributesWidget, 0, 0, 1, 1)
+
 
         ## Needs Table
 

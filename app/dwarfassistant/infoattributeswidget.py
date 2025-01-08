@@ -1,11 +1,12 @@
 from PyQt6 import QtGui, QtWidgets
+from PyQt6.QtCore import QSettings
 
 class InfoAttributesWidget(QtWidgets.QWidget):
     """This widget wraps the Dwarf Info label and the Attributes/Goals/Beliefs StackedWidget.
 
        I was having issues with the layout of the QLabel and the QStackedWidget, so I wrapped them in a QWidget
     """
-    def __init__(self, parent=None, data: dict = None):
+    def __init__(self, parent=None, data: dict = None, settings: QSettings = None):
         super().__init__(parent)
         sizepolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizepolicy.setHorizontalStretch(0)
@@ -17,11 +18,6 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         self.gridLayout.setObjectName("gridLayout")
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.gridLayout)
-
-        font = QtGui.QFont()
-        font.setFamily("More Perfect DOS VGA")
-        font.setPointSize(6)
-        self.setFont(font)
 
         # Info Label
         self.infoLabel = QtWidgets.QLabel("Info", self)
@@ -83,7 +79,6 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         self.attributesTable.setObjectName("attributesTable")
         self.attributesTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.attributesTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-        self.attributesTable.setFont(font)
 
         current_style = self.attributesTable.styleSheet()
         # TODO: figure out why when using setStyleSheet, it negates changing the height of the rows with SetDefaultSectionSize
@@ -99,7 +94,6 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         self.beliefsTable.setObjectName("beliefsGoalsTable")
         self.beliefsTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.beliefsTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-        self.beliefsTable.setFont(font)
 
         current_style = self.beliefsTable.styleSheet()
         self.beliefsTable.setStyleSheet(current_style + "QTableWidget {background: black;}")
@@ -109,13 +103,21 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         self.goalsTable.setObjectName("goalsTable")
         self.goalsTable.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.goalsTable.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-        self.goalsTable.setFont(font)
 
         current_style = self.goalsTable.styleSheet()
         self.goalsTable.setStyleSheet(current_style + "QTableWidget {background: black;}")
         layout.addWidget(self.goalsTable)
 
         self.attributeStack.addWidget(page_2)
+
+        # fonts are awful
+        font_name = settings.value("font_name", "More Perfect DOS VGA", type=str)
+        font_size = settings.value("font_size", 6, type=int)
+        font = QtGui.QFont(font_name, font_size)
+
+        for t in [self.attributesTable, self.beliefsTable, self.goalsTable]:
+            t.setFont(font)
+
 
 
 if __name__ == "__main__":
