@@ -40,7 +40,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
 
-
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
@@ -51,6 +50,10 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.setStatusBar(self.statusbar)
 
         self.labor_window = None
+
+        # default sort key and order
+        self.sort_key = "Name"
+        self.descending = False
 
         self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data, self.settings)
         self.nameList.setObjectName("nameList")
@@ -63,13 +66,12 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 
         # the widgets need to be created before reading the settings
-        self.refresh_ui_from_settings()
+        font = self.get_font()
+        self.setFont(font)
 
         self.create_menu()
         self.connect_slots()
 
-        # default sort key and order
-        self.sort_key = "Name"
         SignalsManager.instance().sort_changed.emit(self.sort_key, False)
         self.nameList.nameTable.setCurrentCell(0, 0) # select the first cell in the name list
 
@@ -117,21 +119,19 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.nameList.searchBar.lineEdit().returnPressed.connect(self.sort_list)
 
         # signals
+        signal_manager.refresh_ui.connect(self.refresh_ui_from_settings)
         signal_manager.sort_changed.connect(self.sort_and_populate)
         signal_manager.populate_table.connect(self.populate_name_list)
-        signal_manager.refresh_ui.connect(self.refresh_ui_from_settings)
 
     def refresh_ui_from_settings(self):
         '''This is called when the settings are changed to update the UI.'''
         self.read_settings_font()
+        self.sort_and_populate(self.sort_key, self.descending)
 
     def read_settings_font(self):
         """Read the font settings from the QSettings object."""
-        font_name = self.settings.value("font_name", "More Perfect DOS VGA", type=str)
-        font_size = self.settings.value("font_size", 6, type=int)
-
+        font = self.get_font()
         for widget in [self, self.nameList, self.mainPanel]:
-            font = QFont(font_name, font_size)
             widget.setFont(font)
 
     def change_name_tab(self):
@@ -153,7 +153,10 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         """Populate the name table with the given names."""
         self.nameList.nameTable.setRowCount(len(data))
         for i, entry in enumerate(data):
-            self.nameList.nameTable.setCellWidget(i, 0, NameListLabel(entry))
+            font = self.get_font()
+            label = NameListLabel(entry)
+            label.setFont(font)
+            self.nameList.nameTable.setCellWidget(i, 0, label)
             self.nameList.nameTable.setItem(i, 1, QTableWidgetItem(str(entry["id"])))
 
     def sort_list(self):
@@ -236,6 +239,12 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             d["_sort_value"] = skill["experience"] if skill else 0
 
         return sorted(dwarves, key=lambda x: x["_sort_value"], reverse=descending)
+
+    def get_font(self):
+        font_name = self.settings.value("font_name", "More Perfect DOS VGA", type=str)
+        font_size = self.settings.value("font_size", 6, type=int)
+        font = QFont(font_name, font_size)
+        return font
 
     def show_labor_window(self):
         if self.labor_window is None:
