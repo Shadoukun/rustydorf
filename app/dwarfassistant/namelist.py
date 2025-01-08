@@ -1,3 +1,4 @@
+from typing import Tuple
 from PyQt6.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QSizePolicy, QVBoxLayout, QLabel, QTableWidgetItem
 from PyQt6.QtWidgets import QMenu
 from PyQt6.QtCore import QPoint, QSettings
@@ -55,7 +56,7 @@ class NameListWidget(QWidget):
         # This forces the table to repaint when the current cell changes.
         self.nameTable.currentCellChanged.connect(lambda x: self.nameTable.viewport().update())
 
-    def get_selection(self) -> QTableWidgetItem:
+    def get_selection(self) -> Tuple[int, QTableWidgetItem]:
         """Get the selected row from the namelist table and return the QTableWidgetItem object for the dwarf id
 
            This takes the selected cell from the table and returns the QTableWidgetItem that contains
@@ -68,17 +69,11 @@ class NameListWidget(QWidget):
         #   even if the selection returns to the first row
 
         # in this case, selectedIndexes always returns a list of 1 index (the selected row)
-        selected_indexes = self.nameTable.selectionModel().selectedIndexes()
-        selected_id = None
+        row = self.nameTable.selectionModel().selectedIndexes()[0].row()
+        selected_id = self.nameTable.item(row, 1)
 
-        for index in selected_indexes:
-            row = index.row()
-            selected_id = self.nameTable.item(row, 1)
-
-        if selected_id is None:
-            return None
-
-        return selected_id
+        if selected_id is not None:
+            return row, selected_id
 
 class NameListSearchBar(DropdownComboBox):
     """Search bar for the name list widget that uses a custom QComboBox to display a menu of search options."""

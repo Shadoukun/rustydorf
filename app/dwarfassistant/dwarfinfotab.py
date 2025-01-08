@@ -68,7 +68,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         # Right Panel Widget
 
-        self.rightPanelWidget = RightPanelWidget(self)
+        self.rightPanelWidget = RightPanelWidget(self, self.settings)
         self.rightPanelWidget.setObjectName("rightPanelWidget")
         self.gridlayout.addWidget(self.rightPanelWidget, 0, 1, 1, 1)
         self.setup_beliefs_table(data)

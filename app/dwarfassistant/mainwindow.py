@@ -9,6 +9,7 @@ from .namelist import NameListWidget, NameListLabel
 from .dwarfinfotab import DwarfInfoTab
 from .signals import SignalsManager
 from .laborwindow import LaborWindow
+from .rightpanel import RightPanelWidget
 from .settingsmenu import SettingsMenuDialog
 
 # vscode seemingly doesn't/won't recognize this
@@ -125,8 +126,17 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
     def refresh_ui_from_settings(self):
         '''This is called when the settings are changed to update the UI.'''
+        row, _ = self.nameList.get_selection()
         self.read_settings_font()
+
+        # recreate the name list with the new font
         self.sort_and_populate(self.sort_key, self.descending)
+
+        # recreate the main panel with the new font
+        self.change_name_tab()
+
+        # reselect the row that was selected before the settings change
+        self.nameList.nameTable.setCurrentCell(row, 0)
 
     def read_settings_font(self):
         """Read the font settings from the QSettings object."""
@@ -143,11 +153,14 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             self.mainPanel = None
 
         # get the selected dwarf from the name list by id
-        if selection := self.nameList.get_selection():
-            if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selection.text())), None):
-                self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, dwarf, self.settings)
-                self.mainPanel.setObjectName("mainPanel")
-                self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
+        _, selection = self.nameList.get_selection()
+        if selection is None:
+            return
+
+        if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selection.text())), None):
+            self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, dwarf, self.settings)
+            self.mainPanel.setObjectName("mainPanel")
+            self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 
     def populate_name_list(self, data: list[dict]):
         """Populate the name table with the given names."""

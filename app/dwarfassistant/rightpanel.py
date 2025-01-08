@@ -1,17 +1,19 @@
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
+from PyQt6.QtCore import QSettings
 
 class RightPanelWidget(QtWidgets.QWidget):
     """This is the the right panel widget that contains the Skills and Labors tables."""
-    def __init__(self, parent):
+    def __init__(self, parent, settings: QSettings):
         super().__init__(parent)
         self.setObjectName("rightPanel")
         self.setMinimumWidth(151)
         self.setMaximumWidth(200)
-        font = QtGui.QFont()
-        font.setFamily("More Perfect DOS VGA")
-        font.setPointSize(6)
+
+        font_name = settings.value("font_name", "More Perfect DOS VGA", type=str)
+        font_size = settings.value("font_size", 6, type=int)
+        font = QtGui.QFont(font_name, font_size)
+        self.setFont(font)
 
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
