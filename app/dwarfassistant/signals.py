@@ -4,6 +4,7 @@ from PyQt6.QtCore import QObject, pyqtSignal, QMutex, QMutexLocker
 class SignalsManager(QObject):
     sort_changed   = pyqtSignal(str, bool)
     populate_table = pyqtSignal(list)
+    refresh_ui     = pyqtSignal()
 
     _instance = None
     _mutex = QMutex()

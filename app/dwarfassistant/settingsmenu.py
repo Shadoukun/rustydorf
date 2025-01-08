@@ -3,8 +3,9 @@ from PyQt6.QtWidgets import (QDialog, QWidget, QHBoxLayout, QSpinBox,
 )
 from PyQt6.QtCore import QSettings
 from PyQt6.QtGui import QFont
-
 from PyQt6.QtWidgets import QApplication
+
+from .signals import SignalsManager
 
 DEFAULT_FONT_NAME = "More Perfect DOS VGA"
 DEFAULT_FONT_SIZE = 6
@@ -48,8 +49,12 @@ class SettingsMenuDialog(QDialog):
         self.setLayout(layout)
 
     def save_settings(self):
-        print("Font Size:", self.font_selector.current_font.pointSize())
+        print("Saving Settings")
+        print(f"Font: {self.font_selector.current_font.family()}, Size: {self.font_selector.current_font.pointSize()}")
+        self.settings.setValue("font_name", self.font_selector.current_font.family())
+        self.settings.setValue("font_size", self.font_selector.current_font.pointSize())
         print("Right Tabs Enabled:", self.enable_rightpanel_tabs.isChecked())
+        SignalsManager.instance().refresh_ui.emit()
         self.accept()
 
 class FontSelectorWidget(QWidget):
@@ -59,7 +64,7 @@ class FontSelectorWidget(QWidget):
         font_size = settings.value("font_size", DEFAULT_FONT_SIZE, type=int)
 
         self.current_font = QFont(font_name, font_size)
-        self.font_label = QLabel(f"Font:  {self.current_font.family()}, {self.current_font.pointSize()}")
+        self.font_label = QLabel(f"Font: {self.current_font.family()}, {self.current_font.pointSize()}")
         self.edit_button = QPushButton("Change Font")
 
         layout = QHBoxLayout()

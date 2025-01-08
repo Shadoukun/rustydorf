@@ -51,7 +51,6 @@ class RightPanelWidget(QtWidgets.QWidget):
         self.traitsButton.setText("Traits")
         buttonlayout.addWidget(self.traitsButton)
 
-
         ## Button Spacer
 
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)

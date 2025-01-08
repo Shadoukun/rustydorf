@@ -40,9 +40,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
 
-        font = QFont()
-        font.setPointSize(self.settings.value("font_size", 6, type=int))
-        self.setFont(font)
 
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setObjectName("menubar")
@@ -63,6 +60,9 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.mainPanel.setObjectName("mainPanel")
         self.mainPanel.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
+
+        # the widgets need to be created before reading the settings
+        self.refresh_ui_from_settings()
 
         self.create_menu()
         self.connect_slots()
@@ -118,6 +118,20 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         # signals
         signal_manager.sort_changed.connect(self.sort_and_populate)
         signal_manager.populate_table.connect(self.populate_name_list)
+        signal_manager.refresh_ui.connect(self.refresh_ui_from_settings)
+
+    def refresh_ui_from_settings(self):
+        '''This is called when the settings are changed to update the UI.'''
+        self.read_settings_font()
+
+    def read_settings_font(self):
+        """Read the font settings from the QSettings object."""
+        font_name = self.settings.value("font_name", "More Perfect DOS VGA", type=str)
+        font_size = self.settings.value("font_size", 6, type=int)
+
+        for widget in [self, self.nameList, self.mainPanel]:
+            font = QFont(font_name, font_size)
+            widget.setFont(font)
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
