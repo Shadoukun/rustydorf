@@ -52,11 +52,12 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         self.labor_window = None
 
-        self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data)
+        self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data, self.settings)
         self.nameList.setObjectName("nameList")
         self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
 
-        self.mainPanel = DwarfInfoTab(self.game_data, self.dwarf_data[0], self.centralwidget)
+        # create the main panel from the first dwarf (self.dwarf_data[0]) in the list to start
+        self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, self.dwarf_data[0], self.settings)
         self.mainPanel.setObjectName("mainPanel")
         self.mainPanel.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
@@ -144,7 +145,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         # get the selected dwarf from the name list by id
         if selection := self.nameList.get_selection():
             if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selection.text())), None):
-                self.mainPanel = DwarfInfoTab(self.game_data, dwarf, self.centralwidget)
+                self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, dwarf, self.settings)
                 self.mainPanel.setObjectName("mainPanel")
                 self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
 

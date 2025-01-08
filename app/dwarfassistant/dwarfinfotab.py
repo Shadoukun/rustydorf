@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QTableWidgetItem, QAbstractItemView, QHeaderView
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QSettings
 
 from .infoattributeswidget import InfoAttributesWidget
 from .rightpanel import RightPanelWidget
@@ -10,11 +10,9 @@ buttonStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt;"
 
 
 class DwarfInfoTab(QtWidgets.QWidget):
-    def __init__(self, game_data: dict, data: dict, parent=None):
+    def __init__(self, parent, game_data: dict, data: dict, settings: QSettings):
         super().__init__(parent)
-
-        font = QtGui.QFont()
-        font.setFamily("More Perfect DOS VGA")
+        self.settings = settings
 
         self.gridlayout = QtWidgets.QGridLayout()
         self.setLayout(self.gridlayout)
@@ -45,7 +43,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.needsTable.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.needsTable.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.needsTable.setSizePolicy(sizePolicy)
-        self.needsTable.setFont(font)
         self.needsTable.setColumnCount(1)
         self.needsTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
@@ -62,9 +59,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.thoughtsTable.sizePolicy().hasHeightForWidth())
         self.thoughtsTable.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setFamily("More Perfect DOS VGA")
-        self.thoughtsTable.setFont(font)
         self.thoughtsTable.setColumnCount(1)
         self.thoughtsTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
