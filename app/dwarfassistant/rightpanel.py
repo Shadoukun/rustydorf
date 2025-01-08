@@ -34,14 +34,14 @@ class RightPanelWidget(QtWidgets.QWidget):
         buttonlayout = QtWidgets.QHBoxLayout(self.buttonWidget)
         buttonlayout.setContentsMargins(0, 0, 0, 0)
         self.buttonWidget.setLayout(buttonlayout)
-        self.gridlayout.addWidget(self.buttonWidget, 0, 0, 1, 2)
+        self.gridlayout.addWidget(self.buttonWidget, 0, 0, 1, 3)
 
         ## Skills Button
 
         self.skillsButton = QtWidgets.QPushButton(self) # Attributes Button
-        btnSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
+        btnSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         self.skillsButton.setSizePolicy(btnSizePolicy)
-        self.skillsButton.setFont(QtGui.QFont("More Perfect DOS VGA", 6))
+        self.skillsButton.setFont(font)
         self.skillsButton.setText("Skills")
         buttonlayout.addWidget(self.skillsButton)
 
@@ -49,14 +49,10 @@ class RightPanelWidget(QtWidgets.QWidget):
 
         self.traitsButton = QtWidgets.QPushButton(self) # Traits Button
         self.traitsButton.setSizePolicy(btnSizePolicy)
-        self.traitsButton.setFont(QtGui.QFont("More Perfect DOS VGA", 6))
+        self.traitsButton.setFont(font)
         self.traitsButton.setText("Traits")
         buttonlayout.addWidget(self.traitsButton)
 
-        ## Button Spacer
-
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-        self.gridlayout.addItem(spacerItem, 0, 2, 1, 1)
 
         # Stack Widget
 

@@ -5,8 +5,8 @@ from PyQt6.QtCore import Qt, QSettings
 from .infoattributeswidget import InfoAttributesWidget
 from .rightpanel import RightPanelWidget
 
-buttonActiveStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt; border :2px solid gold; padding: 10px;"
-buttonStylesheet = "font-family: 'More Perfect DOS VGA'; font-size: 5pt;"
+buttonActiveStylesheet = "border :2px solid gold;"
+buttonStylesheet = ""
 
 
 class DwarfInfoTab(QtWidgets.QWidget):
@@ -16,9 +16,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.setObjectName("mainPanel")
 
         # for some reason the font size is not being set by the parent widget
-        font_name = settings.value("font_name", "More Perfect DOS VGA", type=str)
-        font_size = settings.value("font_size", 6, type=int)
-        font = QtGui.QFont(font_name, font_size)
+        font = self.get_font()
         self.setFont(font)
 
         self.gridlayout = QtWidgets.QGridLayout()
@@ -123,6 +121,12 @@ class DwarfInfoTab(QtWidgets.QWidget):
         # these are the active buttons at the start
         self.infoAttributesWidget.attributesButton.setStyleSheet(buttonActiveStylesheet)
         self.rightPanelWidget.skillsButton.setStyleSheet(buttonActiveStylesheet)
+
+        existing = self.styleSheet()
+        self.setStyleSheet(existing + """ \
+            QPushButton { \
+                padding: 10px; \
+            }""")
 
     def setup_beliefs_table(self, data: dict):
         beliefs = data.get('beliefs', {})
@@ -232,6 +236,11 @@ class DwarfInfoTab(QtWidgets.QWidget):
             self.rightPanelWidget.traitsTable.setItem(i, 0, QTableWidgetItem(name))
             self.rightPanelWidget.traitsTable.setItem(i, 1, QTableWidgetItem(str(value)))
 
+    def get_font(self):
+        font_name = self.settings.value("font_name", "More Perfect DOS VGA", type=str)
+        font_size = self.settings.value("font_size", 6, type=int)
+        return QtGui.QFont(font_name, font_size)
+
     def skillsButtonClicked(self):
         self.rightPanelWidget.stackWidget.setCurrentIndex(0)
         self.rightPanelWidget.traitsButton.setStyleSheet(buttonStylesheet)
@@ -243,12 +252,17 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.rightPanelWidget.traitsButton.setStyleSheet(buttonActiveStylesheet)
 
     def attributesButtonClicked(self):
+        font = self.get_font()
         self.infoAttributesWidget.attributeStack.setCurrentIndex(0)
         self.infoAttributesWidget.beliefsGoalsButton.setStyleSheet(buttonStylesheet)
+        self.infoAttributesWidget.beliefsGoalsButton.setFont(font)
         self.infoAttributesWidget.attributesButton.setStyleSheet(buttonActiveStylesheet)
+        self.infoAttributesWidget.attributesButton.setFont(font)
 
     def beliefsGoalsButtonClicked(self):
+        font = self.get_font()
         self.infoAttributesWidget.attributeStack.setCurrentIndex(1)
         self.infoAttributesWidget.attributesButton.setStyleSheet(buttonStylesheet)
+        self.infoAttributesWidget.attributesButton.setFont(font)
         self.infoAttributesWidget.beliefsGoalsButton.setStyleSheet(buttonActiveStylesheet)
-
+        self.infoAttributesWidget.beliefsGoalsButton.setFont(font)

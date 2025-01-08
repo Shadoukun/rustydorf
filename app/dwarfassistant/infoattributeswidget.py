@@ -14,6 +14,12 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         self.setSizePolicy(sizepolicy)
         self.setMinimumHeight(50)
 
+        # fonts are awful
+        font_name = settings.value("font_name", "More Perfect DOS VGA", type=str)
+        font_size = settings.value("font_size", 6, type=int)
+        font = QtGui.QFont(font_name, font_size)
+
+
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setObjectName("gridLayout")
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
@@ -48,14 +54,14 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         self.attributesButton = QtWidgets.QPushButton(self)
         btnSizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         self.attributesButton.setSizePolicy(btnSizePolicy)
-        self.attributesButton.setFont(QtGui.QFont("More Perfect DOS VGA", 6))
+        self.attributesButton.setFont(font)
         self.attributesButton.setText("Attributes")
         buttonlayout.addWidget(self.attributesButton)
 
         # Beliefs/Goals Button
         self.beliefsGoalsButton = QtWidgets.QPushButton(self)
         self.beliefsGoalsButton.setSizePolicy(btnSizePolicy)
-        self.beliefsGoalsButton.setFont(QtGui.QFont("More Perfect DOS VGA", 6))
+        self.beliefsGoalsButton.setFont(font)
         self.beliefsGoalsButton.setText("Beliefs/Goals")
         buttonlayout.addWidget(self.beliefsGoalsButton)
 
@@ -110,13 +116,12 @@ class InfoAttributesWidget(QtWidgets.QWidget):
 
         self.attributeStack.addWidget(page_2)
 
-        # fonts are awful
-        font_name = settings.value("font_name", "More Perfect DOS VGA", type=str)
-        font_size = settings.value("font_size", 6, type=int)
-        font = QtGui.QFont(font_name, font_size)
 
         for t in [self.attributesTable, self.beliefsTable, self.goalsTable]:
             t.setFont(font)
+
+        for b in [self.attributesButton, self.beliefsGoalsButton]:
+            b.setFont(font)
 
 
 

@@ -21,7 +21,6 @@ class NameListWidget(QWidget):
         # do sizing with nameTable instead?
         self.setMinimumWidth(200)
 
-
         # for some reason the font size is not being set by the parent font
         font_name = settings.value("font_name", "More Perfect DOS VGA", type=str)
         font_size = settings.value("font_size", 6, type=int)
