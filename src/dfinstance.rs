@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::error::Error;
 use serde::Serialize;
 
 use crate::histfigure::FortressPosition;
@@ -13,6 +14,7 @@ use crate::dwarf::dwarf::{Dwarf, print_dwarf};
 
 use crate::util::memory::read_mem_as_string;
 use crate::data::{gamedata::{self, GameData}, memorylayout::{load_memory_layout, MemoryOffsets, OffsetSection}};
+use crate::win;
 use crate::win::{memory::memory::{mem_vec, read_mem}, process::Process};
 
 /// Represents the Dwarf Fortress instance \
@@ -57,31 +59,44 @@ pub struct DFInstance {
 #[allow(dead_code)]
 impl DFInstance {
 
-    pub unsafe fn new(proc: &Process) -> Self {
+    pub unsafe fn new(proc: Result<win::process::Process, Box<dyn Error>>) -> Self {
+
         let mut df = DFInstance {
             memory_layout: load_memory_layout(),
             game_data:     gamedata::load_game_data(),
             ..Default::default()
         };
 
-        df.fortress_addr    = read_mem::<usize>(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
-        df.fortress_id      = read_mem::<i32>(&proc.handle, df.fortress_addr + size_of::<usize>());
-        df.dwarf_race_id    = read_mem::<i16>(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
-        df.dwarf_civ_id     = read_mem::<i32>(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
-        df.creature_vector  = mem_vec(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
-        df.syndromes_vector = mem_vec(&proc.handle, global_address(proc, df.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
+        // Check that the process is valid before trying to load the data
+        match proc {
+            Ok(proc) => {
+                df.load_data(&proc);
+            },
+            Err(e) => {
+                eprintln!("Error: {}", e);
+            }
+        }
+        df
+    }
+
+    pub unsafe fn load_data(&mut self, proc: &Process) {
+        self.fortress_addr    = read_mem::<usize>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
+        self.fortress_id      = read_mem::<i32>(&proc.handle, self.fortress_addr + size_of::<usize>());
+        self.dwarf_race_id    = read_mem::<i16>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
+        self.dwarf_civ_id     = read_mem::<i32>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
+        self.creature_vector  = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
+        self.syndromes_vector = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
 
         // TODO: fix materials
         // df.load_materials(&proc);
 
-        df.load_item_definitions(&proc);
-        df.load_arts(&proc);
-        df.load_languages(&proc);
-        df.load_races(&proc);
-        df.load_historical_figures(&proc);
-        df.load_historical_entities(&proc);
-        df.load_beliefs(&proc);
-        df
+        self.load_item_definitions(&proc);
+        self.load_arts(&proc);
+        self.load_languages(&proc);
+        self.load_races(&proc);
+        self.load_historical_figures(&proc);
+        self.load_historical_entities(&proc);
+        self.load_beliefs(&proc);
     }
 
     pub unsafe fn load_materials(&mut self, proc: &Process) {

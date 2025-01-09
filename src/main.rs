@@ -44,7 +44,7 @@ async fn main() {
         let state = {
             let process = win::process::Process::new_by_name(PROCESS_NAME);
             AppState {
-                df: Arc::new(Mutex::new(DFInstance::new(&process))),
+                df: Arc::new(Mutex::new(DFInstance::new(process))),
             }
         };
 
@@ -63,15 +63,24 @@ async fn main() {
 
         // start the update task
         let update_task = tokio::task::spawn_blocking(move || {
-            // process can't be sent between threads, so we need to create a new one here
-            let process = win::process::Process::new_by_name(PROCESS_NAME);
             loop {
+                // recreate the process instance every time to make sure it's still running
+                let process = win::process::Process::new_by_name(PROCESS_NAME);
+                match process {
+                    Ok(_) => (),
+                    Err(e) => {
+                        eprintln!("Failed to find the process: {}", e);
+                        continue
+                    }
+                }
+
                 // this is its own scope so that the mutex lock is dropped before the sleep
                 {
                     let mut df = state.df.blocking_lock();
-                    df.load_dwarves(&process);
+                    df.load_dwarves(process.as_ref().unwrap());
                     println!("Updating...");
                 }
+
                 std::thread::sleep(Duration::from_secs(30));
             }
         });

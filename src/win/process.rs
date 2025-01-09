@@ -1,3 +1,4 @@
+use std::error;
 use std::ffi::CStr;
 use std::mem::size_of;
 use std::ptr::null_mut;
@@ -36,7 +37,7 @@ impl Process {
         proc
     }
 
-    pub unsafe fn new_by_name(target_process_name: &str) -> Self {
+    pub unsafe fn new_by_name(target_process_name: &str) -> Result<Self, Box<dyn error::Error>> {
         let mut pe32: PROCESSENTRY32 = std::mem::zeroed();
         pe32.dwSize = size_of::<PROCESSENTRY32>() as u32;
 
@@ -59,7 +60,7 @@ impl Process {
                 if proc_h.is_null() {
                     panic!("Failed to open process.");
                 }
-                return Process::new(pe32.th32ProcessID, proc_h);
+                return Ok(Process::new(pe32.th32ProcessID, proc_h));
             }
 
             // Get the next process
@@ -68,7 +69,7 @@ impl Process {
             }
         }
 
-        panic!("Process not found.");
+        Err("Failed to find process by name.".into())
     }
 
     unsafe fn create_module_snapshot(&mut self) {
