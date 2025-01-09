@@ -77,6 +77,10 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         self.running = True
 
+        pid_label = QtWidgets.QLabel(f"Process ID: {self.game_data['pid']}")
+        self.statusbar.addPermanentWidget(pid_label)
+        self.statusbar.showMessage("Connected")
+
     def start_update_worker(self):
         # the callback that will be run by the worker
         def fn():
@@ -87,6 +91,11 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             game_data =  requests.get(API_URLS["data"])
             if game_data.status_code == 200:
                 self.game_data = game_data.json()
+
+            if self.game_data["pid"] == 0:
+                self.statusbar.removeWidget(self.statusbar.findChild(QtWidgets.QLabel, "pid_label"))
+                self.statusbar.showMessage("Disconnected")
+                return
 
             dwarf_data = requests.get(API_URLS["dwarves"])
             if dwarf_data.status_code == 200:

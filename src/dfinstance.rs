@@ -21,6 +21,7 @@ use crate::win::{memory::memory::{mem_vec, read_mem}, process::Process};
 /// Contains all the data loaded from the game
 #[derive(Default, Serialize, Clone)]
 pub struct DFInstance {
+    pub pid: u32,
     pub memory_layout: MemoryOffsets,
     pub game_data: GameData,
     pub fortress_addr: usize,
@@ -70,6 +71,7 @@ impl DFInstance {
         // Check that the process is valid before trying to load the data
         match proc {
             Ok(proc) => {
+                df.pid = proc.pid;
                 df.load_data(&proc);
             },
             Err(e) => {

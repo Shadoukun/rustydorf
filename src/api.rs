@@ -14,9 +14,11 @@ pub struct AppState {
 /// get_gamedata_handler allows the GUI to request game data from the
 /// server so we don't have to send it all with every request.
 pub async fn get_gamedata_handler(State(state): State<AppState>) -> Json<serde_json::Value> {
-    let game_data = state.df.lock().await.game_data.clone();
+    let df = state.df.lock().await;
+    let pid = df.pid;
+    let game_data = df.game_data.clone();
 
-    let response = serde_json::json!({
+    let mut response = serde_json::json!({
         "attributes": game_data.attributes,
         "beliefs": game_data.beliefs,
         "traits": game_data.facets,
@@ -32,6 +34,9 @@ pub async fn get_gamedata_handler(State(state): State<AppState>) -> Json<serde_j
         "thoughts": game_data.unit_thoughts,
         "subthoughts": game_data.unit_subthoughts,
     });
+
+    // the easiest way to me seems to be insert the process id into the game data response
+    response["pid"] = serde_json::json!(pid);
 
     Json(response)
 }

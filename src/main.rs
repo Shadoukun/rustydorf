@@ -64,21 +64,23 @@ async fn main() {
         // start the update task
         let update_task = tokio::task::spawn_blocking(move || {
             loop {
-                // recreate the process instance every time to make sure it's still running
-                let process = win::process::Process::new_by_name(PROCESS_NAME);
-                match process {
-                    Ok(_) => (),
-                    Err(e) => {
-                        // if the process is not found sleep for 5 seconds and try again
-                        eprintln!("{}", e);
-                        std::thread::sleep(Duration::from_secs(5));
-                        continue
-                    }
-                }
-
                 // this is its own scope so that the mutex lock is dropped before the sleep
                 {
                     let mut df = state.df.blocking_lock();
+
+                    // recreate the process instance every time to make sure it's still running. Do it after the lock so we can track its status
+                    let process = win::process::Process::new_by_name(PROCESS_NAME);
+                    match process {
+                        Ok(_) => (),
+                        Err(e) => {
+                            // if the process is not found sleep for 5 seconds and try again
+                            eprintln!("{}", e);
+                            df.pid = 0;
+                            std::thread::sleep(Duration::from_secs(5));
+                            continue
+                        }
+                    }
+
                     df.load_dwarves(process.as_ref().unwrap());
                     println!("Updating...");
                 }
