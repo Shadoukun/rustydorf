@@ -61,7 +61,8 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
 
         # create the main panel from the first dwarf (self.dwarf_data[0]) in the list to start
-        self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, self.dwarf_data[0], self.settings)
+        first_dwarf = self.dwarf_data[0] if self.dwarf_data else {}
+        self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, first_dwarf, self.settings)
         self.mainPanel.setObjectName("mainPanel")
         self.mainPanel.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)

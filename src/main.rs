@@ -69,7 +69,9 @@ async fn main() {
                 match process {
                     Ok(_) => (),
                     Err(e) => {
-                        eprintln!("Failed to find the process: {}", e);
+                        // if the process is not found sleep for 5 seconds and try again
+                        eprintln!("{}", e);
+                        std::thread::sleep(Duration::from_secs(5));
                         continue
                     }
                 }
