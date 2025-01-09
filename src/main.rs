@@ -74,7 +74,7 @@ async fn main() {
                         Ok(_) => (),
                         Err(e) => {
                             // if the process is not found sleep for 5 seconds and try again
-                            eprintln!("{}", e);
+                            eprintln!("Update Task: {}", e);
                             df.pid = 0;
                             std::thread::sleep(Duration::from_secs(5));
                             continue

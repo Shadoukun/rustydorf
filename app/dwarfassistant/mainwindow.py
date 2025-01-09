@@ -70,16 +70,21 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.create_menu()
         self.connect_slots()
 
-        SignalsManager.instance().sort_changed.emit(self.sort_key, False)
-        self.nameList.nameTable.setCurrentCell(0, 0) # select the first cell in the name list
-        first_column_width = self.nameList.nameTable.columnWidth(0)
-        self.nameList.nameTable.setMinimumWidth(first_column_width + self.nameList.nameTable.verticalHeader().width() + 2)
+        # make sure the game is running
+        if self.check_game_status():
+            self.nameList.nameTable.setCurrentCell(0, 0) # select the first cell in the name list
+            SignalsManager.instance().sort_changed.emit(self.sort_key, False)
 
-        self.running = True
-
-        pid_label = QtWidgets.QLabel(f"Process ID: {self.game_data['pid']}")
-        self.statusbar.addPermanentWidget(pid_label)
-        self.statusbar.showMessage("Connected")
+    def check_game_status(self) -> bool:
+        if self.game_data["pid"] == 0:
+            self.running = False
+            self.statusbar.removeWidget(self.statusbar.findChild(QtWidgets.QLabel, "pid_label"))
+            self.statusbar.showMessage("Disconnected")
+            return False
+        else:
+            self.running = True
+            self.statusbar.showMessage("Connected")
+            return True
 
     def start_update_worker(self):
         # the callback that will be run by the worker
@@ -93,7 +98,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
                 self.game_data = game_data.json()
 
             if self.game_data["pid"] == 0:
-                self.statusbar.removeWidget(self.statusbar.findChild(QtWidgets.QLabel, "pid_label"))
+                self.statusbar.remove(self.statusbar.findChild(QtWidgets.QLabel, "pid_label"))
                 self.statusbar.showMessage("Disconnected")
                 return
 
@@ -126,6 +131,10 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         signal_manager = SignalsManager.instance()
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
         self.nameList.searchBar.lineEdit().returnPressed.connect(self.sort_list)
+
+        # This fixes an issue where styles/border colors would persist when the table cell selection changed.
+        # This forces the table to repaint when the current cell changes.
+        self.nameList.nameTable.currentCellChanged.connect(lambda x: self.nameList.nameTable.viewport().update())
 
         # signals
         signal_manager.refresh_ui.connect(self.refresh_ui)

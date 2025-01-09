@@ -68,16 +68,15 @@ impl DFInstance {
             ..Default::default()
         };
 
-        // Check that the process is valid before trying to load the data
+        // Check that the process is valid before trying to load data from it
         match proc {
             Ok(proc) => {
                 df.pid = proc.pid;
                 df.load_data(&proc);
             },
-            Err(e) => {
-                eprintln!("Error: {}", e);
-            }
+            Err(e) => ()
         }
+
         df
     }
 

@@ -52,15 +52,13 @@ class NameListWidget(QWidget):
         self.nameTable = NameListTable(self)
         self.nameTable.setObjectName("nameTable")
         self.nameTable.setColumnCount(2)
+
+        column_width = 150
+        self.nameTable.setColumnWidth(0, column_width)
         self.nameTable.setColumnHidden(1, True)
         layout.addWidget(self.nameTable)
 
-        # This fixes an issue where styles/border colors would persist when the table cell selection changed.
-        # This forces the table to repaint when the current cell changes.
-        self.nameTable.currentCellChanged.connect(lambda x: self.nameTable.viewport().update())
-
-        #
-        self.nameTable.setColumnWidth(0, 150)
+        self.nameTable.setMinimumWidth(column_width + 2)
 
     def get_selection(self) -> Tuple[int, QTableWidgetItem]:
         """Get the selected row from the namelist table and return the QTableWidgetItem object for the dwarf id
