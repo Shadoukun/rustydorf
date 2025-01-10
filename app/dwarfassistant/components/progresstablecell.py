@@ -15,20 +15,20 @@ class ProgressTableCell(QWidget):
         labelWidget.setLayout(labelLayout)
         labelLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.leftLabel = QLabel(self)
-        self.leftLabel.setText("Name")
-        labelLayout.addWidget(self.leftLabel)
+        self.nameLabel = QLabel(self)
+        self.nameLabel.setText("Name")
+        labelLayout.addWidget(self.nameLabel)
 
         labelLayout.addStretch()
 
-        self.rightLabel = QLabel(self)
-        self.rightLabel.setText("0%")
-        labelLayout.addWidget(self.rightLabel)
+        self.valueLabel = QLabel(self)
+        self.valueLabel.setText("0%")
+        labelLayout.addWidget(self.valueLabel)
 
         layout.addWidget(labelWidget, 0, 0)
 
-        progress = QProgressBar()
-        progress.setOrientation(Qt.Orientation.Horizontal)
+        self.progress = QProgressBar()
+        self.progress.setOrientation(Qt.Orientation.Horizontal)
 
         self.progress_color = "red"
         self.progress_value = 60
@@ -45,11 +45,11 @@ class ProgressTableCell(QWidget):
             width: 5px
         }
         '''
-        progress.setStyleSheet(stylesheet)
-        progress.setTextVisible(False)
-        progress.setRange(0, 100)
-        progress.setValue(self.progress_value)
-        layout.addWidget(progress, 0, 0)
+        self.progress.setStyleSheet(stylesheet)
+        self.progress.setTextVisible(False)
+        self.progress.setRange(0, 100)
+        self.progress.setValue(self.progress_value)
+        layout.addWidget(self.progress, 0, 0)
         labelWidget.raise_()
 
 if __name__ == "__main__":

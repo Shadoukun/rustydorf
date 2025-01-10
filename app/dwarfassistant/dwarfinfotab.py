@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt, QSettings
 
 from .infoattributeswidget import InfoAttributesWidget
 from .rightpanel import RightPanelWidget
+from .components.progresstablecell import ProgressTableCell
 
 buttonActiveStylesheet = "border :2px solid gold;"
 buttonStylesheet = ""
@@ -215,11 +216,16 @@ class DwarfInfoTab(QtWidgets.QWidget):
         # if the dwarf doesn't have 15 skills, fill the rest of the table with empty rows
         rows = len(skills) if len(skills) > 14 else 14
         self.rightPanelWidget.skillsTable.setRowCount(rows)
-        self.rightPanelWidget.skillsTable.setColumnCount(2)
+        self.rightPanelWidget.skillsTable.setColumnCount(1)
 
         for i, skill in enumerate(skills):
-            self.rightPanelWidget.skillsTable.setItem(i, 0, QTableWidgetItem(skill["name"]))
-            self.rightPanelWidget.skillsTable.setItem(i, 1, QTableWidgetItem(str(skill["raw_level"])))
+            widget = ProgressTableCell()
+            widget.nameLabel.setText(skill["name"])
+            widget.valueLabel.setText(str(skill["raw_level"]))
+
+            widget.progress.setRange(0, 15)
+            widget.progress.setValue(skill["raw_level"])
+            self.rightPanelWidget.skillsTable.setCellWidget(i, 0, widget)
 
         self.rightPanelWidget.skillsTable.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         header = self.rightPanelWidget.skillsTable.horizontalHeader()
