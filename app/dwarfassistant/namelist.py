@@ -7,6 +7,46 @@ from PyQt6.QtGui import QFont
 from .components.dropdowncombobox import DropdownComboBox
 from .signals import SignalsManager
 
+STYLESHEET = '''
+QComboBox {
+    border: 0px;
+    border-radius: 3px;
+    padding: 1px 18px 1px 3px;
+    min-width: 6em;
+    background: palette(Base);
+}
+
+QComboBox:focus {
+    border: 1px solid darkgray;
+    padding-top: 3px;
+    padding-left: 4px;
+    background: palette(Mid);
+}
+
+QComboBox::drop-down {
+    width: 25px;
+    margin-left: 0px;
+    border-left: 1px solid #a0a0a4;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+QMenu {
+    background-color: palette(Base);
+    border: 1px solid darkgray;
+}
+
+QMenu::item {
+    background-color: transparent;
+    padding: 5px 10px;
+}
+
+QMenu::item:selected {
+    background-color: palette(Mid);
+}
+'''
+
+
 class NameListWidget(QWidget):
     """ The Main widget for the list of name list on the right side of the window."""
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None, settings: QSettings = None):
@@ -47,6 +87,8 @@ class NameListWidget(QWidget):
         self.searchBar = NameListSearchBar(self, self.menu_data)
         self.searchBar.setObjectName("nameListSearchBar")
         self.searchBar.setPlaceholderText("Search")
+        self.searchBar.setFixedHeight(25)
+        self.searchBar.font().setPointSize(settings.value("font_size", 6, type=int))
         layout.addWidget(self.searchBar)
 
         self.nameTable = NameListTable(self)
@@ -59,6 +101,7 @@ class NameListWidget(QWidget):
         layout.addWidget(self.nameTable)
 
         self.nameTable.setMinimumWidth(column_width + 2)
+        self.setStyleSheet(STYLESHEET)
 
     def get_selection(self) -> Tuple[int, QTableWidgetItem]:
         """Get the selected row from the namelist table and return the QTableWidgetItem object for the dwarf id
@@ -91,14 +134,11 @@ class NameListSearchBar(DropdownComboBox):
     def showPopup(self):
         # instead of the default popup show a custom QMenu
         menu = QMenu(self)
-
+        menu.setFixedWidth(self.width())
         self.populate_menu(menu, self.menu_data)
-
-        # position the menu below the combo box
         pos = self.mapToGlobal(QPoint(0, self.height()))
-        action = menu.exec(pos)
         # if an action was triggered update the QComboBox text
-        if action and action.data() is not None:
+        if (action := menu.exec(pos)) and action.data() is not None:
             # TODO: transform keywords, @attr, etc based on menu_data selection
             #       Or remove keywords. I'm not sure I need them. if I use this
             #
