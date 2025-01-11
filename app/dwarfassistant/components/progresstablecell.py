@@ -3,6 +3,20 @@ from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QProgressBar, QGridLay
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QApplication
 
+STYLESHEET = '''
+QProgressBar {
+    background-color: transparent;
+    border: 0px;
+    padding: 0px;
+    height: 20px;
+}
+
+QProgressBar::chunk {
+    background: #CD7F32;
+    width: 5px;
+}
+'''
+
 class ProgressTableCell(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -30,22 +44,8 @@ class ProgressTableCell(QWidget):
         self.progress = QProgressBar()
         self.progress.setOrientation(Qt.Orientation.Horizontal)
 
-        self.progress_color = "red"
         self.progress_value = 60
-        stylesheet = '''
-        QProgressBar {
-            background-color: transparent;
-            border: 0px;
-            padding: 0px;
-            height: 20px;
-        }
-
-        QProgressBar::chunk {''' + \
-            f"background: {self.progress_color};" + '''
-            width: 5px
-        }
-        '''
-        self.progress.setStyleSheet(stylesheet)
+        self.progress.setStyleSheet(STYLESHEET)
         self.progress.setTextVisible(False)
         self.progress.setRange(0, 100)
         self.progress.setValue(self.progress_value)

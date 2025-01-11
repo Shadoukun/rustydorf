@@ -235,12 +235,16 @@ class DwarfInfoTab(QtWidgets.QWidget):
         traits: dict = data.get('traits', {})
 
         self.rightPanelWidget.traitsTable.setRowCount(len(traits))
-        self.rightPanelWidget.traitsTable.setColumnCount(2)
+        self.rightPanelWidget.traitsTable.setColumnCount(1)
 
         for i, trait in enumerate(traits):
-            name, value = trait[1], trait[2]
-            self.rightPanelWidget.traitsTable.setItem(i, 0, QTableWidgetItem(name))
-            self.rightPanelWidget.traitsTable.setItem(i, 1, QTableWidgetItem(str(value)))
+            widget = ProgressTableCell()
+            widget.progress.setRange(0, 255)
+            widget.nameLabel.setText(trait[1])
+            widget.valueLabel.setText(str(trait[2]))
+            widget.progress.setValue(trait[2])
+            self.rightPanelWidget.traitsTable.setCellWidget(i, 0, widget)
+
 
     def get_font(self):
         font_name = self.settings.value("font_name", "More Perfect DOS VGA", type=str)
