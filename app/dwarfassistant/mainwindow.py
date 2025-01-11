@@ -58,7 +58,6 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         self.splitter = QtWidgets.QSplitter(self.centralwidget)
         self.splitter.setHandleWidth(1)
-
         self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data, self.settings)
         self.nameList.setObjectName("nameList")
         self.splitter.addWidget(self.nameList)
@@ -166,9 +165,9 @@ class DwarfAssistant(QtWidgets.QMainWindow):
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
         # remove the current main panel otherwise it will stack behind the new one
+
         if self.mainPanel is not None:
-            self.layout().removeWidget(self.mainPanel)
-            self.mainPanel.deleteLater()
+            self.splitter.widget(1).deleteLater()
             self.mainPanel = None
 
         # get the selected dwarf from the name list by id
@@ -179,7 +178,9 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selection.text())), None):
             self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, dwarf, self.settings)
             self.mainPanel.setObjectName("mainPanel")
-            self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
+            self.mainPanel.setContentsMargins(0, 0, 0, 0)
+            self.splitter.addWidget(self.mainPanel)
+
 
     def populate_name_list(self, data: list[dict]):
         """Populate the name table with the given names."""
