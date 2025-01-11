@@ -11,6 +11,12 @@ buttonStylesheet = ""
 
 
 class DwarfInfoTab(QtWidgets.QWidget):
+    """
+    This is the top level widget for the dwarf info panel on the right side of the main window.
+
+    It creates the main widget and the right panel widget and contains the logic for initializing them.
+    """
+
     def __init__(self, parent, game_data: dict, data: dict, settings: QSettings):
         super().__init__(parent)
         self.settings = settings
@@ -20,17 +26,23 @@ class DwarfInfoTab(QtWidgets.QWidget):
         font = self.get_font()
         self.setFont(font)
 
-        self.gridlayout = QtWidgets.QGridLayout()
-        self.setLayout(self.gridlayout)
+        layout = QtWidgets.QHBoxLayout()
+        self.setLayout(layout)
+
+        # Splitter
+        self.splitter = QtWidgets.QSplitter()
+        self.splitter.setOrientation(Qt.Orientation.Horizontal)
+        self.splitter.setHandleWidth(1)
+        layout.addWidget(self.splitter)
 
         # Main Panel
 
         self.mainPanel = QtWidgets.QWidget(self)
         self.mainPanel.setObjectName("mainPanel")
-        self.gridlayout.addWidget(self.mainPanel, 0, 0, 1, 1)
         mainPanelLayout = QtWidgets.QGridLayout(self.mainPanel)
         mainPanelLayout.setObjectName("mainpanelLayout")
         self.mainPanel.setLayout(mainPanelLayout)
+        self.splitter.addWidget(self.mainPanel)
 
         ## Info / Attributes Widget
 
@@ -38,7 +50,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.infoAttributesWidget.setObjectName("infoWidget")
         self.infoAttributesWidget.setFont(font)
         mainPanelLayout.addWidget(self.infoAttributesWidget, 0, 0, 1, 1)
-
 
         ## Needs Table
 
@@ -78,7 +89,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         self.rightPanelWidget = RightPanelWidget(self, self.settings)
         self.rightPanelWidget.setObjectName("rightPanelWidget")
-        self.gridlayout.addWidget(self.rightPanelWidget, 0, 1, 1, 1)
+        self.splitter.addWidget(self.rightPanelWidget)
+
         self.setup_beliefs_table(data)
         self.setup_goals_table(data)
         self.setup_attributes_table(data)
@@ -106,7 +118,6 @@ class DwarfInfoTab(QtWidgets.QWidget):
             table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
             table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
             table.resizeColumnToContents(1)
-
 
         # connect the buttons to their handlers
         buttons = [

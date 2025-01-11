@@ -3,7 +3,10 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import QSettings
 
 class RightPanelWidget(QtWidgets.QWidget):
-    """This is the the right panel widget that contains the Skills and Labors tables."""
+    """
+    This is the the right panel widget that contains the Skills and Labors tables.
+    """
+
     def __init__(self, parent, settings: QSettings):
         super().__init__(parent)
         self.setObjectName("rightPanel")

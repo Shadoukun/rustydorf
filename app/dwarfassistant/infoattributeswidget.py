@@ -2,9 +2,10 @@ from PyQt6 import QtGui, QtWidgets
 from PyQt6.QtCore import QSettings
 
 class InfoAttributesWidget(QtWidgets.QWidget):
-    """This widget wraps the Dwarf Info label and the Attributes/Goals/Beliefs StackedWidget.
+    """
+    This widget wraps the Dwarf Info label and the Attributes/Goals/Beliefs StackedWidget.
 
-       I was having issues with the layout of the QLabel and the QStackedWidget, so I wrapped them in a QWidget
+    I was having issues with the layout of the QLabel and the QStackedWidget, so I wrapped them in a QWidget
     """
     def __init__(self, parent=None, data: dict = None, settings: QSettings = None):
         super().__init__(parent)

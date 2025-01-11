@@ -48,7 +48,10 @@ QMenu::item:selected {
 
 
 class NameListWidget(QWidget):
-    """ The Main widget for the list of name list on the right side of the window."""
+    """
+    This is the widget that contains the search bar and name table on the left side of the main window.
+    """
+
     def __init__(self, parent=None, game_data: dict = None, dwarves: list[dict] = None, settings: QSettings = None):
         super().__init__(parent)
         self.setObjectName("nameList")

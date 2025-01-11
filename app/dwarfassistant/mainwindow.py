@@ -56,16 +56,21 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.sort_key = "Name"
         self.descending = False
 
+        self.splitter = QtWidgets.QSplitter(self.centralwidget)
+        self.splitter.setHandleWidth(1)
+
         self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data, self.settings)
         self.nameList.setObjectName("nameList")
-        self.gridLayout.addWidget(self.nameList, 1, 0, 1, 1)
+        self.splitter.addWidget(self.nameList)
 
         # create the main panel from the first dwarf (self.dwarf_data[0]) in the list to start
         first_dwarf = self.dwarf_data[0] if self.dwarf_data else {}
         self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, first_dwarf, self.settings)
         self.mainPanel.setObjectName("mainPanel")
         self.mainPanel.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout.addWidget(self.mainPanel, 1, 1, 1, 1)
+        self.splitter.addWidget(self.mainPanel)
+
+        self.gridLayout.addWidget(self.splitter, 0, 0, 0, 0)
 
         self.create_menu()
         self.connect_slots()

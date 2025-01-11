@@ -2,6 +2,10 @@ from PyQt6.QtCore import QObject, pyqtSignal, QMutex, QMutexLocker
 
 
 class SignalsManager(QObject):
+    """
+    A singleton class that manages signals used in the application.
+    """
+
     sort_changed   = pyqtSignal(str, bool)
     populate_table = pyqtSignal(list)
     refresh_ui     = pyqtSignal()
