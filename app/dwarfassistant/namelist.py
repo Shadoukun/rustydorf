@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QMenu
 from PyQt6.QtCore import Qt, QPoint, QSettings
 from PyQt6.QtGui import QFont
 
-from .components.dropdowncombobox import DropdownComboBox
+from .components.dropdowncombobox import DropdownComboBox, DropDownSortComboBox
 from .signals import SignalsManager
 
 STYLESHEET = '''
@@ -93,34 +93,12 @@ class NameListWidget(QWidget):
         searchBarWidget.setLayout(searchbarlayout)
         layout.addWidget(searchBarWidget)
 
-        self.searchBar = NameListSearchBar(self, self.menu_data)
+        namelist_searchbar = NameListSearchBar(self, self.menu_data)
+        self.searchBar = DropDownSortComboBox(self, namelist_searchbar)
         self.searchBar.setObjectName("nameListSearchBar")
-        self.searchBar.setPlaceholderText("Search")
         self.searchBar.setFixedHeight(25)
         self.searchBar.font().setPointSize(settings.value("font_size", 6, type=int))
         searchbarlayout.addWidget(self.searchBar)
-
-        # TODO: floating button instead of to the right of the search bar
-        self.asc_desc_button = QPushButton("^/v")
-        self.asc_desc_button.setObjectName("ascDescButton")
-        self.asc_desc_button.setFixedHeight(25)
-        self.asc_desc_button.setFixedWidth(25)
-        asc_desc_stylesheet = """
-            QPushButton {
-                border: 0px;
-                border-radius: 3px;
-                padding: 0;
-                background: transparent;
-            }
-
-            QPushButton:focus {
-                border: 1px solid darkgray;
-                background: transparent;
-            }
-        """
-        self.asc_desc_button.setStyleSheet(asc_desc_stylesheet)
-        # asc_desc_button.clicked.connect()
-        searchbarlayout.addWidget(self.asc_desc_button)
 
         self.nameTable = NameListTable(self)
         self.nameTable.setObjectName("nameTable")

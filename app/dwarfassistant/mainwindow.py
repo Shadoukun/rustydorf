@@ -137,12 +137,12 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         """Connect the signals to the slots."""
         signal_manager = SignalsManager.instance()
         self.nameList.nameTable.itemSelectionChanged.connect(self.change_name_tab)
-        self.nameList.searchBar.lineEdit().returnPressed.connect(self.sort_list)
+        self.nameList.searchBar.combo.lineEdit().returnPressed.connect(self.sort_list)
 
         # This fixes an issue where styles/border colors would persist when the table cell selection changed.
         # This forces the table to repaint when the current cell changes.
         self.nameList.nameTable.currentCellChanged.connect(lambda x: self.nameList.nameTable.viewport().update())
-        self.nameList.asc_desc_button.clicked.connect(self.change_asc_desc)
+        self.nameList.searchBar.sort_button.clicked.connect(self.change_asc_desc)
 
         # signals
         signal_manager.refresh_ui.connect(self.refresh_ui)
@@ -203,7 +203,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
     def sort_list(self):
         '''Filter the name list based on the search bar text.'''
-        search_text = self.nameList.searchBar.lineEdit().text().lower()
+        search_text = self.nameList.searchBar.combo.lineEdit().text().lower()
         keywords = [r"@attr:"] # etc
         result = self.get_sort_key_value(search_text, keywords)
 
