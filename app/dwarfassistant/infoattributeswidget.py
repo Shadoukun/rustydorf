@@ -34,6 +34,7 @@ class InfoAttributesWidget(QtWidgets.QWidget):
         sizepolicy.setHorizontalStretch(0)
         sizepolicy.setVerticalStretch(0)
         self.infoLabel.setSizePolicy(sizepolicy)
+        self.infoLabel.setFont(font)
         self.infoLabel.setText((
             f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n"
             f"Profession: {data.get('profession', {}).get('name', 'Unknown')}\n"
