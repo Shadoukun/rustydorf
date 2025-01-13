@@ -142,6 +142,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         # This fixes an issue where styles/border colors would persist when the table cell selection changed.
         # This forces the table to repaint when the current cell changes.
         self.nameList.nameTable.currentCellChanged.connect(lambda x: self.nameList.nameTable.viewport().update())
+        self.nameList.asc_desc_button.clicked.connect(self.change_asc_desc)
 
         # signals
         signal_manager.refresh_ui.connect(self.refresh_ui)
@@ -185,6 +186,10 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             # self.mainPanel.setContentsMargins(0, 0, 0, 0)
             # self.splitter.addWidget(self.mainPanel)
 
+    def change_asc_desc(self):
+        '''Change the sort order when the ascending/descending button is clicked.'''
+        self.descending = not self.descending
+        self.sort_and_populate(self.sort_key, self.descending)
 
     def populate_name_list(self, data: list[dict]):
         """Populate the name table with the given names."""
