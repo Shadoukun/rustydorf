@@ -2,57 +2,6 @@ from PyQt6.QtWidgets import QApplication, QComboBox, QMenu, QMainWindow, QWidget
 from PyQt6.QtCore import QPoint
 from PyQt6.QtGui import QAction
 
-STYLESHEET = '''
-QComboBox {
-    border: 0px;
-    border-radius: 3px;
-    padding: 1px 18px 1px 3px;
-    min-width: 6em;
-    background: palette(Base);
-}
-
-QComboBox:focus {
-    border: 1px solid darkgray;
-    padding-top: 3px;
-    padding-left: 4px;
-    background: palette(Mid);
-}
-
-QComboBox::drop-down {
-    width: 25px;
-    margin-left: 0px;
-    border-left: 1px solid #a0a0a4;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-}
-
-QMenu {
-    background-color: palette(Base);
-    border: 1px solid darkgray;
-}
-
-QMenu::item {
-    background-color: transparent;
-    padding: 5px 10px;
-}
-
-QMenu::item:selected {
-    background-color: palette(Mid);
-}
-
-QPushButton {
-    border: none;
-    border-radius: 0px;
-    padding: 0px;
-    color: white;
-    background-color: transparent;
-}
-
-QPushButton:hover {
-    background-color: transparent;
-}
-'''
-
 class DropDownSortComboBox(QWidget):
     def __init__(self, parent=None, combobox=None):
         super().__init__(parent)
@@ -60,8 +9,6 @@ class DropDownSortComboBox(QWidget):
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.main_layout)
-        self.setStyleSheet(STYLESHEET)
-
         self.set_combobox(combobox)
 
         self.sort_button = QPushButton("↑↓", self)
@@ -101,7 +48,6 @@ class DropdownComboBox(QComboBox):
 
         self.setEditable(True)
         self.menu_data = {}
-        self.setStyleSheet(STYLESHEET)
 
     def showPopup(self):
         # instead of the default popup show a custom QMenu

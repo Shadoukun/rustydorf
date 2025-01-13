@@ -7,6 +7,7 @@ from PyQt6.QtGui import QFont
 from .components.dropdowncombobox import DropdownComboBox, DropDownSortComboBox
 from .signals import SignalsManager
 
+
 STYLESHEET = '''
 QComboBox {
     border: 0px;
@@ -44,8 +45,33 @@ QMenu::item {
 QMenu::item:selected {
     background-color: palette(Mid);
 }
-'''
 
+QPushButton {
+    border: none;
+    border-radius: 0px;
+    padding: 0px;
+    color: white;
+    background-color: transparent;
+}
+
+QPushButton:hover {
+    background-color: transparent;
+}
+
+QTableView::item {
+    padding: 5px;
+    background-color: transparent;
+    border: 0px;
+}
+
+QTableView::item:selected {
+    border: 3px solid gold;
+}
+
+QLabel#professionLabel {
+    color: rgb(150, 150, 150);
+}
+'''
 
 class NameListWidget(QWidget):
     """
@@ -170,19 +196,6 @@ class NameListTable(QTableWidget):
         self.verticalHeader().setHighlightSections(False)
         self.verticalHeader().setDefaultSectionSize(40)
 
-        existing = self.styleSheet()
-        self.setStyleSheet(existing +
-            """
-            QTableView::item { \
-                padding: 5px; \
-                background-color: transparent; \
-                border: 0px; \
-            } \
-
-            QTableView::item:selected { \
-                border: 3px solid gold; \
-            }""")
-
 class NameListLabel(QWidget):
     def __init__(self, entry: dict, parent=None, font: QFont = None):
         super().__init__(parent)
@@ -197,7 +210,6 @@ class NameListLabel(QWidget):
         profession = entry.get('profession', {}).get('name', 'Unknown')
         profession_label = QLabel(profession)
         profession_label.setObjectName("professionLabel")
-        profession_label.setStyleSheet("color: rgb(150, 150, 150);")
         self.setFont(font)
         profession_label.setFont(font)
         layout.addWidget(profession_label)
