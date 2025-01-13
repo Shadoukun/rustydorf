@@ -31,6 +31,8 @@ class DwarfInfoTab(QtWidgets.QWidget):
 
         # Splitter
         self.splitter = QtWidgets.QSplitter()
+        self.splitter.setObjectName("splitter")
+
         self.splitter.setOrientation(Qt.Orientation.Horizontal)
         self.splitter.setHandleWidth(1)
         layout.addWidget(self.splitter)
@@ -64,6 +66,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.needsTable.setSizePolicy(sizePolicy)
         self.needsTable.setColumnCount(1)
         self.needsTable.setRowCount(0)
+        self.needsTable.setFont(font)
         item = QtWidgets.QTableWidgetItem()
         self.needsTable.setHorizontalHeaderItem(0, item)
         self.needsTable.horizontalHeader().setStretchLastSection(True)
@@ -80,6 +83,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.thoughtsTable.setSizePolicy(sizePolicy)
         self.thoughtsTable.setColumnCount(1)
         self.thoughtsTable.setRowCount(0)
+        self.thoughtsTable.setFont(font)
         item = QtWidgets.QTableWidgetItem()
         self.thoughtsTable.setHorizontalHeaderItem(0, item)
         self.thoughtsTable.horizontalHeader().setStretchLastSection(True)
@@ -230,7 +234,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.rightPanelWidget.skillsTable.setColumnCount(1)
 
         for i, skill in enumerate(skills):
-            widget = ProgressTableCell()
+            widget = ProgressTableCell(self)
             widget.nameLabel.setText(skill["name"])
             widget.valueLabel.setText(str(skill["raw_level"]))
 
@@ -249,7 +253,7 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.rightPanelWidget.traitsTable.setColumnCount(1)
 
         for i, trait in enumerate(traits):
-            widget = ProgressTableCell()
+            widget = ProgressTableCell(self)
             widget.progress.setRange(0, 255)
             widget.nameLabel.setText(trait[1])
             widget.valueLabel.setText(str(trait[2]))

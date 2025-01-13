@@ -41,6 +41,13 @@ class ProgressTableCell(QWidget):
 
         layout.addWidget(labelWidget, 0, 0)
 
+        # Set font. I still don't know why this is necessary.
+        # Maybe labels don't automatically inherit the font of their parent widget?
+        if parent is not None:
+            font = parent.font()
+            for l in [self.nameLabel, self.valueLabel]:
+                l.setFont(font)
+
         self.progress = QProgressBar()
         self.progress.setOrientation(Qt.Orientation.Horizontal)
 

@@ -58,6 +58,8 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
         self.splitter = QtWidgets.QSplitter(self.centralwidget)
         self.splitter.setHandleWidth(1)
+        self.splitter.setObjectName("mainSplitter")
+
         self.nameList = NameListWidget(self.centralwidget, self.game_data, self.dwarf_data, self.settings)
         self.nameList.setObjectName("nameList")
         self.splitter.addWidget(self.nameList)
