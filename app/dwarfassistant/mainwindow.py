@@ -38,8 +38,9 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.setWindowTitle("Dwarf Assistant")
         self.centralwidget = QtWidgets.QWidget(self)
         self.setCentralWidget(self.centralwidget)
-        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName("gridLayout")
+        layout = QtWidgets.QHBoxLayout(self.centralwidget)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.centralwidget.setLayout(layout)
 
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setObjectName("menubar")
@@ -71,7 +72,7 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         self.mainPanel.setContentsMargins(0, 0, 0, 0)
         self.splitter.addWidget(self.mainPanel)
 
-        self.gridLayout.addWidget(self.splitter, 0, 0, 0, 0)
+        layout.addWidget(self.splitter)
 
         self.create_menu()
         self.connect_slots()
@@ -168,9 +169,9 @@ class DwarfAssistant(QtWidgets.QMainWindow):
         '''Change the dwarf tab when a new name is selected in the name list.'''
         # remove the current main panel otherwise it will stack behind the new one
 
-        if self.mainPanel is not None:
-            self.splitter.widget(1).deleteLater()
-            self.mainPanel = None
+        # if self.mainPanel is not None:
+        #     self.splitter.widget(1).deleteLater()
+        #     self.mainPanel = None
 
         # get the selected dwarf from the name list by id
         _, selection = self.nameList.get_selection()
@@ -178,10 +179,11 @@ class DwarfAssistant(QtWidgets.QMainWindow):
             return
 
         if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selection.text())), None):
-            self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, dwarf, self.settings)
-            self.mainPanel.setObjectName("mainPanel")
-            self.mainPanel.setContentsMargins(0, 0, 0, 0)
-            self.splitter.addWidget(self.mainPanel)
+            self.mainPanel.update_data(dwarf, self.game_data, self.settings)
+            # self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, dwarf, self.settings)
+            # self.mainPanel.setObjectName("mainPanel")
+            # self.mainPanel.setContentsMargins(0, 0, 0, 0)
+            # self.splitter.addWidget(self.mainPanel)
 
 
     def populate_name_list(self, data: list[dict]):

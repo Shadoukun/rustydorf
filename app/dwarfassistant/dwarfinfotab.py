@@ -95,13 +95,9 @@ class DwarfInfoTab(QtWidgets.QWidget):
         self.rightPanelWidget.setObjectName("rightPanelWidget")
         self.splitter.addWidget(self.rightPanelWidget)
 
-        self.setup_beliefs_table(data)
-        self.setup_goals_table(data)
-        self.setup_attributes_table(data)
-        self.setup_traits_table(data)
-        self.setup_thoughts_table(data)
-        self.setup_needs_table(game_data, data)
-        self.setup_skills_table(data)
+        # set the initial data for the tables
+        # TODO: figure out why this errors if its at the end of __init__
+        self.update_data(data, game_data, settings)
 
         # # common setup for all tables
         tables = [
@@ -143,6 +139,22 @@ class DwarfInfoTab(QtWidgets.QWidget):
             QPushButton { \
                 padding: 10px; \
             }""")
+
+    def update_data(self, data: dict, game_data: dict, settings: QSettings):
+        self.infoAttributesWidget.infoLabel.setText((
+            f"Name: {data.get('first_name', 'Unknown')} {data.get('last_name', '')}\n"
+            f"Profession: {data.get('profession', {}).get('name', 'Unknown')}\n"
+            f"Age: {data.get('age', 'Unknown')}\n"
+            f"Sex: {data.get('sex', 'Unknown')}"
+        ))
+
+        self.setup_beliefs_table(data)
+        self.setup_goals_table(data)
+        self.setup_attributes_table(data)
+        self.setup_traits_table(data)
+        self.setup_thoughts_table(data)
+        self.setup_needs_table(game_data, data)
+        self.setup_skills_table(data)
 
     def setup_beliefs_table(self, data: dict):
         beliefs = data.get('beliefs', {})
