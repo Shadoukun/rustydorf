@@ -168,23 +168,8 @@ class DwarfAssistant(QtWidgets.QMainWindow):
 
     def change_name_tab(self):
         '''Change the dwarf tab when a new name is selected in the name list.'''
-        # remove the current main panel otherwise it will stack behind the new one
-
-        # if self.mainPanel is not None:
-        #     self.splitter.widget(1).deleteLater()
-        #     self.mainPanel = None
-
-        # get the selected dwarf from the name list by id
-        _, selection = self.nameList.get_selection()
-        if selection is None:
-            return
-
-        if dwarf := next((d for d in self.dwarf_data if d["id"] == int(selection.text())), None):
+        if (selection := self.nameList.get_selection()) and (dwarf := next((d for d in self.dwarf_data if d["id"] == int(selection[1].text())), None)):
             self.mainPanel.update_data(dwarf, self.game_data, self.settings)
-            # self.mainPanel = DwarfInfoTab(self.centralwidget, self.game_data, dwarf, self.settings)
-            # self.mainPanel.setObjectName("mainPanel")
-            # self.mainPanel.setContentsMargins(0, 0, 0, 0)
-            # self.splitter.addWidget(self.mainPanel)
 
     def change_asc_desc(self):
         '''Change the sort order when the ascending/descending button is clicked.'''
