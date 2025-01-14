@@ -72,6 +72,9 @@ impl DFInstance {
         match proc {
             Ok(proc) => {
                 df.pid = proc.pid;
+                // TODO: add check for if the game has a loaded save,
+                // if not, don't try to load the data
+                // I think Dwarf Therapist does this by checking the year or vtable or something
                 df.load_data(&proc);
             },
             Err(e) => ()

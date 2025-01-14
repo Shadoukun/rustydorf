@@ -64,27 +64,32 @@ async fn main() {
         // start the update task
         let update_task = tokio::task::spawn_blocking(move || {
             loop {
-                // this is its own scope so that the mutex lock is dropped before the sleep
-                {
-                    let mut df = state.df.blocking_lock();
-
-                    // recreate the process instance every time to make sure it's still running. Do it after the lock so we can track its status
-                    let process = win::process::Process::new_by_name(PROCESS_NAME);
-                    match process {
-                        Ok(_) => (),
-                        Err(e) => {
-                            // if the process is not found sleep for 5 seconds and try again
-                            eprintln!("Update Task: {}", e);
-                            df.pid = 0;
-                            std::thread::sleep(Duration::from_secs(5));
-                            continue
-                        }
+                let mut df = state.df.blocking_lock();
+                // recreate the process instance every time to make sure it's still running. Do it after the lock so we can track its status
+                let process = match win::process::Process::new_by_name(PROCESS_NAME) {
+                    Ok(p) => {
+                        // if the process is found update the pid
+                        df.pid = p.pid;
+                        p
+                    },
+                    Err(e) => {
+                        // if the process is not found sleep for 5 seconds and try again
+                        eprintln!("Update Task: {}", e);
+                        df.pid = 0;
+                        // drop the lock so it doesn't hold up the GUI if the process is not found
+                        drop(df);
+                        std::thread::sleep(Duration::from_secs(5));
+                        continue
                     }
+                };
 
-                    df.load_dwarves(process.as_ref().unwrap());
-                    println!("Updating...");
-                }
+                println!("Updating...");
+                // TODO: add check for if the game has a loaded save,
+                // if not don't try to load the dwarves
+                // I think Dwarf Therapist does this by checking the year or vtable or something
+                df.load_dwarves(&process);
 
+                drop(df);
                 std::thread::sleep(Duration::from_secs(30));
             }
         });
