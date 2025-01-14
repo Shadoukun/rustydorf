@@ -2,20 +2,29 @@ from PyQt6.QtWidgets import QApplication, QComboBox, QMenu, QMainWindow, QWidget
 from PyQt6.QtCore import QPoint
 from PyQt6.QtGui import QAction
 
-class DropDownSortComboBox(QWidget):
-    def __init__(self, parent=None, combobox=None):
+class SortComboBox(QWidget):
+    """This widget is a combination of a QComboBox and a QPusbutton for sorting
+        The sort button is positioned near the right edge of the combo box.
+
+        It accepts an optional custom QComboBox to use
+    """
+    def __init__(self, parent=None, custom_combobox=None):
+
         super().__init__(parent)
 
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.main_layout)
-        self.set_combobox(combobox)
+        self.create_combobox(custom_combobox)
 
         self.sort_button = QPushButton("↑↓", self)
         self.sort_button.setFixedSize(24, 24)
 
-    def set_combobox(self, widget=None):
-        '''Allows me to use a custom combo box'''
+    def create_combobox(self, widget=None):
+        """
+        Create the combo box and add it to the layout
+        """
+
         if widget is None:
             widget = DropdownComboBox(self)
 
@@ -43,9 +52,9 @@ class DropDownSortComboBox(QWidget):
         self.sort_button.move(x, y)
 
 class DropdownComboBox(QComboBox):
+    """Custom QComboBox that displays a custom QMenu when the popup is shown"""
     def __init__(self, parent=None):
         super().__init__(parent)
-
         self.setEditable(True)
         self.menu_data = {}
 
@@ -103,7 +112,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("Dropdown Test")
         layout = QVBoxLayout()
-        self.dropdown_combo = DropDownSortComboBox(self)
+        self.dropdown_combo = SortComboBox(self)
         self.dropdown_combo.combo.menu_data = {
             "Fruits": ["Apple", "Banana", "Cherry"],
             "Vegetables": {

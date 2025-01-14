@@ -1,10 +1,10 @@
 from typing import Tuple
-from PyQt6.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QSizePolicy, QVBoxLayout, QLabel, QTableWidgetItem, QHBoxLayout, QPushButton
+from PyQt6.QtWidgets import QWidget, QTableWidget, QAbstractItemView, QSizePolicy, QVBoxLayout, QLabel, QTableWidgetItem, QHBoxLayout
 from PyQt6.QtWidgets import QMenu
 from PyQt6.QtCore import Qt, QPoint, QSettings
 from PyQt6.QtGui import QFont
 
-from .components.dropdowncombobox import DropdownComboBox, DropDownSortComboBox
+from .components.dropdowncombobox import DropdownComboBox, SortComboBox
 from .signals import SignalsManager
 
 
@@ -115,14 +115,15 @@ class NameListWidget(QWidget):
 
         searchBarWidget = QWidget(self)
         searchBarWidget.setObjectName("searchBarWidget")
+
         searchbarlayout = QHBoxLayout(searchBarWidget)
+        searchbarlayout.setContentsMargins(0, 0, 0, 0)
         searchBarWidget.setLayout(searchbarlayout)
         layout.addWidget(searchBarWidget)
 
-        namelist_searchbar = NameListSearchBar(self, self.menu_data)
-        self.searchBar = DropDownSortComboBox(self, namelist_searchbar)
+        self.searchBar = SortComboBox(self, NameListSearchBar(self, self.menu_data))
         self.searchBar.setObjectName("nameListSearchBar")
-        self.searchBar.setFixedHeight(25)
+        self.searchBar.combo.setFixedHeight(30)
         self.searchBar.font().setPointSize(settings.value("font_size", 6, type=int))
         searchbarlayout.addWidget(self.searchBar)
 

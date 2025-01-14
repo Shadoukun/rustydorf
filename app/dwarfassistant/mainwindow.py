@@ -9,7 +9,6 @@ from .namelist import NameListWidget, NameListLabel
 from .dwarfinfotab import DwarfInfoTab
 from .signals import SignalsManager
 from .laborwindow import LaborWindow
-from .rightpanel import RightPanelWidget
 from .settingsmenu import SettingsMenuDialog
 
 # vscode seemingly doesn't/won't recognize this
