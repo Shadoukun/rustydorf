@@ -15,6 +15,7 @@ use crate::dwarf::dwarf::{Dwarf, print_dwarf};
 use crate::util::memory::read_mem_as_string;
 use crate::data::{gamedata::{self, GameData}, memorylayout::{load_memory_layout, MemoryOffsets, OffsetSection}};
 use crate::win;
+use crate::win::memory::memory::try_read_mem;
 use crate::win::{memory::memory::{mem_vec, read_mem}, process::Process};
 
 /// Represents the Dwarf Fortress instance \
@@ -24,6 +25,7 @@ pub struct DFInstance {
     pub pid: u32,
     pub memory_layout: MemoryOffsets,
     pub game_data: GameData,
+    pub data_loaded: bool,
     pub fortress_addr: usize,
     pub fortress_id: i32,
     pub dwarf_race_id: i32,
@@ -72,10 +74,12 @@ impl DFInstance {
         match proc {
             Ok(proc) => {
                 df.pid = proc.pid;
-                // TODO: add check for if the game has a loaded save,
-                // if not, don't try to load the data
-                // I think Dwarf Therapist does this by checking the year or vtable or something
-                df.load_data(&proc);
+
+                // make sure there is a fortress loaded
+                match df.load_data(&proc) {
+                    Ok(_) => println!("Data loaded successfully"),
+                    Err(e) => println!("Error loading data: {}", e)
+                }
             },
             Err(e) => ()
         }
@@ -83,14 +87,18 @@ impl DFInstance {
         df
     }
 
-    pub unsafe fn load_data(&mut self, proc: &Process) {
+    pub unsafe fn load_data(&mut self, proc: &Process)-> Result<(), Box<dyn Error>> {
+
         self.fortress_addr    = read_mem::<usize>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
+        if self.fortress_addr == 0 {
+            return Err("No fortress loaded".into());
+        }
+
         self.fortress_id      = read_mem::<i32>(&proc.handle, self.fortress_addr + size_of::<usize>());
         self.dwarf_race_id    = read_mem::<i16>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_race_index"))) as i32;
         self.dwarf_civ_id     = read_mem::<i32>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
         self.creature_vector  = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
         self.syndromes_vector = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
-
         // TODO: fix materials
         // df.load_materials(&proc);
 
@@ -101,6 +109,9 @@ impl DFInstance {
         self.load_historical_figures(&proc);
         self.load_historical_entities(&proc);
         self.load_beliefs(&proc);
+        self.data_loaded = true;
+        println!("Data loaded successfully");
+        Ok(())
     }
 
     pub unsafe fn load_materials(&mut self, proc: &Process) {

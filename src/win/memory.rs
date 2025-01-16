@@ -1,4 +1,5 @@
 pub mod memory {
+    use std::error::Error;
     use winapi::ctypes::c_void;
     use std::ptr::null_mut;
 
@@ -65,6 +66,26 @@ pub mod memory {
             println!("Read Failed: {:?}", error_code);
         }
         res
+    }
+
+    pub unsafe fn try_read_mem<T: Default>(
+        process_handle: &HANDLE,
+        base_address: usize,
+    ) -> Result<T, Box<dyn Error>> {
+            let mut res: T = Default::default();
+
+        if ReadProcessMemory(
+            *process_handle,
+            base_address as *mut c_void,
+            &mut res as *mut T as *mut c_void,
+            std::mem::size_of::<T>(),
+            null_mut::<usize>(),
+        ) == 0 {
+            let error_code: u32 = GetLastError();
+            return Err(Box::from(format!("Read Failed: {:?}", error_code)));
+        }
+
+        Ok(res)
     }
 
     /// A generic function to wrap WriteProcessMemory

@@ -64,6 +64,8 @@ async fn main() {
         // start the update task
         let update_task = tokio::task::spawn_blocking(move || {
             loop {
+                println!("Updating...");
+
                 let mut df = state.df.blocking_lock();
                 // recreate the process instance every time to make sure it's still running. Do it after the lock so we can track its status
                 let process = match win::process::Process::new_by_name(PROCESS_NAME) {
@@ -74,7 +76,7 @@ async fn main() {
                     },
                     Err(e) => {
                         // if the process is not found sleep for 5 seconds and try again
-                        eprintln!("Update Task: {}", e);
+                        eprintln!("Update Task | Process: {}", e);
                         df.pid = 0;
                         // drop the lock so it doesn't hold up the GUI if the process is not found
                         drop(df);
@@ -83,12 +85,22 @@ async fn main() {
                     }
                 };
 
-                println!("Updating...");
-                // TODO: add check for if the game has a loaded save,
-                // if not don't try to load the dwarves
-                // I think Dwarf Therapist does this by checking the year or vtable or something
-                df.load_dwarves(&process);
+                if !df.data_loaded {
+                    println!("Data not loaded. Loading...");
+                    match df.load_data(&process) {
+                        Ok(_) => {
+                            println!("Data loaded successfully");
+                        },
+                        Err(e) => {
+                            eprintln!("Update Task: | load_data {}", e);
+                            drop(df);
+                            std::thread::sleep(Duration::from_secs(5));
+                            continue
+                        }
+                    }
+                }
 
+                df.load_dwarves(&process);
                 drop(df);
                 std::thread::sleep(Duration::from_secs(30));
             }
