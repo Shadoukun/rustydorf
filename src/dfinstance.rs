@@ -377,7 +377,8 @@ impl DFInstance {
 
     pub unsafe fn is_on_embark_screen(&mut self, proc: &Process) -> bool {
         println!("Checking embark screen");
-        // Check if the embark screen has already been found
+        const MAX_DEPTH: usize = 5;
+
         if self.embark_offsets.gview == 0 {
             self.embark_offsets = EmbarkOffsets {
                 gview: global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "gview")),
@@ -394,19 +395,16 @@ impl DFInstance {
 
         let mut depth = 0;
         let mut current_viewscreen = self.embark_offsets.gview + self.embark_offsets.view_offset;
-        // check the in-game menu vtable for the embark screen, and if found, return true
-        while current_viewscreen != 0 && depth < 5 {
-            let vtable = read_mem::<usize>(&proc.handle, current_viewscreen);
-            if vtable == self.embark_offsets.viewscreen_setupdwarfgame_vtable {
-                println!("Embark Check: Found embark screen");
+        while let Ok(view) = try_read_mem::<usize>(&proc.handle, current_viewscreen) {
+            if view == self.embark_offsets.viewscreen_setupdwarfgame_vtable {
                 self.embark_offsets.final_embark = current_viewscreen + self.memory_layout.field_offset(OffsetSection::Viewscreen, "setupdwarfgame_units");
-                println!("Setup Dwarfgame Units: {:#X}", self.embark_offsets.setup_dwarfgameunits);
+                println!("Embark Check: Found embark screen\n\
+                          Embark Screen Address: {:#X}", self.embark_offsets.final_embark);
                 return true;
             }
-
             current_viewscreen = read_mem::<usize>(&proc.handle, current_viewscreen + self.embark_offsets.child_view_offset);
             depth += 1;
-        };
+        }
 
         return false;
     }
