@@ -109,10 +109,11 @@ async fn main() {
                         // check for embark screen
                         eprintln!("Checking for embark screen...");
                         if df.is_on_embark_screen(&process) {
+                            eprintln!("Embark screen found, loading data...");
                             match df.load_dwarves(&process) {
                                 Ok(_) => {println!("Dwarves loaded successfully");},
                                 Err(e) => {
-                                    eprintln!("Update Task: | Failed to find embark screen | {}", e);
+                                    eprintln!("Update Task: load_dwarves | {}", e);
                                     drop(df);
                                     std::thread::sleep(Duration::from_secs(5));
                                     continue

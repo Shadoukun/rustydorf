@@ -25,6 +25,7 @@ pub struct EmbarkOffsets {
     pub view_offset: usize,
     pub child_view_offset: usize,
     pub setup_dwarfgameunits: usize,
+    pub final_embark: usize,
 }
 
 /// Represents the Dwarf Fortress instance \
@@ -335,7 +336,8 @@ impl DFInstance {
                     id += 1;
                 }
             }
-            self.races = races
+
+        self.races = races
     }
 
     pub fn get_race(&self, id: i32) -> Option<&Race> {
@@ -349,57 +351,46 @@ impl DFInstance {
     }
 
     pub unsafe fn load_dwarves(&mut self, proc: &Process) -> Result<(), Box<dyn Error>> {
-        // check for the embark screen and try to load the dwarves from there
-        let mut dwarves = vec![];
-        println!("Creature Vector Length: {}", self.creature_vector.len());
+        if !self.creature_vector.is_empty() {
+            self.dwarves = self.creature_vector.iter().filter_map(|&c| {
+                Dwarf::new(self, proc, c).ok()
+            }).collect();
 
-        if self.creature_vector.is_empty() {
+        } else {
             // embark screen check
             if self.is_on_embark_screen(proc) {
-                let addr = read_mem::<usize>(&proc.handle, self.embark_offsets.setup_dwarfgameunits);
-                let dwarf_addrs = mem_vec(&proc.handle, addr);
-                dwarves = dwarf_addrs.iter().filter_map(|&c| {
+                println!("Loading dwarves from embark screen");
+                let dwarf_addrs = mem_vec(&proc.handle, self.embark_offsets.final_embark);
+                self.dwarves = dwarf_addrs.iter().filter_map(|&c| {
                     Dwarf::new(self, proc, c).ok()
                 }).collect();
             }
-        } else {
-            dwarves = self.creature_vector.iter().filter_map(|&c| {
-                Dwarf::new(self, proc, c).ok()
-            }).collect();
         }
 
-        if dwarves.is_empty() {
-            return Err("Dwarves empty. No dwarves loaded".into());
+        if self.dwarves.is_empty() {
+            return Err("Dwarves empty, No dwarves loaded".into());
         } else {
-            println!("Loaded {} dwarves.", dwarves.len());
-            self.dwarves = dwarves;
+            println!("Loaded {} dwarves.", self.dwarves.len());
             Ok(())
         }
     }
 
     pub unsafe fn is_on_embark_screen(&mut self, proc: &Process) -> bool {
-
+        println!("Checking embark screen");
         // Check if the embark screen has already been found
         if self.embark_offsets.gview == 0 {
-            println!("Checking embark screen");
-            let gview = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "gview"));
-            let viewscreen_setupdwarfgame_vtable = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "viewscreen_setupdwarfgame_vtable"));
-            let view_offset = self.memory_layout.field_offset(OffsetSection::Viewscreen, "view");
-            let child_view_offset = self.memory_layout.field_offset(OffsetSection::Viewscreen, "child");
-            let offsets = [gview, viewscreen_setupdwarfgame_vtable, view_offset, child_view_offset];
-            // if gview or viewscreen_setupdwarfgame_vtable is 0, then the game is not open to the embark screen
-            if gview == 0 || viewscreen_setupdwarfgame_vtable == 0 {
-                return false;
-            }
-
             self.embark_offsets = EmbarkOffsets {
-                gview,
-                viewscreen_setupdwarfgame_vtable,
-                view_offset,
-                child_view_offset,
+                gview: global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "gview")),
+                viewscreen_setupdwarfgame_vtable: global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "viewscreen_setupdwarfgame_vtable")),
+                view_offset: self.memory_layout.field_offset(OffsetSection::Viewscreen, "view"),
+                child_view_offset: self.memory_layout.field_offset(OffsetSection::Viewscreen, "child"),
                 ..Default::default()
             };
-        };
+        }
+
+        if self.embark_offsets.gview == 0 || self.embark_offsets.viewscreen_setupdwarfgame_vtable == 0 {
+            return false;
+        }
 
         let mut depth = 0;
         let mut current_viewscreen = self.embark_offsets.gview + self.embark_offsets.view_offset;
@@ -407,8 +398,9 @@ impl DFInstance {
         while current_viewscreen != 0 && depth < 5 {
             let vtable = read_mem::<usize>(&proc.handle, current_viewscreen);
             if vtable == self.embark_offsets.viewscreen_setupdwarfgame_vtable {
-                println!("Found embark screen");
-                self.embark_offsets.setup_dwarfgameunits = self.memory_layout.field_offset(OffsetSection::Viewscreen, "setupdwarfgame_units");
+                println!("Embark Check: Found embark screen");
+                self.embark_offsets.final_embark = current_viewscreen + self.memory_layout.field_offset(OffsetSection::Viewscreen, "setupdwarfgame_units");
+                println!("Setup Dwarfgame Units: {:#X}", self.embark_offsets.setup_dwarfgameunits);
                 return true;
             }
 
