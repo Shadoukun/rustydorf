@@ -48,6 +48,7 @@ async fn main() {
             }
         };
 
+        // Spawn the REST API server for communication with the GUI
         let api_server = tokio::spawn({
             let state = state.clone();
             async move {
@@ -61,12 +62,15 @@ async fn main() {
             }
         });
 
-        // start the update task
+        /* Periodically updates the DFInstance by monitoring the Dwarf Fortress process,
+         loading game data if not already loaded, and fetching the latest list of dwarves.
+         This task runs in a loop, ensuring the application state remains current by
+         handling process monitoring and data refreshes at specified intervals. */
         let update_task = tokio::task::spawn_blocking(move || {
             loop {
                 println!("Updating...");
-
                 let mut df = state.df.blocking_lock();
+
                 // recreate the process instance every time to make sure it's still running. Do it after the lock so we can track its status
                 let process = match win::process::Process::new_by_name(PROCESS_NAME) {
                     Ok(p) => {
@@ -75,7 +79,6 @@ async fn main() {
                         p
                     },
                     Err(e) => {
-                        // if the process is not found sleep for 5 seconds and try again
                         eprintln!("Update Task | Process: {}", e);
                         df.pid = 0;
                         // drop the lock so it doesn't hold up the GUI if the process is not found
@@ -85,28 +88,49 @@ async fn main() {
                     }
                 };
 
-                if !df.data_loaded {
-                    println!("Data not loaded. Loading...");
-                    match df.load_data(&process) {
-                        Ok(_) => {
-                            println!("Data loaded successfully");
-                        },
-                        Err(e) => {
-                            eprintln!("Update Task: | load_data {}", e);
-                            drop(df);
-                            std::thread::sleep(Duration::from_secs(5));
-                            continue
+                match df.load_data(&process) {
+                    Ok(_) => {
+                        println!("Data loaded successfully");
+                        match df.load_dwarves(&process) {
+                            Ok(_) => {println!("Dwarves loaded successfully");},
+                            Err(e) => {
+                                eprintln!("Update Task: | load_dwarves {}", e);
+                                drop(df);
+                                std::thread::sleep(Duration::from_secs(5));
+                                continue
+                            }
                         }
+                        drop(df);
+                        std::thread::sleep(Duration::from_secs(30));
+                    },
+                    Err(e) => {
+                        eprintln!("Update Task: | failed to load fortress data {}", e);
+
+                        // check for embark screen
+                        eprintln!("Checking for embark screen...");
+                        if df.is_on_embark_screen(&process) {
+                            match df.load_dwarves(&process) {
+                                Ok(_) => {println!("Dwarves loaded successfully");},
+                                Err(e) => {
+                                    eprintln!("Update Task: | Failed to find embark screen | {}", e);
+                                    drop(df);
+                                    std::thread::sleep(Duration::from_secs(5));
+                                    continue
+                                }
+                            }
+                        }
+
+                        drop(df);
+                        std::thread::sleep(Duration::from_secs(5));
+                        continue
                     }
                 }
-
-                df.load_dwarves(&process);
-                drop(df);
-                std::thread::sleep(Duration::from_secs(30));
             }
         });
 
-        // start the python GUI thread
+        /* Spawns a new thread to run the GUI. This thread is responsible for initializing the Python interpreter,
+           adding the current directory to the Python path, adding the relevant Rust code as a python module,
+           and running the main Python script. */
         let gui_thread = tokio::task::spawn_blocking(move || {
             Python::with_gil(|py| {
                 match add_cwd_to_path(py) {
@@ -125,7 +149,7 @@ async fn main() {
                     }
                 }
 
-                // have to import the modules for the python script here to use them
+                // we have to import the modules for the python script here to use them
                 let requests = PyModule::import(py, "requests");
                 let qt6 = PyModule::import(py, "PyQt6.QtWidgets");
                 let app = PyModule::import(py, "app");

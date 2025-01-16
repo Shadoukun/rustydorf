@@ -18,6 +18,15 @@ use crate::win;
 use crate::win::memory::memory::try_read_mem;
 use crate::win::{memory::memory::{mem_vec, read_mem}, process::Process};
 
+#[derive(Debug, Default, Serialize, Clone)]
+pub struct EmbarkOffsets {
+    pub gview: usize,
+    pub viewscreen_setupdwarfgame_vtable: usize,
+    pub view_offset: usize,
+    pub child_view_offset: usize,
+    pub setup_dwarfgameunits: usize,
+}
+
 /// Represents the Dwarf Fortress instance \
 /// Contains all the data loaded from the game
 #[derive(Default, Serialize, Clone)]
@@ -26,6 +35,13 @@ pub struct DFInstance {
     pub memory_layout: MemoryOffsets,
     pub game_data: GameData,
     pub data_loaded: bool,
+
+    pub embark_offsets: EmbarkOffsets,
+    pub gview: usize,
+    pub viewscreen_setupdwarfgame_vtable: usize,
+    pub view_offset: usize,
+    pub child_view_offset: usize,
+
     pub fortress_addr: usize,
     pub fortress_id: i32,
     pub dwarf_race_id: i32,
@@ -89,6 +105,7 @@ impl DFInstance {
 
     pub unsafe fn load_data(&mut self, proc: &Process)-> Result<(), Box<dyn Error>> {
 
+        // Check if there is a fortress loaded first before trying to load the data
         self.fortress_addr    = read_mem::<usize>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
         if self.fortress_addr == 0 {
             return Err("No fortress loaded".into());
@@ -99,6 +116,7 @@ impl DFInstance {
         self.dwarf_civ_id     = read_mem::<i32>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "dwarf_civ_index")));
         self.creature_vector  = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "active_creature_vector")));
         self.syndromes_vector = mem_vec(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "all_syndromes_vector")));
+
         // TODO: fix materials
         // df.load_materials(&proc);
 
@@ -330,17 +348,77 @@ impl DFInstance {
         self.squads = self.squad_vector.iter().map(|&s| Squad::new(self, proc, s)).collect();
     }
 
-    pub unsafe fn load_dwarves(&mut self, proc: &Process) {
+    pub unsafe fn load_dwarves(&mut self, proc: &Process) -> Result<(), Box<dyn Error>> {
+        // check for the embark screen and try to load the dwarves from there
+        let mut dwarves = vec![];
+        println!("Creature Vector Length: {}", self.creature_vector.len());
+
         if self.creature_vector.is_empty() {
-            return;
+            // embark screen check
+            if self.is_on_embark_screen(proc) {
+                let addr = read_mem::<usize>(&proc.handle, self.embark_offsets.setup_dwarfgameunits);
+                let dwarf_addrs = mem_vec(&proc.handle, addr);
+                dwarves = dwarf_addrs.iter().filter_map(|&c| {
+                    Dwarf::new(self, proc, c).ok()
+                }).collect();
+            }
+        } else {
+            dwarves = self.creature_vector.iter().filter_map(|&c| {
+                Dwarf::new(self, proc, c).ok()
+            }).collect();
         }
 
-        self.dwarves = self.creature_vector.iter().filter_map(|&c| {
-            Dwarf::new(self, proc, c).ok()
-        }).collect();
-
-        println!("Loaded {} dwarves", self.dwarves.len());
+        if dwarves.is_empty() {
+            return Err("Dwarves empty. No dwarves loaded".into());
+        } else {
+            println!("Loaded {} dwarves.", dwarves.len());
+            self.dwarves = dwarves;
+            Ok(())
+        }
     }
+
+    pub unsafe fn is_on_embark_screen(&mut self, proc: &Process) -> bool {
+
+        // Check if the embark screen has already been found
+        if self.embark_offsets.gview == 0 {
+            println!("Checking embark screen");
+            let gview = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "gview"));
+            let viewscreen_setupdwarfgame_vtable = global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "viewscreen_setupdwarfgame_vtable"));
+            let view_offset = self.memory_layout.field_offset(OffsetSection::Viewscreen, "view");
+            let child_view_offset = self.memory_layout.field_offset(OffsetSection::Viewscreen, "child");
+            let offsets = [gview, viewscreen_setupdwarfgame_vtable, view_offset, child_view_offset];
+            // if gview or viewscreen_setupdwarfgame_vtable is 0, then the game is not open to the embark screen
+            if gview == 0 || viewscreen_setupdwarfgame_vtable == 0 {
+                return false;
+            }
+
+            self.embark_offsets = EmbarkOffsets {
+                gview,
+                viewscreen_setupdwarfgame_vtable,
+                view_offset,
+                child_view_offset,
+                ..Default::default()
+            };
+        };
+
+        let mut depth = 0;
+        let mut current_viewscreen = self.embark_offsets.gview + self.embark_offsets.view_offset;
+        // check the in-game menu vtable for the embark screen, and if found, return true
+        while current_viewscreen != 0 && depth < 5 {
+            let vtable = read_mem::<usize>(&proc.handle, current_viewscreen);
+            if vtable == self.embark_offsets.viewscreen_setupdwarfgame_vtable {
+                println!("Found embark screen");
+                self.embark_offsets.setup_dwarfgameunits = self.memory_layout.field_offset(OffsetSection::Viewscreen, "setupdwarfgame_units");
+                return true;
+            }
+
+            current_viewscreen = read_mem::<usize>(&proc.handle, current_viewscreen + self.embark_offsets.child_view_offset);
+            depth += 1;
+        };
+
+        return false;
+    }
+
 
     /// Returns the current time in the game
     pub unsafe fn current_time(&self, proc: &Process) -> DfTime {
