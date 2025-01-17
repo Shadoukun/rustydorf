@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::error::Error;
 use serde::Serialize;
-
+use log::{info, error, debug};
 use crate::histfigure::FortressPosition;
 use crate::items::material::Material;
 use crate::items::ItemType;
@@ -80,32 +80,34 @@ pub struct DFInstance {
 impl DFInstance {
 
     pub unsafe fn new(proc: Result<win::process::Process, Box<dyn Error>>) -> Self {
+        debug!("Creating new DFInstance");
 
+        debug!("DFInstance | Loading memory layout and game data...");
         let mut df = DFInstance {
             memory_layout: load_memory_layout(),
             game_data:     gamedata::load_game_data(),
             ..Default::default()
         };
 
+        debug!("DFInstance | Checking process...");
         // Check that the process is valid before trying to load data from it
         match proc {
             Ok(proc) => {
+                debug!("DFInstance | Process found, loading data...");
                 df.pid = proc.pid;
-
                 // make sure there is a fortress loaded
                 match df.load_data(&proc) {
-                    Ok(_) => println!("Data loaded successfully"),
-                    Err(e) => println!("Error loading data: {}", e)
+                    Ok(_) => debug!("DFInstance | Data loaded successfully"),
+                    Err(e) => error!("Error: DFInstance | failed to load data.\n{}", e)
                 }
             },
-            Err(e) => ()
+            Err(e) => error!("Error: DFInstance | process not found.\n{}", e)
         }
 
         df
     }
 
     pub unsafe fn load_data(&mut self, proc: &Process)-> Result<(), Box<dyn Error>> {
-
         // Check if there is a fortress loaded first before trying to load the data
         self.fortress_addr    = read_mem::<usize>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
         if self.fortress_addr == 0 {
