@@ -360,27 +360,45 @@ impl DFInstance {
 
     pub unsafe fn load_dwarves(&mut self, proc: &Process) -> Result<(), Box<dyn Error>> {
         let n = logger_display_name(&(self.logger_name.to_string() + "::load_dwarves"));
-        if !self.creature_vector.is_empty() {
-            self.dwarves = self.creature_vector.iter().filter_map(|&c| {
-                Dwarf::new(self, proc, c).ok()
-            }).collect();
 
-        } else {
-            // embark screen check
-            if self.is_on_embark_screen(proc) {
-                info!("{n} | Loading dwarves from embark screen...");
-                let dwarf_addrs = mem_vec(&proc.handle, self.embark_offsets.final_embark);
-                self.dwarves = dwarf_addrs.iter().filter_map(|&c| {
-                    Dwarf::new(self, proc, c).ok()
+        match self.creature_vector.is_empty() {
+            false => {
+                self.dwarves = self.creature_vector.iter().filter_map(|&c| {
+                    match Dwarf::new(self, proc, c) {
+                        Ok(d) => {
+                            Some(d)
+                        },
+                        Err(e) => {
+                            error!("{n} | Failed to load dwarf: {}", e);
+                            None
+                        }
+                    }
                 }).collect();
+            },
+            true => {
+                if self.is_on_embark_screen(proc) {
+                    info!("{n} | Loading dwarves from embark screen...");
+                    self.dwarves = mem_vec(&proc.handle, self.embark_offsets.final_embark).iter().filter_map(|&c| {
+                        match Dwarf::new(self, proc, c) {
+                            Ok(d) => {
+                                Some(d)
+                            },
+                            Err(e) => {
+                                error!("{n} | Failed to load dwarf: {}", e);
+                                None
+                            }
+                        }
+                    }).collect();
+                }
             }
         }
 
-        if self.dwarves.is_empty() {
-            return Err(format!("{n} | Dwarves empty, No dwarves loaded").into());
-        } else {
-            info!("{n} | Loaded {} dwarves", self.dwarves.len());
-            Ok(())
+        match self.dwarves.is_empty() {
+            false => {
+                info!("{n} | Loaded {} dwarves", self.dwarves.len());
+                Ok(())
+            },
+            true => Err(format!("{n} | Dwarves empty, No dwarves loaded").into())
         }
     }
 
