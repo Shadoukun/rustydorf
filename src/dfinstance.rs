@@ -6,6 +6,7 @@ use crate::histfigure::FortressPosition;
 use crate::items::material::Material;
 use crate::items::ItemType;
 use crate::language::{Languages, Translation, Word};
+use crate::logger::logger_display_name;
 use crate::squad::Squad;
 use crate::time::DfTime;
 use crate::util::global_address;
@@ -33,6 +34,7 @@ pub struct EmbarkOffsets {
 #[derive(Default, Serialize, Clone)]
 pub struct DFInstance {
     pub pid: u32,
+    pub logger_name: String,
     pub memory_layout: MemoryOffsets,
     pub game_data: GameData,
     pub data_loaded: bool,
@@ -80,28 +82,32 @@ pub struct DFInstance {
 impl DFInstance {
 
     pub unsafe fn new(proc: Result<win::process::Process, Box<dyn Error>>) -> Self {
-        debug!("Creating new DFInstance");
+        let logger_name = "DFInstance";
+        let n = logger_display_name(&(logger_name.to_string() + "::new"));
 
-        debug!("DFInstance | Loading memory layout and game data...");
+        debug!("{n} | Creating new DFInstance");
+
+        debug!("{n} | Loading memory layout and game data...");
         let mut df = DFInstance {
+            logger_name:   logger_name.to_string(),
             memory_layout: load_memory_layout(),
             game_data:     gamedata::load_game_data(),
             ..Default::default()
         };
 
-        debug!("DFInstance | Checking process...");
+        debug!("{n} | Checking process...");
         // Check that the process is valid before trying to load data from it
         match proc {
             Ok(proc) => {
-                debug!("DFInstance | Process found, loading data...");
+                debug!("{n} | Process found, loading data...");
                 df.pid = proc.pid;
                 // make sure there is a fortress loaded
                 match df.load_data(&proc) {
-                    Ok(_) => debug!("DFInstance | Data loaded successfully"),
-                    Err(e) => error!("Error: DFInstance | failed to load data.\n{}", e)
+                    Ok(_) => debug!("{n} | Data loaded successfully"),
+                    Err(e) => error!("{n} | failed to load data.\n{}", e)
                 }
             },
-            Err(e) => error!("Error: DFInstance | process not found.\n{}", e)
+            Err(e) => error!("{n} | process not found.\n{}", e)
         }
 
         df

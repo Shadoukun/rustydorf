@@ -24,7 +24,7 @@ impl log::Log for Logger {
                 Level::Debug => format!("{}", record.level().to_string().blue().bold()),
                 Level::Trace => format!("{}", record.level().to_string().white().dimmed()),
             };
-            println!("{}{}- {}", colored_level, spaces, record.args());
+            println!("{}{}| {}", colored_level, spaces, record.args());
         }
     }
 
@@ -37,4 +37,8 @@ pub fn init_logger(level: LevelFilter) -> Result<(), SetLoggerError> {
     log::set_logger(&LOGGER)?;
     log::set_max_level(level);
     Ok(())
+}
+
+pub fn logger_display_name(text: &str) -> String {
+    format!("{}", text.yellow().bold())
 }
