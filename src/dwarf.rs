@@ -3,6 +3,7 @@ pub mod dwarf {
     use std::collections::HashMap;
     use std::fmt::Error;
 
+    use log::debug;
     use log::error;
     use log::warn;
     use serde::Deserialize;
@@ -55,7 +56,6 @@ pub mod dwarf {
         pub arrival_time: DfTime,
         pub body_size: i32,
         pub body_size_base: i32,
-        // TODO: FIX NAMES
         pub first_name: String,
         pub nickname: String,
         pub last_name: String,
@@ -102,6 +102,7 @@ pub mod dwarf {
 
     impl Dwarf {
         pub unsafe fn new(df: &DFInstance, proc: &Process, addr: usize) -> Result<Dwarf, Error> {
+            let n = logger_display_name("Dwarf::new");
             let mut d = Dwarf{
                 addr,
                 id:     read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Dwarf, "id")),
@@ -111,11 +112,18 @@ pub mod dwarf {
 
             // check if the creature is from the same civ as the fort
             if d.civ_id != df.dwarf_civ_id {
+                // debug!("{n} | Unit is not from the fortress civilization ");
                 return Err(Error);
             }
 
-            // read race/caste before anything else to filter out non-dwarves
-            d.read_race_and_caste(df, proc)?;
+            match d.read_race_and_caste(df, proc) {
+                Ok(_) => (),
+                Err(_) => {
+                    // debug!("{n} | Unit is not a dwarf");
+                    return Err(Error);
+                }
+            }
+
             d.read_names(df, proc);
             d.read_states(df, proc);
             d.read_profession(df, proc);

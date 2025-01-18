@@ -359,6 +359,7 @@ impl DFInstance {
     }
 
     pub unsafe fn load_dwarves(&mut self, proc: &Process) -> Result<(), Box<dyn Error>> {
+        let n = logger_display_name(&(self.logger_name.to_string() + "::load_dwarves"));
         if !self.creature_vector.is_empty() {
             self.dwarves = self.creature_vector.iter().filter_map(|&c| {
                 Dwarf::new(self, proc, c).ok()
@@ -367,7 +368,7 @@ impl DFInstance {
         } else {
             // embark screen check
             if self.is_on_embark_screen(proc) {
-                println!("Loading dwarves from embark screen");
+                info!("{n} | Loading dwarves from embark screen...");
                 let dwarf_addrs = mem_vec(&proc.handle, self.embark_offsets.final_embark);
                 self.dwarves = dwarf_addrs.iter().filter_map(|&c| {
                     Dwarf::new(self, proc, c).ok()
@@ -376,9 +377,9 @@ impl DFInstance {
         }
 
         if self.dwarves.is_empty() {
-            return Err("Dwarves empty, No dwarves loaded".into());
+            return Err(format!("{n} | Dwarves empty, No dwarves loaded").into());
         } else {
-            println!("Loaded {} dwarves.", self.dwarves.len());
+            info!("{n} | Loaded {} dwarves", self.dwarves.len());
             Ok(())
         }
     }
