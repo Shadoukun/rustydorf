@@ -3,10 +3,13 @@ pub mod dwarf {
     use std::collections::HashMap;
     use std::fmt::Error;
 
+    use log::error;
+    use log::warn;
     use serde::Deserialize;
     use serde::Serialize;
 
     use crate::attribute::{Attribute, AttributeType};
+    use crate::logger::logger_display_name;
     use crate::skill::Skill;
     use crate::thought::Thought;
     use crate::histfigure::FortressPosition;
@@ -513,13 +516,10 @@ pub mod dwarf {
             // ensure traits are loaded first
 
             self.thoughts = thoughts.iter().filter_map(|&addr| {
-                let thought = Thought::new(df, proc, self, addr);
-                if thought.id >= 0 {
-                    self.thought_ids.push(thought.id);
-                    Some(thought)
-                } else {
-                    None
-                }
+                Thought::new(df, proc, self, addr).map_err(|e| {
+                    // not a major error, just log it
+                    warn!("{} | {}", logger_display_name("Dwarf::read_emotions"), e);
+                }).ok()
             }).collect();
 
             // TODO: dated emotions

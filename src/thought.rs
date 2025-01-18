@@ -1,4 +1,6 @@
+use log::warn;
 use serde::{Deserialize, Serialize};
+use std::error::Error;
 
 use crate::{data::{gamedata::{Subthought, UnitThoughts}, memorylayout::OffsetSection}, dfinstance::DFInstance, dwarf::dwarf::Dwarf, time::DfTime, win::{memory::memory::read_mem, process::Process}};
 
@@ -24,7 +26,7 @@ pub struct Thought {
 }
 
 impl Thought {
-    pub unsafe fn new(df: &DFInstance, proc: &Process, dwarf: &Dwarf, addr: usize) -> Self {
+    pub unsafe fn new(df: &DFInstance, proc: &Process, dwarf: &Dwarf, addr: usize) -> Result<Thought, Box<dyn Error>> {
         let mut t = Thought{
             id:              read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "thought_id")),
             emotion_type:    EmotionType::from(read_mem::<i32>(&proc.handle, addr + df.memory_layout.field_offset(OffsetSection::Emotion, "emotion_type"))),
@@ -41,32 +43,36 @@ impl Thought {
 
         // TODO: figure out why some thoughts have an id of 0
         if t.id == 0 {
-            eprintln!("Warning: Thought with id {}", t.id);
-            return t;
+            return Err("Thought id is 0".into());
         }
 
         match df.game_data.unit_thoughts.get(t.id as usize - 1) {
             Some(data) => {
                 t.data = data.clone();
                 t.thought = t.data.thought.clone();
-                t.check_subthought(df);
+                match t.check_subthought(df) {
+                    Ok(_) => {},
+                    Err(e) => {
+                        return Err(e);
+                    }
+                }
                 t.calculate_effect(df, dwarf);
             },
             None => {
-                eprintln!("Warning: Thought with id {} not found", t.id);
                 t.data = UnitThoughts::default();
+                return Err(format!("Thought with id {} not found", t.id).into());
             }
         }
 
-        t
+        Ok(t)
     }
 
-    fn check_subthought(&mut self, df: &DFInstance) {
+    fn check_subthought(&mut self, df: &DFInstance) -> Result<(), Box<dyn Error>> {
         // TODO: I might be able to simplify this after I fix the subthoughts data
 
         // seemingly, subthoughts_type 0 and 1 are weird
         if self.data.subthoughts_type < 2 {
-            return;
+            return Ok(());
         }
 
         match df.game_data.unit_subthoughts.get(self.data.subthoughts_type as usize) {
@@ -75,8 +81,7 @@ impl Thought {
                 self.subthought = match data.subthoughts.iter().find(|s| s.id == self.subthought_id) {
                     Some(subthought) => subthought.clone(),
                     None => {
-                        eprintln!("Warning: Subthought with id {} not found", self.subthought_id);
-                        Subthought::default()
+                        return Err(format!("Subthought with id {} not found", self.data.subthoughts_type).into());
                     }
                 };
 
@@ -89,10 +94,10 @@ impl Thought {
                 }
             },
             None => {
-                eprintln!("Warning: Subthoughts with id {} not found", self.data.subthoughts_type);
-                return;
+                return Err(format!("Subthought with id {} not found", self.data.subthoughts_type).into());
             }
         };
+        Ok(())
     }
 
     fn calculate_effect(&mut self, df: &DFInstance, dwarf: &Dwarf) {

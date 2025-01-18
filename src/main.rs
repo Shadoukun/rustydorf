@@ -88,8 +88,8 @@ async fn main() {
                         df.pid = p.pid;
                         p
                     },
-                    Err(e) => {
-                        error!("{n} | failed to find process - {e}");
+                    Err(_) => {
+                        error!("{n} | Failed to find process.");
                         df.pid = 0;
                         // drop the lock so it doesn't hold up the GUI if the process is not found
                         drop(df);
@@ -120,6 +120,7 @@ async fn main() {
                         // check for embark screen if the data failed to load
                         info!("{n} | Checking for embark screen...");
                         if df.is_on_embark_screen(&process) {
+
                             info!("{n} | Embark screen detected, Trying to load data again...");
                             match df.load_dwarves(&process) {
                                 Ok(_) => {info!("{n} | Dwarves loaded successfully");},
