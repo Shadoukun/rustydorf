@@ -101,9 +101,9 @@ async fn main() {
                 info!("{n} | Process found, loading data...");
                 match df.load_data(&process) {
                     Ok(_) => {
-                        info!("{n} | Data loaded successfully");
                         match df.load_dwarves(&process) {
-                            Ok(_) => {info!("{n} | Dwarves loaded successfully");},
+                            Ok(_) => {
+                                info!("{n} | Loaded {} dwarves successfully.", df.dwarves.len());},
                             Err(e) => {
                                 error!("{n} | load_dwarves - {e}");
                                 drop(df);

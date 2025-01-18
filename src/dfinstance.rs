@@ -114,10 +114,11 @@ impl DFInstance {
     }
 
     pub unsafe fn load_data(&mut self, proc: &Process)-> Result<(), Box<dyn Error>> {
+        let n = logger_display_name(&(self.logger_name.to_string() + "::load_data"));
         // Check if there is a fortress loaded first before trying to load the data
         self.fortress_addr    = read_mem::<usize>(&proc.handle, global_address(proc, self.memory_layout.field_offset(OffsetSection::Addresses, "fortress_entity")));
         if self.fortress_addr == 0 {
-            return Err("No fortress loaded".into());
+            return Err(format!("{n} | No fortress loaded").into());
         }
 
         self.fortress_id      = read_mem::<i32>(&proc.handle, self.fortress_addr + size_of::<usize>());
@@ -137,7 +138,6 @@ impl DFInstance {
         self.load_historical_entities(&proc);
         self.load_beliefs(&proc);
         self.data_loaded = true;
-        println!("Data loaded successfully");
         Ok(())
     }
 
@@ -369,7 +369,7 @@ impl DFInstance {
                             Some(d)
                         },
                         Err(e) => {
-                            error!("{n} | Failed to load dwarf: {}", e);
+                            // error!("{n} | Failed to load dwarf: {}", e);
                             None
                         }
                     }
@@ -384,7 +384,7 @@ impl DFInstance {
                                 Some(d)
                             },
                             Err(e) => {
-                                error!("{n} | Failed to load dwarf: {}", e);
+                                // error!("{n} | Failed to load dwarf: {}", e);
                                 None
                             }
                         }
@@ -394,16 +394,13 @@ impl DFInstance {
         }
 
         match self.dwarves.is_empty() {
-            false => {
-                info!("{n} | Loaded {} dwarves", self.dwarves.len());
-                Ok(())
-            },
+            false => Ok(()),
             true => Err(format!("{n} | Dwarves empty, No dwarves loaded").into())
         }
     }
 
     pub unsafe fn is_on_embark_screen(&mut self, proc: &Process) -> bool {
-        println!("Checking embark screen");
+        debug!("Checking embark screen");
         const MAX_DEPTH: usize = 5;
 
         if self.embark_offsets.gview == 0 {
@@ -425,8 +422,7 @@ impl DFInstance {
         while let Ok(view) = try_read_mem::<usize>(&proc.handle, current_viewscreen) {
             if view == self.embark_offsets.viewscreen_setupdwarfgame_vtable {
                 self.embark_offsets.final_embark = current_viewscreen + self.memory_layout.field_offset(OffsetSection::Viewscreen, "setupdwarfgame_units");
-                println!("Embark Check: Found embark screen\n\
-                          Embark Screen Address: {:#X}", self.embark_offsets.final_embark);
+                debug!("Embark Check: Found embark screen | Embark Screen Address: {:#X}", self.embark_offsets.final_embark);
                 return true;
             }
             current_viewscreen = read_mem::<usize>(&proc.handle, current_viewscreen + self.embark_offsets.child_view_offset);

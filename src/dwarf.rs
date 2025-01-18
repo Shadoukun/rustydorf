@@ -112,14 +112,14 @@ pub mod dwarf {
 
             // check if the creature is from the same civ as the fort
             if d.civ_id != df.dwarf_civ_id {
-                // debug!("{n} | Unit is not from the fortress civilization ");
+                // debug!("{n} | Unit is from the wrong civ.");
                 return Err(Error);
             }
 
             match d.read_race_and_caste(df, proc) {
                 Ok(_) => (),
                 Err(_) => {
-                    // debug!("{n} | Unit is not a dwarf");
+                    // debug!("{n} | Unit is not a Dwarf.");
                     return Err(Error);
                 }
             }
