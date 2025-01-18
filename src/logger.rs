@@ -12,6 +12,11 @@ impl log::Log for Logger {
 
     fn log(&self, record: &Record) {
         if self.enabled(record.metadata()) {
+            // lol make the lines line up
+            const MAX_LEVEL_LEN: usize = 6; // +1
+            let level_len = record.level().to_string().len();
+            let spaces = " ".repeat(MAX_LEVEL_LEN - level_len);
+
             let colored_level = match record.level() {
                 Level::Error => format!("{}", record.level().to_string().red().bold()),
                 Level::Warn  => format!("{}", record.level().to_string().yellow().bold()),
@@ -19,7 +24,7 @@ impl log::Log for Logger {
                 Level::Debug => format!("{}", record.level().to_string().blue().bold()),
                 Level::Trace => format!("{}", record.level().to_string().white().dimmed()),
             };
-            println!("{} - {}", colored_level, record.args());
+            println!("{}{}- {}", colored_level, spaces, record.args());
         }
     }
 
