@@ -1,6 +1,7 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QCheckBox, QWidget, QHBoxLayout, QHeaderView, QLabel
+from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidget, QCheckBox, QWidget, QHBoxLayout, QHeaderView
 from PyQt6.QtCore import Qt
+
 
 class CheckboxTable(QWidget):
     def __init__(self):
@@ -8,6 +9,16 @@ class CheckboxTable(QWidget):
         self.table = QTableWidget()
         self.table.setRowCount(5)
         self.table.setColumnCount(3)
+        layout = QHBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        layout.addWidget(self.table)
+        self.setLayout(layout)
+
+        self.unchecked_stylesheet = "background-color: #933;"
+        self.checked_stylesheet = "background-color: #393;"
+
+        # override default section sizes to better match the checkbox size
 
         hheader = self.table.horizontalHeader()
         hheader.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
@@ -17,18 +28,7 @@ class CheckboxTable(QWidget):
         vheader.setSectionResizeMode(QHeaderView.ResizeMode.Fixed)
         vheader.setMinimumSectionSize(15)
 
-        layout = QHBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-        layout.addWidget(self.table)
-        self.setLayout(layout)
-
-        self.populate_table()
-
-        self.table.cellClicked.connect(self.toggle_checkbox)
-        self.resize(400, 300)
-
-    def toggle_checkbox(self, row: int, column: int) -> None:
+    def toggle_checkbox(self, row: int, column: int):
         if res := self.get_checkbox(row, column):
             _, checkbox = res
             if checkbox:
@@ -38,18 +38,16 @@ class CheckboxTable(QWidget):
         """Get the checkbox widget at the specified row and column."""
         if (widget := self.table.cellWidget(row, column)) and (checkbox := widget.findChild(QCheckBox)):
                 return widget, checkbox
-        else:
-            return None, None
 
-    def checkbox_state_changed(self, state, row, column) -> None:
-        if state == Qt.CheckState.Checked.value:
-            print(f"Checkbox at ({row}, {column}) is checked.")
-            self.table.cellWidget(row, column).setStyleSheet("background-color: #393;")
-        else:
-            print(f"Checkbox at ({row}, {column}) is unchecked.")
-            self.table.cellWidget(row, column).setStyleSheet("background-color: #933;")
+    def checkbox_state_changed(self, state, row: int, column: int):
+        match state:
+            case Qt.CheckState.Checked.value:
+                self.table.cellWidget(row, column).setStyleSheet(self.checked_stylesheet)
+            case Qt.CheckState.Unchecked.value:
+                self.table.cellWidget(row, column).setStyleSheet(self.unchecked_stylesheet)
 
     def populate_table(self):
+        """override this method to populate the table with checkboxes"""
         hheader = self.table.horizontalHeader()
         vheader = self.table.verticalHeader()
 
@@ -61,8 +59,10 @@ class CheckboxTable(QWidget):
                 hheader.setSectionResizeMode(column, QHeaderView.ResizeMode.Fixed)
                 self.table.setColumnWidth(column, 20)
                 checkbox_widget = CheckBoxWidget(self.table)
-                checkbox_widget.checkbox.stateChanged.connect(lambda state, row=row, column=column: self.checkbox_state_changed(state, row, column))
                 self.table.setCellWidget(row, column, checkbox_widget)
+
+                checkbox_widget.checkbox.stateChanged.connect(lambda state, row=row, column=column: self.checkbox_state_changed(state, row, column))
+
 
 class CheckBoxWidget(QWidget):
     def __init__(self, parent=None):
@@ -74,6 +74,7 @@ class CheckBoxWidget(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         layout.addWidget(self.checkbox)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
