@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QGraphi
 from PyQt6.QtCore import QRectF, QPointF
 from PyQt6.QtGui import QBrush, QColor, QPen, QPolygonF
 from PyQt6.QtCore import Qt
+import requests
 
 class ClickableRectItem(QGraphicsRectItem):
     def __init__(self, rect, row, col):
@@ -35,27 +36,26 @@ class ClickableGridView(QGraphicsView):
         self.background_color = background_color
         self.headers = headers
         self.draw_background()
-        self.create_headers(self.cols, self.cell_size, self.headers)
+        self.create_top_headers(headers)
         self.create_grid(self.rows, self.cols, self.cell_size)
 
-    def create_headers(self, cols, cell_size, headers):
-        """Create horizontal headers above the grid and rotate them by 45 degrees."""
-        for col in range(cols):
+    def create_top_headers(self, headers):
+        for col in range(self.cols):
             header_text = QGraphicsTextItem(headers[col] if headers else f"Header {col}")
-            header_text.setDefaultTextColor(QColor(255, 255, 255))
-            # if the text is too long, its jank
-            if len(headers[col]) >= 8:
-                x_pos = col * cell_size - 5
-                y_pos = -self.cell_size - 25 - len(headers[col]) * 0.2
-            else:
-                x_pos = col * cell_size + 5
-                y_pos = -self.cell_size - 20
-            header_text.setPos(x_pos, y_pos)
+            header_text.setDefaultTextColor(QColor(0, 0, 0))
 
-            # Rotate 45 degrees
+            # Calculate boundingRect for the text
             bounding = header_text.boundingRect()
-            header_text.setTransformOriginPoint(bounding.width()/2, bounding.height())
+            x_pos = col * self.cell_size + 10
+            y_pos = -self.cell_size * 0.8 - 5
+
+            # move and pivot the text
+            header_text.setPos(x_pos, y_pos)
+            header_text.setTransformOriginPoint(0, bounding.height())
+
+            # rotate the text
             header_text.setRotation(-45)
+            header_text.setZValue(1)  # Above any background shapes
 
             self.scene.addItem(header_text)
 
@@ -71,8 +71,8 @@ class ClickableGridView(QGraphicsView):
         # Define the four corners of the trapezoid for the background behind the headers
         # top-left counter-clockwise
         points = [
-            QPointF(30, -55),
-            QPointF(total_width + 35, -55),
+            QPointF(68.75, -78.75),
+            QPointF(total_width + 68.75, -78.75),
             QPointF(total_width, -5),
             QPointF(-10, -5)
         ]
@@ -94,6 +94,8 @@ class ClickableGridView(QGraphicsView):
 
 if __name__ == '__main__':
     app = QApplication([])
-    grid = ClickableGridView(rows=5, cols=5, cell_size=20, headers=["Woodworking", "Mining", "Carving", "Hauling", "Farming"])
+
+    response: list[dict] = requests.get('http://127.0.0.1:3000/data').json()
+    grid = ClickableGridView(rows=5, cols=len(response["labors"]), cell_size=20, headers=[labor['name'] for labor in response['labors']])
     grid.show()
     app.exec()
