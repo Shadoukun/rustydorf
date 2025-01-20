@@ -1,9 +1,11 @@
 import sys
 import requests
+from PyQt6.QtGui import QColor
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QWidget, QVBoxLayout
+from PyQt6.QtWidgets import QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QWidget, QVBoxLayout, QGraphicsTextItem
 
 from .components.checkboxtable import CheckboxTable, CheckBoxWidget
+from .components.clickablegridview import ClickableGridView
 
 WORK_DETAILS = {
     "Mining": {
@@ -61,24 +63,14 @@ WORK_DETAILS = {
 }
 
 
-# class LaborSection(QWidget):
-#     def __init__(self, data: dict):
-#         super().__init__()
-#         self.labors = data.get('labors', [])
-#         self.dwarves = data.get('dwarves', [])
-#         self.table = CheckboxTable()
-#         self.table.setRowCount(len(self.dwarves))
-#         self.table.setColumnCount(len(self.labors))
-#         self.populate_table()
-
-
 class LaborWindow(QMainWindow):
     def __init__(self, data: list[dict], dwarf_data: list[dict]):
         super().__init__()
         self.setWindowTitle("Dwarf Assistant: Labors")
         self.resize(800, 600)
-        labors_table = LaborTable(data, dwarf_data)
-        self.setCentralWidget(labors_table)
+
+        labor_view = LaborGridView(parent=self, data=data, dwarf_data=dwarf_data)
+        self.setCentralWidget(labor_view)
         menubar = self.menuBar()
 
         file_menu = menubar.addMenu("File")
@@ -87,92 +79,31 @@ class LaborWindow(QMainWindow):
 
         central_widget = QWidget()
         layout = QVBoxLayout()
-        layout.addWidget(labors_table)
+        layout.addWidget(labor_view)
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
-
-class RotatedHeaderView(QHeaderView):
-    """A Custom header view that rotates the table header text 45 degrees counter-clockwise."""
-    def __init__(self, orientation, parent=None):
-        super().__init__(orientation, parent)
-        self.setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.setStyleSheet("""
-        QHeaderView::section:hover {
-            background-color: none;
-            }
-        """)
-
-    def paintSection(self, painter, rect, logicalIndex):
-        painter.save()
-        painter.translate(rect.center())
-        painter.rotate(-45)
-        painter.translate(-rect.center())
-
-        # Adjust rect for rotated text
-        adjusted_rect = rect.adjusted(-20, 10, 20, 20)  # Add padding for rotated text
-        painter.drawText(
-            adjusted_rect, Qt.AlignmentFlag.AlignCenter, self.model().headerData(logicalIndex, self.orientation())
-        )
-        painter.restore()
-
-
-class LaborTable(CheckboxTable):
-    def __init__(self, data: list[dict], dwarf_data: list[dict]):
-        # load data before calling super().__init__()
+class LaborGridView(ClickableGridView):
+    def __init__(self, parent=None, background_color=QColor(100, 100, 100), data: dict = None, dwarf_data: list[dict] = None):
         self.labors = sorted(data.get('labors', []), key=lambda x: x["id"])
         self.dwarves = dwarf_data
-        super().__init__()
+        cols = len(self.labors)
+        rows = len(self.dwarves)
 
-        self.table.setRowCount(len(dwarf_data))
-        self.table.setColumnCount(len(self.labors))
-        self.table.setHorizontalHeader(RotatedHeaderView(Qt.Orientation.Horizontal, self.table))
-        self.populate_table()
+        headers = [labor["name"] for labor in self.labors]
+        left_headers = [f"{dwarf['first_name']} {dwarf['last_name']}" for dwarf in self.dwarves]
 
-    def populate_table(self):
-        hheader = self.table.horizontalHeader()
-        hheader.setDefaultSectionSize(20)
-        vheader = self.table.verticalHeader()
-        vheader.setDefaultSectionSize(20)
-
-        for row, dwarf in enumerate(self.dwarves):
-            # important for checkbox size
-            vheader.setSectionResizeMode(row, QHeaderView.ResizeMode.Fixed)
-            self.table.setRowHeight(row, 20)
-
-            sorted_labors = sorted(dwarf["labors"].items(), key=lambda x: x[1]["id"])
-            self.table.setVerticalHeaderItem(row, QTableWidgetItem(f"{dwarf['first_name']} {dwarf['last_name']}"))
-
-            for column, labor in enumerate(self.labors):
-                # important for checkbox size
-                hheader.setSectionResizeMode(column, QHeaderView.ResizeMode.Fixed)
-                self.table.setColumnWidth(column, 20)
-
-                self.table.setHorizontalHeaderItem(column, QTableWidgetItem(labor["name"]))
-
-                # use custom checkbox widget
-                checkbox = CheckBoxWidget(self.table)
-                # Check if the labor is enabled for the dwarf
-                if checked := sorted_labors[column][1]["enabled"]:
-                    checkbox.checkbox.setChecked(checked)
-                    checkbox.setStyleSheet("background-color: #393;")
-                else:
-                    checkbox.setStyleSheet("background-color: #933;")
-
-                self.table.setCellWidget(row, column, checkbox)
-                checkbox.checkbox.stateChanged.connect(lambda state, r=row, c=column: self.checkbox_state_changed(state, r, c))
+        super().__init__(parent, rows, cols, 20,
+                         background_color, headers, left_headers)
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    main_window = QMainWindow()
 
     response: list[dict] = requests.get('http://127.0.0.1:3000/data').json()
     dwarf_data = requests.get('http://127.0.0.1:3000/dwarves').json()
 
-    labors_table = LaborTable(response, dwarf_data)
-    main_window.setCentralWidget(labors_table)
-    main_window.setWindowTitle("Labors Table")
+    main_window = LaborWindow(response, dwarf_data)
     main_window.resize(400, 300)
     main_window.show()
     sys.exit(app.exec())
