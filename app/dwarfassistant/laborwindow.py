@@ -1,11 +1,13 @@
 import sys
 import requests
-from PyQt6.QtGui import QColor
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QWidget, QVBoxLayout, QGraphicsTextItem
+from PyQt6.QtGui import QFontMetrics, QStandardItemModel, QStandardItem, QColor
 
-from .components.checkboxtable import CheckboxTable, CheckBoxWidget
-from .components.clickablegridview import ClickableGridView
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QAbstractItemView, QGridLayout, QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QWidget, QGraphicsTextItem, QVBoxLayout
+
+from dwarfassistant.components.checkboxtable import CheckboxTable, CheckBoxWidget
+from dwarfassistant.components.clickablegridview import ClickableGridView
+from dwarfassistant.components.checkableangledtable import CheckableAngledTable, CheckedTableItemDelegate
 
 WORK_DETAILS = {
     "Mining": {
@@ -69,33 +71,49 @@ class LaborWindow(QMainWindow):
         self.setWindowTitle("Dwarf Assistant: Labors")
         self.resize(800, 600)
 
-        labor_view = LaborGridView(parent=self, data=data, dwarf_data=dwarf_data)
-        self.setCentralWidget(labor_view)
-        menubar = self.menuBar()
+        self.labor_table = CheckableAngledTable()
+        self.setCentralWidget(self.labor_table)
+        layout = QVBoxLayout()
+        self.labor_table.setLayout(layout)
 
+        menubar = self.menuBar()
         file_menu = menubar.addMenu("File")
         exit_action = file_menu.addAction("Exit")
         exit_action.triggered.connect(self.close)
 
-        central_widget = QWidget()
-        layout = QVBoxLayout()
-        layout.addWidget(labor_view)
-        central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
+        labors = data["labors"]
+        model = QStandardItemModel(len(dwarf_data),  len(labors))
+        for i, dwarf in enumerate(dwarf_data):
+            for j, labor in enumerate(labors):
+                item = QStandardItem()
+                item.setCheckable(True)
 
-class LaborGridView(ClickableGridView):
-    def __init__(self, parent=None, background_color=QColor(100, 100, 100), data: dict = None, dwarf_data: list[dict] = None):
-        self.labors = sorted(data.get('labors', []), key=lambda x: x["id"])
-        self.dwarves = dwarf_data
-        cols = len(self.labors)
-        rows = len(self.dwarves)
+                enabled = dwarf["labors"][str(labor['id'])]["enabled"]
+                item.setCheckState(Qt.CheckState.Checked if enabled else Qt.CheckState.Unchecked)
+                model.setItem(i, j, item)
 
-        headers = [labor["name"] for labor in self.labors]
-        left_headers = [f"{dwarf['first_name']} {dwarf['last_name']}" for dwarf in self.dwarves]
+        self.labor_table.setModel(model)
+        self.labor_table.setItemDelegate(CheckedTableItemDelegate(self.labor_table))
+        self.labor_table.setHorizontalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
 
-        super().__init__(parent, rows, cols, 20,
-                         background_color, headers, left_headers)
+        # Set header labels
+        model.setVerticalHeaderLabels([f'{dwarf["first_name"]} {dwarf["last_name"]}' for dwarf in dwarf_data])
+        columns = [f'{labor["name"]}' for labor in labors]
+        model.setHorizontalHeaderLabels(columns)
+        self.labor_table.verticalHeader().setDefaultSectionSize(10)
 
+        # Apply styles to headers and grid lines
+        self.labor_table.setStyleSheet("""
+            QHeaderView::section {
+                background-color: gray;
+                color: black;
+                font-weight: bold;
+                border: 1px solid #444;
+            }
+            QTableView {
+                gridline-color: transparent;
+            }
+        """)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
