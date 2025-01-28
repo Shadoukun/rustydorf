@@ -5,9 +5,9 @@ from PyQt6.QtGui import QFontMetrics, QStandardItemModel, QStandardItem, QColor,
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QAbstractItemView, QGridLayout, QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QWidget, QGraphicsTextItem, QVBoxLayout
 
-from dwarfassistant.components.checkboxtable import CheckboxTable, CheckBoxWidget
-from dwarfassistant.components.clickablegridview import ClickableGridView
-from dwarfassistant.components.checkableangledtable import CheckableAngledTable, CheckedTableItemDelegate
+from .components.checkboxtable import CheckboxTable, CheckBoxWidget
+from .components.clickablegridview import ClickableGridView
+from .components.checkableangledtable import CheckableAngledTable, CheckedTableItemDelegate
 
 WORK_DETAILS = {
     "Mining": {
