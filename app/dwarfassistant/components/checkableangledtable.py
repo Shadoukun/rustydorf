@@ -13,6 +13,7 @@ class AngledHeader(QtWidgets.QHeaderView):
         self.border_size = 2
         self.header_height = 100
         self.labelBrush = kwargs.get('labelBrush', self.labelBrush)
+        self._column_colors = {}
 
         # Set default section s
         # ize based on font metrics
@@ -24,6 +25,10 @@ class AngledHeader(QtWidgets.QHeaderView):
 
         # Calculate size for text ellipsis
         self.fontEllipsisSize = int(hypot(*[fm.height()] * 2) * 0.5)
+
+    def setColumnColor(self, column: int, color: QtCore.Qt.GlobalColor):
+        self._column_colors[column] = color
+        self.update()
 
     def sizeHint(self):
         hint = super().sizeHint()
@@ -54,21 +59,17 @@ class AngledHeader(QtWidgets.QHeaderView):
         hint.setHeight(min(self.maximumHeight(), minSize))
         return hint
 
-    # def mousePressEvent(self, event):
-    #         width = self.defaultSectionSize()
-    #         start = self.sectionViewportPosition(0)
-    #         rect = QtCore.QRect(0, 0, width, -self.height())
-    #         transform = QtGui.QTransform().translate(0, self.height()).shear(-1, 0)
+    def mousePressEvent(self, event):
+            width = self.defaultSectionSize()
+            start = self.sectionViewportPosition(0)
+            rect = QtCore.QRect(0, 0, width, -self.height())
+            transform = QtGui.QTransform().translate(0, self.height()).shear(-1, 0)
 
-    #         for s in range(self.count()):
-    #             if self.isSectionHidden(s):
-    #                 continue
-    #             # Note: In PyQt6, WindingFill is QtCore.Qt.FillRule.WindingFill
-    #             polygon = transform.mapToPolygon(rect.translated(s * width + start, 0))
-    #             if polygon.containsPoint(event.position().toPoint(), QtCore.Qt.FillRule.WindingFill):
-    #                 # Use sectionPressed(s) if available; otherwise consider sectionClicked(s).
-    #                 self.sectionPressed.emit(s)
-    #                 return
+            for s in range(self.count()):
+                if not self.isSectionHidden(s):
+                    polygon = transform.mapToPolygon(rect.translated(s * width + start, 0))
+                    if polygon.containsPoint(event.position().toPoint(), QtCore.Qt.FillRule.WindingFill):
+                        self.sectionPressed.emit(s)
 
     def paintEvent(self, event):
         qp = QtGui.QPainter(self.viewport())
@@ -91,7 +92,12 @@ class AngledHeader(QtWidgets.QHeaderView):
             qp.setTransform(qp.transform().translate(s * width, delta).shear(-1, 0))
             qp.drawRect(rect)
             qp.setPen(QtCore.Qt.PenStyle.NoPen)
-            qp.setBrush(self.labelBrush)
+
+            # Set brush color to column color if available
+            if s in self._column_colors:
+                qp.setBrush(self._column_colors[s])
+            else:
+                qp.setBrush(self.labelBrush)
 
             # Draw header border
             qp.drawRect(rect.adjusted(self.border_size, -self.border_size, -self.border_size, self.border_size))
@@ -214,7 +220,6 @@ class TestWidget(QtWidgets.QWidget):
         columns = [f'Column {c + 1}' for c in range(8)]
         columns[3] += ' very, very, very, very, very, very, long'
         model.setHorizontalHeaderLabels(columns)
-
         self.table.verticalHeader().setDefaultSectionSize(10)  # Set vertical header size
 
         # Apply styles to headers and grid lines
@@ -229,6 +234,8 @@ class TestWidget(QtWidgets.QWidget):
                 gridline-color: transparent;
             }
         """)
+
+
 
 
 if __name__ == '__main__':

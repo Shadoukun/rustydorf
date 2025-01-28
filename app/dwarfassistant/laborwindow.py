@@ -1,6 +1,6 @@
 import sys
 import requests
-from PyQt6.QtGui import QFontMetrics, QStandardItemModel, QStandardItem, QColor
+from PyQt6.QtGui import QFontMetrics, QStandardItemModel, QStandardItem, QColor, QBrush
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QAbstractItemView, QGridLayout, QHeaderView, QApplication, QMainWindow, QTableWidgetItem, QWidget, QGraphicsTextItem, QVBoxLayout
@@ -11,11 +11,11 @@ from dwarfassistant.components.checkableangledtable import CheckableAngledTable,
 
 WORK_DETAILS = {
     "Mining": {
-        "color": "#393",
+        "color": "grey",
         "labors": [0]
     },
     "Woodworking": {
-        "color": "#933",
+        "color": "orangered",
         "labors": [11, 59]
     },
     "Stoneworking": {
@@ -81,8 +81,14 @@ class LaborWindow(QMainWindow):
         exit_action = file_menu.addAction("Exit")
         exit_action.triggered.connect(self.close)
 
-        labors = data["labors"]
-        model = QStandardItemModel(len(dwarf_data),  len(labors))
+        labor_data = data["labors"]
+        # ensure labors are sorted in the order they are defined in WORK_DETAILS
+        sorted_labor_ids = [labor_id for category in WORK_DETAILS.values() for labor_id in category["labors"]]
+        labors = sorted(labor_data, key=lambda x: sorted_labor_ids.index(x["id"]) if x["id"] in sorted_labor_ids else len(sorted_labor_ids))
+        columns = [f'{labor["name"]}' for labor in labors]
+
+        # Create table model
+        model = QStandardItemModel(len(dwarf_data), len(labors))
         for i, dwarf in enumerate(dwarf_data):
             for j, labor in enumerate(labors):
                 item = QStandardItem()
@@ -98,11 +104,17 @@ class LaborWindow(QMainWindow):
 
         # Set header labels
         model.setVerticalHeaderLabels([f'{dwarf["first_name"]} {dwarf["last_name"]}' for dwarf in dwarf_data])
-        columns = [f'{labor["name"]}' for labor in labors]
         model.setHorizontalHeaderLabels(columns)
         self.labor_table.verticalHeader().setDefaultSectionSize(10)
 
-        # Apply styles to headers and grid lines
+        # Set column colors based on labor category
+        header = self.labor_table.horizontalHeader()
+        for i, labor in enumerate(labors):
+            category = next((category for category in WORK_DETAILS.values() if labor["id"] in category["labors"]), None)
+            if category:
+                header.setColumnColor(i, QColor(category["color"]))
+
+         # Apply styles to headers and grid lines
         self.labor_table.setStyleSheet("""
             QHeaderView::section {
                 background-color: gray;
